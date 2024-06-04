@@ -1,3 +1,14 @@
+import numpy as np
+
+from ..core import utils
+from ..core.series import CoupledTimeAndFrequencySeries
+from ..core.utils import PropertyAccessor
+from .conversion import convert_to_lal_binary_black_hole_parameters
+from .utils import lalsim_GetApproximantFromString
+
+import scipy
+
+
 class WaveformGeneratorWFU(object):
     duration = PropertyAccessor('_times_and_frequencies', 'duration')
     sampling_frequency = PropertyAccessor('_times_and_frequencies', 'sampling_frequency')
