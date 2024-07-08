@@ -104,7 +104,7 @@ likelihood = bilby.gw.likelihood.GravitationalWaveTransient(
 
 
 result = bilby.run_sampler(
-    likelihood, prior, sampler='dynesty', outdir='/home/ryanmatthew.johnson/waveform_uncertainty/output/', 
+    likelihood, prior, sampler='dynesty', outdir='/home/ryanmatthew.johnson/waveform_uncertainty/submission/', 
     label="NS1_wfu_nlive_1000",
     conversion_function=bilby.gw.conversion.generate_all_bns_parameters,
     resume=True,
