@@ -1,9 +1,9 @@
 universe                 = vanilla
 get_env                  = True
 executable               = /home/ryanmatthew.johnson/waveform_uncertainty/submission/NS1_wfu.sh
-log                     = /home/ryanmatthew.johnson/waveform_uncertainty/output/log/NS1_wfu_log.log
-output                  = /home/ryanmatthew.johnson/waveform_uncertainty/output/log/NS1_wfu_out.out
-error                   = /home/ryanmatthew.johnson/waveform_uncertainty/output/log/NS1_wfu_err.err
+log                     = /home/ryanmatthew.johnson/waveform_uncertainty/submission/NS1_wfu_log.log
+output                  = /home/ryanmatthew.johnson/waveform_uncertainty/submission/NS1_wfu_out.out
+error                   = /home/ryanmatthew.johnson/waveform_uncertainty/submission/NS1_wfu_err.err
 stream_error = True
 stream_input = True
 stream_output = True
