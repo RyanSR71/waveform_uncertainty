@@ -1,0 +1,16 @@
+universe                 = vanilla
+get_env                  = True
+executable               = /home/ryanmatthew.johnson/Waveform_Uncertainty/output/NS1/submission/NS1_wfu.sh
+log                     = /home/ryanmatthew.johnson/Waveform_Uncertainty/output/NS1/log/NS1_wfu_log.log
+output                  = /home/ryanmatthew.johnson/Waveform_Uncertainty/output/NS1/log/NS1_wfu_out.out
+error                   = /home/ryanmatthew.johnson/Waveform_Uncertainty/output/NS1/log/NS1_wfu_err.err
+stream_error = True
+stream_input = True
+stream_output = True
+request_cpus = 2
+request_disk = 50 MB
+request_memory = 4096 MB
+should_transfer_files = YES
+accounting_group        = ligo.dev.o5.cbc.waveforms.bilby
+batch_name = NS1_wfu_nlive_1000
+queue 1
