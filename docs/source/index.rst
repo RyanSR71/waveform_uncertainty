@@ -21,7 +21,7 @@ how to :ref:`installation` the project.
    :maxdepth: 1
    :caption: Examples:
 
-   parameterization_tutorial
+   notebooks/Parameterization_Tutorial
 
 .. toctree::
    :maxdepth: 1
