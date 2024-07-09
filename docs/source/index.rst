@@ -10,9 +10,6 @@ how to :ref:`installation` the project.
 
    This project is under active development.
 
-Contents
---------
-
 .. toctree::
    :maxdepth: 1
    :caption: Contents:
@@ -20,15 +17,9 @@ Contents
    usage
    api
 
-Examples
---------
-
 .. toctree::
    :maxdepth: 1
    :caption: Examples:
-
-Functions
----------
 
 .. toctree::
    :maxdepth: 1
