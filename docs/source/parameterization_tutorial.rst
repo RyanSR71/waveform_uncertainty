@@ -1,9 +1,6 @@
-Usage
-=====
+Parameterization Tutorial
+=========================
 
-.. _installation:
+.. toctree::
 
-Installation
-------------
-
-To use WaveformUncertainty, first download WaveformUncertainty.py and place it in your directory.
+   notebooks/Example 1
