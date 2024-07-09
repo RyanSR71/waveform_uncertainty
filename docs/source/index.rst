@@ -1,4 +1,4 @@
-Welcome to Lumache's documentation!
+Welcome to WaveformUncertainty's documentation!
 ===================================
 
 **WaveformUncertainty** is a Python library for gravitational waveform uncertainty.
