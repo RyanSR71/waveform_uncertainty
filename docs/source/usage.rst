@@ -6,4 +6,4 @@ Usage
 Installation
 ------------
 
-To use WaveformUncertainty, first download WaveformUncertainty.py and place it in your directory:
+To use WaveformUncertainty, first download WaveformUncertainty.py and place it in your directory.
