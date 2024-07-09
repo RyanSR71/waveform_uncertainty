@@ -14,7 +14,8 @@ Contents
 --------
 
 .. toctree::
-   :caption:Contents:
+   :maxdepth: 1
+   :caption: Contents:
 
    usage
    api
@@ -23,10 +24,12 @@ Examples
 --------
 
 .. toctree::
-   :caption:Examples:
+   :maxdepth: 1
+   :caption: Examples:
 
 Functions
 ---------
 
 .. toctree::
-   :caption:Functions:
+   :maxdepth: 1
+   :caption: Functions:
