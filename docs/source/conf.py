@@ -3,7 +3,7 @@
 # -- Project information
 
 project = 'WaveformUncertainty'
-copyright = '2024, Ryan Johnson'
+copyright = ''
 author = 'Ryan Johnson'
 
 release = '0.1'
