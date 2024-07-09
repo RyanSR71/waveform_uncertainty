@@ -3,4 +3,4 @@ Parameterization Tutorial
 
 .. toctree::
 
-   notebooks/Example 1
+   notebooks/parameterization_tutorial
