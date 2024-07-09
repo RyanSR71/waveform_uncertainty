@@ -17,7 +17,6 @@ Contents
 
    usage
    api
-   functions
 
 Examples
 --------
