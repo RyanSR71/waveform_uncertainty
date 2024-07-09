@@ -18,3 +18,9 @@ Contents
    usage
    api
    functions
+
+Examples
+--------
+
+Functions
+---------
