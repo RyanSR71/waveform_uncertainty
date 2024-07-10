@@ -10,8 +10,10 @@ WaveformUncertainty.fd_model_difference
 Generates frequency domain waveform differences between two models hf1 and hf2
 
 Parameters:
-
-hf1 & hf2: bilby.gw.waveform_generator.WaveformGenerator
+===========
+hf1: bilby.gw.waveform_generator.WaveformGenerator
+   frequency domain waveform generator object WITH injected parameters (for strain calculation)
+hf2: bilby.gw.waveform_generator.WaveformGenerator
    frequency domain waveform generator object WITH injected parameters (for strain calculation)
 f_low: float, optional
    minimum frequency
@@ -35,8 +37,8 @@ correction_parameter: float, optional
    value at which to cut the second derivative of amplitude difference (see WFU_equations.pdf #1)
    default: -10e-6
       
-Returns
-==================
+Returns:
+========
 frequency_grid: numpy.ndarray
    frequency grid that corresponds to the uncertainty arrays
 amplitude_difference: numpy.ndarray
