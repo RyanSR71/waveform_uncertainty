@@ -30,3 +30,4 @@ Check out the :doc:`installation` section for instructions. General information 
    parameter_dict_from_prior
    injection
    parameterization
+   recovery_from_parameterization
