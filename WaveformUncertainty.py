@@ -198,6 +198,39 @@ def injection(data,**kwargs):
 
 
 
+def recovery_from_parameterization(identity,data):
+    '''
+    Converts a parameterized set of waveform difference (output of WaveformUncertainty.parameterization()) back into waveform difference arrays
+    
+    Parameters
+    ==================
+    identity: string
+        specifies which waveform difference should be returned (amplitude_difference or phase_difference)
+    data: numpy.ndarray
+        one index of the output matrix from WaveformUncertainty.parameterization(); input WaveformUncertainty.parameterization()[index]
+    
+    Returns
+    ==================
+    difference_array: numpy.ndarray
+        array of the waveform difference converted from the parameterization; has the same shape as the frequency grid within the original matrix
+    '''
+    if str(identity) == 'amplitude_difference':
+        parameterized_curve = np.polynomial.chebyshev.chebval(data[1][0:data[4]],data[2])
+        post_waveform_uncertainties = np.copy(data[1])
+        post_waveform_uncertainties[data[4]-2:] = data[5]
+    
+    elif str(identity) == 'phase_difference':
+        parameterized_curve = np.polynomial.chebyshev.chebval(data[1][0:data[4]],data[3])
+        post_waveform_uncertainties = np.copy(data[1])
+        post_waveform_uncertainties[data[4]-2:] = data[6]
+    
+    else:
+        raise Exception('Identity of the uncertainty must be "amplitude_difference" or "phase_difference".')
+    
+    return np.concatenate((parameterized_curve[:-2],post_waveform_uncertainties[data[4]-2:]))
+
+
+
 def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs):
     '''
     Generates samples of waveform uncertainty between two approximants and parameterizes the data with Chebyshev polynomial functions.
@@ -309,7 +342,7 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
     else:
         data = parameter_data
     
-    index_samples=list(range(len(data["a_1"]))) # To Do
+    index_samples=list(range(len(data[list(data.keys())[0]])))
     indexes=[]
     for draws in range(len(index_samples)):
         index=random.choice(index_samples)
@@ -318,17 +351,6 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
     
     wfargs1 = dict(waveform_approximant=approximant1, reference_frequency=f_ref, catch_waveform_errors=True)
     wfargs2 = dict(waveform_approximant=approximant2, reference_frequency=f_ref, catch_waveform_errors=True)
-    
-    def recovery(identity,data): # To Do
-        if str(identity) == 'amplitude_difference':
-            parameterized_curve = np.polynomial.chebyshev.chebval(data[1][0:data[4]],data[2])
-            post_waveform_uncertainties = np.copy(data[1])
-            post_waveform_uncertainties[data[4]-2:] = data[5]
-        elif str(identity) == 'phase_difference':
-            parameterized_curve = np.polynomial.chebyshev.chebval(data[1][0:data[4]],data[3])
-            post_waveform_uncertainties = np.copy(data[1])
-            post_waveform_uncertainties[data[4]-2:] = data[6]
-        return np.concatenate((parameterized_curve[:-2],post_waveform_uncertainties[data[4]-2:]))
     
     def progressBar(count_value, total, suffix=''): #To Do
         bar_length = 100
@@ -339,13 +361,13 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
         sys.stdout.flush()
     
     trial = 0
-    final_indexes = [] # To Do
-    extraneous_indexes = [] # To Do
+    final_indexes = []
+    extraneous_indexes = []
     
     output_matrix = np.zeros([len(indexes),8],dtype=object)
     start = tm.time()
     
-    print("Parameterizing...") #To Do
+    print("Generating Waveform Differences and Parameterizing...")
     
     for index in indexes:
     
@@ -394,8 +416,8 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
 
         final_indexes.append(index)
         
-        relative_amplitude_error = np.max(np.abs(100*((amplitude_difference-recovery('amplitude_difference',output_matrix[index])))/([max_amplitude_error]*len(amplitude_difference))))
-        relative_phase_error = np.max(np.abs((100*((phase_difference-recovery('phase_difference',output_matrix[index])))/([max_phase_error*(2*np.pi/360)]*len(phase_difference)))))
+        relative_amplitude_error = np.max(np.abs(100*((amplitude_difference-recovery_from_parameterization('amplitude_difference',output_matrix[index])))/([max_amplitude_error]*len(amplitude_difference))))
+        relative_phase_error = np.max(np.abs((100*((phase_difference-recovery_from_parameterization('phase_difference',output_matrix[index])))/([max_phase_error*(2*np.pi/360)]*len(phase_difference)))))
 
         if relative_amplitude_error>100 or relative_phase_error>100:
             final_indexes.remove(index)
@@ -420,48 +442,15 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
     parameterized_data = np.copy(empty_data_matrix)
     
     print("")
-    print("Done!") # To Do
+    print("Done!")
     print("")
     print(f"Time Elapsed: {round(tm.time()-start,3)} seconds")
     print("")
     final_parameterization_rate = round(100*(nsamples/(len(final_indexes)+len(extraneous_indexes))),4)
-    print(f"Parameterized Model Difference data was created with {len(final_indexes)} sample sets at a parameterization rate of {final_parameterization_rate}%.") 
+    print(f"Parameterized Waveform Model Difference data was created with {len(final_indexes)} sample sets at a final parameterization rate of {final_parameterization_rate}%.") 
     print("")
     
     return parameterized_data
-
-
-
-def recovery_from_parameterization(identity,data):
-    '''
-    Converts a parameterized set of waveform difference (output of WaveformUncertainty.parameterization()) back into waveform difference arrays
-    
-    Parameters
-    ==================
-    identity: string
-        specifies which waveform difference should be returned (amplitude_difference or phase_difference)
-    data: numpy.ndarray
-        one index of the output matrix from WaveformUncertainty.parameterization(); input WaveformUncertainty.parameterization()[index]
-    
-    Returns
-    ==================
-    difference_array: numpy.ndarray
-        array of the waveform difference converted from the parameterization; has the same shape as the frequency grid within the original matrix
-    '''
-    if str(identity) == 'amplitude_difference':
-        parameterized_curve = np.polynomial.chebyshev.chebval(data[1][0:data[4]],data[2])
-        post_waveform_uncertainties = np.copy(data[1])
-        post_waveform_uncertainties[data[4]-2:] = data[5]
-    
-    elif str(identity) == 'phase_difference':
-        parameterized_curve = np.polynomial.chebyshev.chebval(data[1][0:data[4]],data[3])
-        post_waveform_uncertainties = np.copy(data[1])
-        post_waveform_uncertainties[data[4]-2:] = data[6]
-    
-    else:
-        raise Exception('Identity of the uncertainty must be "amplitude_difference" or "phase_difference".')
-    
-    return np.concatenate((parameterized_curve[:-2],post_waveform_uncertainties[data[4]-2:]))
 
 
 
@@ -496,24 +485,15 @@ def uncertainties_from_parameterization(data,**kwargs):
     linear = kwargs.get('linear',False)
     resolution = kwargs.get('resolution',None)
     
-    amplitude_difference_data = [] #To Do
-    for index in range(len(data)):
-        amplitude_difference_data.append(recovery_from_parameterization('amplitude_difference',data[index]))
-
-    phase_difference_data = [] #To Do
-    for index in range(len(data)):
-        phase_difference_data.append(recovery_from_parameterization('phase_difference',data[index]))
+    amplitude_difference_data = [recovery_from_parameterization('amplitude_difference',data[index]) for index in range(len(data))]
+    phase_difference_data = [recovery_from_parameterization('phase_difference',data[index]) for index in range(len(data))]
 
     if linear==True and resolution is not None:
     
         linear_frequency_grid = np.arange(data[0][1][0],data[0][1][-1]+resolution,resolution)
-        amplitude_difference = [] # To Do
-        for i in range(len(amplitude_difference_data)):
-            amplitude_difference.append(np.interp(linear_frequency_grid,data[0][1],amplitude_difference_data[i]))
-
-        phase_difference = [] # To Do
-        for i in range(len(phase_difference_data)):
-            phase_difference.append(np.interp(linear_frequency_grid,data[0][1],phase_difference_data[i]))
+        
+        amplitude_difference = [np.interp(linear_frequency_grid,data[0][1],amplitude_difference_data[i]) for i in range(len(amplitude_difference_data))]
+        phase_difference = [np.interp(linear_frequency_grid,data[0][1],phase_difference_data[i]) for i in range(len(phase_difference_data))]
         
         mean_amplitude_difference = np.mean(amplitude_difference,axis=0)
         amplitude_uncertainty = np.std(amplitude_difference,axis=0)
