@@ -3,6 +3,7 @@
 # -- Project information
 
 project = 'WaveformUncertainty'
+copywrite = '2024, Ryan Johnson (not actually copywrited)'
 author = 'Ryan Johnson'
 
 release = '0.1'
