@@ -10,7 +10,7 @@ WaveformUncertainty.WaveformGeneratorWFU
                                             waveform_uncertainty_nodes=None,dA_sampling=False,
                                             dphi_sampling=False)
 
-Bases: `object`
+Bases: ``object``
 
 Modified WaveformGenerator object from bilby.gw to include waveform uncertainty corrections in the strain calculation;
 To sample waveform uncertainty, include all relevant "alpha" and "beta" parameters in the prior.
