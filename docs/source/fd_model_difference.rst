@@ -10,7 +10,7 @@ WaveformUncertainty.fd_model_difference
 Generates frequency domain waveform differences between two models hf1 and hf2
 
 Parameters:
------------
+
 hf1: bilby.gw.waveform_generator.WaveformGenerator
    frequency domain waveform generator object WITH injected parameters (for strain calculation)
 hf2: bilby.gw.waveform_generator.WaveformGenerator
