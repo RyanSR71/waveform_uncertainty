@@ -11,7 +11,7 @@ WaveformUncertainty.parameterization
                                         correction_parameter=-10e-6,polarization='plus',
                                         fit_threshold=75)
 
- Generates samples of waveform differences between two approximants and parameterizes the data.
+Generates samples of waveform differences between two approximants and parameterizes the data.
 
 Parameters:
 -----------
