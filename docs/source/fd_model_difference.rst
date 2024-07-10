@@ -24,11 +24,11 @@ f_ref: float, optional, (50.0)
 npoints: int, optional, (1000)
    length of the desired frequency grid
 polarization: string, optional, ('plus')
-   polarization of the strain data (plus or cross)
+   polarization of the strain data {'plus','cross'}
 psd_data: numpy.ndarray, optional, (None)
    array containing the psd data and their corresponding frequencies
 correction_parameter: float, optional, (-10e-6)
-   value at which to cut the second derivative of amplitude difference (see WFU_equations.pdf #1)
+   value at which to cut the second derivative of amplitude difference (see WFU Equations #1)
 
 Returns:
 --------
