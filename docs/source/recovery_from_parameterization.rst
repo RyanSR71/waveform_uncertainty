@@ -1,7 +1,7 @@
 WaveformUncertainty.recovery_from_parameterization
 ==================================================
 
-.. code_block:: python
+.. code-block:: python
 
    WaveformUncertainty.recovery_from_parameterization(identity,data)
 
