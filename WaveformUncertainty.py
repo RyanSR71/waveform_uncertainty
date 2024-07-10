@@ -42,7 +42,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
         default: None
     correction_parameter: float, optional
         value at which to cut the second derivative of amplitude difference (see WFU_equations #1)
-        default: -10e-6 FIX THIS
+        default: -10e-6 To Do
         
     Returns
     ==================
