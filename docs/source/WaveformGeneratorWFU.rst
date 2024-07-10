@@ -14,7 +14,7 @@ Bases: ``object``
 
 Modified WaveformGenerator object from bilby.gw to include waveform uncertainty corrections in the strain calculation;
 To sample waveform uncertainty, include all relevant "alpha" and "beta" parameters in the prior.
-See bilby's documentation for 'bilby.gw.WaveformGenerator <https://lscsoft.docs.ligo.org/bilby/api/bilby.gw.waveform_generator.WaveformGenerator.html#bilby.gw.waveform_generator.WaveformGenerator>'_.
+See bilby's documentation for bilby.gw.WaveformGenerator: https://lscsoft.docs.ligo.org/bilby/api/bilby.gw.waveform_generator.WaveformGenerator.html#bilby.gw.waveform_generator.WaveformGenerator
 
 .. note::
 
