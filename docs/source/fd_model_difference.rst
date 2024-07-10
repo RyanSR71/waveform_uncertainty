@@ -11,31 +11,24 @@ Generates frequency domain waveform differences between two models hf1 and hf2
 
 Parameters:
 ===========
-**hf1: bilby.gw.waveform_generator.WaveformGenerator**
+hf1: bilby.gw.waveform_generator.WaveformGenerator
    frequency domain waveform generator object WITH injected parameters (for strain calculation)
-**hf2: bilby.gw.waveform_generator.WaveformGenerator**
+hf2: bilby.gw.waveform_generator.WaveformGenerator
    frequency domain waveform generator object WITH injected parameters (for strain calculation)
-f_low: float, optional
+f_low: float, optional, (20.0)
    minimum frequency
-   default: 20.0
-f_high: float, optional
+f_high: float, optional, (2048.0)
    maximum frequency
-   default: 2048.0
-f_ref: float, optional
+f_ref: float, optional, (50.0)
    reference frequency
-   default: 50.0
-npoints: int, optional
+npoints: int, optional, (1000)
    length of the desired frequency grid
-   default: 1000
-polarization: string, optional
+polarization: string, optional, ('plus')
    polarization of the strain data (plus or cross)
-   default: 'plus'
-psd_data: numpy.ndarray, optional
+psd_data: numpy.ndarray, optional, (None)
    array containing the psd data and their corresponding frequencies
-   default: None
-correction_parameter: float, optional
+correction_parameter: float, optional, (-10e-6)
    value at which to cut the second derivative of amplitude difference (see WFU_equations.pdf #1)
-   default: -10e-6
       
 Returns:
 ========
