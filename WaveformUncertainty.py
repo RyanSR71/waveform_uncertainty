@@ -1,11 +1,3 @@
-pip install numpy
-pip install bilby
-pip install matplotlib
-pip install random
-pip install time
-pip install sys
-pip install scipy
-
 import numpy as np
 import bilby
 import matplotlib.pyplot as plt
