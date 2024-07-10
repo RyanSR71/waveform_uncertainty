@@ -31,7 +31,7 @@ correction_parameter: float, optional, (-10e-6)
    value at which to cut the second derivative of amplitude difference (see WFU_equations.pdf #1)
       
 Returns:
-========
+--------
 frequency_grid: numpy.ndarray
    frequency grid that corresponds to the uncertainty arrays
 amplitude_difference: numpy.ndarray
