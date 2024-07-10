@@ -7,8 +7,8 @@ WaveformUncertainty.uncertainties_from_parameterization
 
 Takes all of the sets in a parameterized waveform difference matrix and takes the mean and standard deviation of amplitude and phase difference
 
-Parameters
-==================
+Parameters:
+-----------
 data: numpy.ndarray
     WaveformUncertainty.parameterization() output table
 linear: bool, optional, (False)
@@ -16,8 +16,8 @@ linear: bool, optional, (False)
 resolution: float, (None)
     distance between points in the linear frequency grid
       
-Returns
-==================
+Returns:
+--------
 mean_amplitude_difference: numpy.ndarray
     array of the mean value of the amplitude difference corresponding to the frequency grid
 amplitude_uncertainty: numpy.ndarray
