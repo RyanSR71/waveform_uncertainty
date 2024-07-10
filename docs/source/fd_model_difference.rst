@@ -17,9 +17,11 @@ Parameters:
    frequency domain waveform generator object WITH injected parameters (for strain calculation)
 f_low: float, optional
    minimum frequency
+
    default: 20.0
 f_high: float, optional
    maximum frequency
+
    default: 2048.0
 f_ref: float, optional
    reference frequency
