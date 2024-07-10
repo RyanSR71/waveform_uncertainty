@@ -24,4 +24,6 @@ Check out the :doc:`installation` section for instructions. General information 
 
 .. toctree::
    :maxdepth: 1
-   :caption: Functions:
+   :caption: API:
+
+   fd_model_difference
