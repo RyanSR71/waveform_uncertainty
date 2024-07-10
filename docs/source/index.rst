@@ -14,6 +14,7 @@ Check out the :doc:`installation` section for instructions. General information 
    :caption: Contents:
 
    installation
+   wfu_equations
 
 .. toctree::
    :maxdepth: 1
