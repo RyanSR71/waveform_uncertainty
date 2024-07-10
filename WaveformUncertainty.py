@@ -65,7 +65,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
-    correction_parameter = kwargs.get('correction_parameter',-10e-6)
+    correction_parameter = kwargs.get('correction_parameter',-10e-6) To Do
     
     bilby.core.utils.log.setup_logger(log_level=30)
     np.seterr(all='ignore')
@@ -90,7 +90,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
         fit = np.polyfit(hf1.frequency_array[wf_freqs],raw_phase_difference,1,w=align_weights)
         residual_phase_difference = raw_phase_difference - np.poly1d(fit)(hf1.frequency_array[wf_freqs])
         
-    def derivative(x,y):
+    def derivative(x,y): # To Do
         output = []
         for i in range(0,len(x)-1):
             slope = (y[i+1]-y[i])/(x[i+1]-x[i])
@@ -98,14 +98,15 @@ def fd_model_difference(hf1,hf2,**kwargs):
         new_x = list(np.copy(x))
         new_x.remove(x[-1])
         return new_x, output  
+        
     f_prime, amplitude_difference_first_derivative = derivative(hf1.frequency_array[wf_freqs],amplitude_difference)
     f_double_prime,amplitude_difference_second_derivative = derivative(f_prime,amplitude_difference_first_derivative)
     for i in range(len(amplitude_difference_second_derivative)):
         if amplitude_difference_second_derivative[i] < correction_parameter:
             final_index = i
             break
-    else: 
-        final_index = len(hf1.frequency_array[wf_freqs])-1
+        else: 
+            final_index = len(hf1.frequency_array[wf_freqs])-1
         
     amplitude_difference[final_index:] = amplitude_difference[final_index-1]
     
@@ -259,7 +260,7 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
         default: None
     correction_parameter: float, optional
         value at which to cut the second derivative of amplitude difference (see WFU_equations #1)
-        default: -10e-6
+        default: -10e-6 To Do
     polarization: string, optional
         polarization of the strain data (plus or cross)
         default: 'plus'
@@ -297,7 +298,7 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
-    correction_parameter = kwargs.get('correction_parameter',-10e-6)
+    correction_parameter = kwargs.get('correction_parameter',-10e-6) # To Do
     precession = kwargs.get('precession',False)
     tides = kwargs.get('tides',True)
     fit_parameters = kwargs.get('fit_parameters',15)
@@ -316,7 +317,7 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
     else:
         data = parameter_data
     
-    index_samples=list(range(len(data["a_1"])))
+    index_samples=list(range(len(data["a_1"]))) # To Do
     indexes=[]
     for draws in range(len(index_samples)):
         index=random.choice(index_samples)
@@ -326,7 +327,7 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
     wfargs1 = dict(waveform_approximant=approximant1, reference_frequency=f_ref, catch_waveform_errors=True)
     wfargs2 = dict(waveform_approximant=approximant2, reference_frequency=f_ref, catch_waveform_errors=True)
     
-    def recovery(identity,data):
+    def recovery(identity,data): # To Do
         if str(identity) == 'amplitude_difference':
             parameterized_curve = np.polynomial.chebyshev.chebval(data[1][0:data[4]],data[2])
             post_waveform_uncertainties = np.copy(data[1])
@@ -337,7 +338,7 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
             post_waveform_uncertainties[data[4]-2:] = data[6]
         return np.concatenate((parameterized_curve[:-2],post_waveform_uncertainties[data[4]-2:]))
     
-    def progressBar(count_value, total, suffix=''):
+    def progressBar(count_value, total, suffix=''): #To Do
         bar_length = 100
         filled_up_Length = int(round(bar_length* count_value / float(total)))
         percentage = round(100.00 * count_value/float(total),1)
@@ -346,13 +347,13 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
         sys.stdout.flush()
     
     trial = 0
-    final_indexes = []
-    extraneous_indexes = []
+    final_indexes = [] # To Do
+    extraneous_indexes = [] # To Do
     
     output_matrix = np.zeros([len(indexes),8],dtype=object)
     start = tm.time()
     
-    print("Parameterizing...")
+    print("Parameterizing...") #To Do
     
     for index in indexes:
     
@@ -375,7 +376,14 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
             duration=duration
         )
         
-        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,f_low=f_low,f_high=f_high,f_ref=f_ref,npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter=correction_parameter)
+        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,
+                                                                                                                                                             f_low=f_low,
+                                                                                                                                                             f_high=f_high,
+                                                                                                                                                             f_ref=f_ref,
+                                                                                                                                                             npoints=npoints,
+                                                                                                                                                             polarization=polarization,
+                                                                                                                                                             psd_data=psd_data,
+                                                                                                                                                             correction_parameter=correction_parameter)
         
         amplitude_difference_fit = np.polynomial.chebyshev.Chebyshev.fit((frequency_grid[0:final_index]),amplitude_difference[0:final_index],fit_parameters-1)
         amplitude_difference_parameters = amplitude_difference_fit.convert().coef
@@ -420,7 +428,7 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
     parameterized_data = np.copy(empty_data_matrix)
     
     print("")
-    print("Done!")
+    print("Done!") # To Do
     print("")
     print(f"Time Elapsed: {round(tm.time()-start,3)} seconds")
     print("")
@@ -496,22 +504,22 @@ def uncertainties_from_parameterization(data,**kwargs):
     linear = kwargs.get('linear',False)
     resolution = kwargs.get('resolution',None)
     
-    amplitude_difference_data = []
+    amplitude_difference_data = [] #To Do
     for index in range(len(data)):
         amplitude_difference_data.append(recovery_from_parameterization('amplitude_difference',data[index]))
 
-    phase_difference_data = []
+    phase_difference_data = [] #To Do
     for index in range(len(data)):
         phase_difference_data.append(recovery_from_parameterization('phase_difference',data[index]))
 
     if linear==True and resolution is not None:
     
         linear_frequency_grid = np.arange(data[0][1][0],data[0][1][-1]+resolution,resolution)
-        amplitude_difference = []
+        amplitude_difference = [] # To Do
         for i in range(len(amplitude_difference_data)):
             amplitude_difference.append(np.interp(linear_frequency_grid,data[0][1],amplitude_difference_data[i]))
 
-        phase_difference = []
+        phase_difference = [] # To Do
         for i in range(len(phase_difference_data)):
             phase_difference.append(np.interp(linear_frequency_grid,data[0][1],phase_difference_data[i]))
         
