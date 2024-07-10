@@ -22,6 +22,7 @@ how to :ref:`installation` the project.
    :caption: Examples:
 
    notebooks/Parameterization_Tutorial
+   notebooks/WFU_Sampling_Tutorial
 
 .. toctree::
    :maxdepth: 1
