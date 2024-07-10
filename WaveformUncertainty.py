@@ -1,3 +1,5 @@
+"WaveformUncertainty package"
+
 import numpy as np
 import bilby
 import random
