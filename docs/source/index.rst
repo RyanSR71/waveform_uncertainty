@@ -3,7 +3,7 @@ Welcome to WaveformUncertainty's documentation!
 
 **WaveformUncertainty** is a Python library for gravitational waveform uncertainty.
 
-Check out the :doc:`usage` section for further information. 
+Check out the :doc:`installation` section for instructions. General information is present in the Content tab, tutorials are in the Examples tab, and code documentation is in the API tab.
 
 .. note::
 
@@ -14,7 +14,6 @@ Check out the :doc:`usage` section for further information.
    :caption: Contents:
 
    installation
-   api
 
 .. toctree::
    :maxdepth: 1
