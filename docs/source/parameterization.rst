@@ -8,7 +8,7 @@ WaveformUncertainty.parameterization
                                         npoints=1000,f_low=20.0,f_high=2048.0,f_ref=50.0,
                                         sampling_frequency=4096,duration=256,
                                         max_amplitude_error=2,max_phase_error=2,psd_data=None,
-                                        correction_parameter=-10e-6,polarization='plus',
+                                        correction_parameter=-1e-5,polarization='plus',
                                         fit_threshold=75)
 
 Generates samples of waveform differences between two approximants and parameterizes the data.
@@ -49,7 +49,7 @@ max_dphi_error: float [degrees], optional, (2)
     maximum allowed error between the phase uncertainty and its parameterization
 psd_data: numpy.ndarray, optional, (None)
     array containing the psd data and their corresponding frequencies
-correction_parameter: float, optional, (-10e-6)
+correction_parameter: float, optional, (-1e-5)
     value at which to cut the second derivative of amplitude difference (see WFU Equations #1)
 polarization: string, optional, ('plus')
     polarization of the strain data {'plus','cross'}
