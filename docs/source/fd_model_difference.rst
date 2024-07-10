@@ -7,9 +7,7 @@ WaveformUncertainty.fd_model_difference
                                              npoints=1000,polarization='plus',psd_data=None,
                                              correction_parameter=-10e-6)
 
-Generates frequency domain waveform differences between two models hf1 and hf2
-
-.. _parameters:
+Generates frequency domain waveform differences between two models hf1 and hf2.
 
 Parameters:
 -----------
@@ -31,8 +29,6 @@ psd_data: numpy.ndarray, optional, (None)
    array containing the psd data and their corresponding frequencies
 correction_parameter: float, optional, (-10e-6)
    value at which to cut the second derivative of amplitude difference (see WFU_equations.pdf #1)
-
-.. returns:
 
 Returns:
 --------
