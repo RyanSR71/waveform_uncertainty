@@ -1,6 +1,5 @@
 import numpy as np
 import bilby
-import matplotlib.pyplot as plt
 import random
 import time as tm
 import sys
