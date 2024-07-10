@@ -5,7 +5,7 @@ WaveformUncertainty.fd_model_difference
 
    WaveformUncertainty.fd_model_difference(hf1,hf2,f_low=20.0,f_high=2048.0,f_ref=50.0,
                                            npoints=1000,polarization='plus',psd_data=None,
-                                           correction_parameter=-10e-6)
+                                           correction_parameter=-1e-5)
 
 Generates frequency domain waveform differences between two models hf1 and hf2
 
@@ -27,7 +27,7 @@ polarization: string, optional, ('plus')
    polarization of the strain data {'plus','cross'}
 psd_data: numpy.ndarray, optional, (None)
    array containing the psd data and their corresponding frequencies
-correction_parameter: float, optional, (-10e-6)
+correction_parameter: float, optional, (-1e-5)
    value at which to cut the second derivative of amplitude difference (see WFU Equations #1)
 
 Returns:
