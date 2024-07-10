@@ -3,7 +3,7 @@ WaveformUncertainty.WaveformGeneratorWFU
 
 .. code-block:: python
 
-   WaveformUncertainty.WaveformGeneratorWFU(duration=None,sampling_frequency=None,start_time=0,
+   class WaveformUncertainty.WaveformGeneratorWFU(duration=None,sampling_frequency=None,start_time=0,
                                             frequency_domain_source_model=None,
                                             time_domain_source_model=None,parameters=None,
                                             parameter_conversion=None,waveform_arguments=None,
