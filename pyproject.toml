@@ -6,4 +6,4 @@ build-backend = "flit_core.buildapi"
 name = "WaveformUncertainty"
 authors = [{name = "Ryan Johnson", email = "ryansr71@csu.fullerton.edu"}]
 dynamic = ["version", "description"]
-dependencies = ['numpy','bilby','time','sys','scipy','matplotlib']
+dependencies = ['numpy','bilby','time','scipy','matplotlib']
