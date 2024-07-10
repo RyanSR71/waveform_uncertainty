@@ -65,7 +65,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
-    correction_parameter = kwargs.get('correction_parameter',-10e-6) To Do
+    correction_parameter = kwargs.get('correction_parameter',-10e-6) #To Do
     
     bilby.core.utils.log.setup_logger(log_level=30)
     np.seterr(all='ignore')
