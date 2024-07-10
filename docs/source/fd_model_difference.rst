@@ -11,9 +11,9 @@ Generates frequency domain waveform differences between two models hf1 and hf2
 
 Parameters:
 ===========
-**hf1**: bilby.gw.waveform_generator.WaveformGenerator
+**hf1: bilby.gw.waveform_generator.WaveformGenerator**
    frequency domain waveform generator object WITH injected parameters (for strain calculation)
-hf2: bilby.gw.waveform_generator.WaveformGenerator
+**hf2: bilby.gw.waveform_generator.WaveformGenerator**
    frequency domain waveform generator object WITH injected parameters (for strain calculation)
 f_low: float, optional
    minimum frequency
