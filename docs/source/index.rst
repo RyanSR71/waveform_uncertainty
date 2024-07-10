@@ -13,7 +13,7 @@ Check out the :doc:`usage` section for further information.
    :maxdepth: 1
    :caption: Contents:
 
-   usage
+   installation
    api
 
 .. toctree::
