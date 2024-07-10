@@ -42,7 +42,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
         default: None
     correction_parameter: float, optional
         value at which to cut the second derivative of amplitude difference (see WFU_equations #1)
-        default: -10e-6 To Do
+        default: -1e-5
         
     Returns
     ==================
@@ -65,7 +65,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
-    correction_parameter = kwargs.get('correction_parameter',-10e-6) #To Do
+    correction_parameter = kwargs.get('correction_parameter',-1e-5)
     
     bilby.core.utils.log.setup_logger(log_level=30)
     np.seterr(all='ignore')
@@ -89,18 +89,10 @@ def fd_model_difference(hf1,hf2,**kwargs):
         align_weights = ref_amplitude*ref_amplitude / ref_sigma * hf1.frequency_array[wf_freqs]
         fit = np.polyfit(hf1.frequency_array[wf_freqs],raw_phase_difference,1,w=align_weights)
         residual_phase_difference = raw_phase_difference - np.poly1d(fit)(hf1.frequency_array[wf_freqs])
-        
-    def derivative(x,y): # To Do
-        output = []
-        for i in range(0,len(x)-1):
-            slope = (y[i+1]-y[i])/(x[i+1]-x[i])
-            output.append(slope)
-        new_x = list(np.copy(x))
-        new_x.remove(x[-1])
-        return new_x, output  
-        
-    f_prime, amplitude_difference_first_derivative = derivative(hf1.frequency_array[wf_freqs],amplitude_difference)
-    f_double_prime,amplitude_difference_second_derivative = derivative(f_prime,amplitude_difference_first_derivative)
+
+    amplitude_difference_first_derivative = np.gradient(amplitude_difference)/np.gradient(frequency_grid)
+    amplitude_difference_second_derivative = np.gradient(amplitude_difference_first_derivative)/np.gradient(frequency_grid)
+
     for i in range(len(amplitude_difference_second_derivative)):
         if amplitude_difference_second_derivative[i] < correction_parameter:
             final_index = i
@@ -260,7 +252,7 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
         default: None
     correction_parameter: float, optional
         value at which to cut the second derivative of amplitude difference (see WFU_equations #1)
-        default: -10e-6 To Do
+        default: -1e-5
     polarization: string, optional
         polarization of the strain data (plus or cross)
         default: 'plus'
@@ -298,7 +290,7 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
-    correction_parameter = kwargs.get('correction_parameter',-10e-6) # To Do
+    correction_parameter = kwargs.get('correction_parameter',-1e-5)
     precession = kwargs.get('precession',False)
     tides = kwargs.get('tides',True)
     fit_parameters = kwargs.get('fit_parameters',15)
