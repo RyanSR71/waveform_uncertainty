@@ -7,7 +7,7 @@ Check out the :doc:`installation` section for instructions. General information 
 
 .. note::
 
-   This project is under active development.
+   This project is under active development and may change drastically.
 
 .. toctree::
    :maxdepth: 1
@@ -31,3 +31,4 @@ Check out the :doc:`installation` section for instructions. General information 
    injection
    parameterization
    recovery_from_parameterization
+   uncertainties_from_parameterization
