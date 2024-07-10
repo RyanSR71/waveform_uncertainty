@@ -19,6 +19,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'nbsphinx',
     'sphinx.ext.autosectionlabel',
+    'sphinxcontrib.pdfembed',
 ]
 
 intersphinx_mapping = {
