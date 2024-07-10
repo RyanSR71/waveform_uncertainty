@@ -1,4 +1,5 @@
 "WaveformUncertainty package"
+__version__ = "0.1.0"
 
 import numpy as np
 import bilby
