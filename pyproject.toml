@@ -1,3 +1,7 @@
+[build-system]
+requires = ["flit_core"]
+build-backend = "flit_core.buildapi"
+
 [project]
 name = "WaveformUncertainty"
 authors = [{name = "Ryan Johnson", email = "ryansr71@csu.fullerton.edu"}]
