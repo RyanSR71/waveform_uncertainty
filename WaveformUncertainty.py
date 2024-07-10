@@ -12,7 +12,6 @@ from bilby.gw.conversion import convert_to_lal_binary_neutron_star_parameters
 
 
 def fd_model_difference(hf1,hf2,**kwargs):
-    
     '''
     Generates frequency domain waveform differences between two models hf1 and hf2
     
@@ -57,7 +56,6 @@ def fd_model_difference(hf1,hf2,**kwargs):
     final_index: int
         position within the frequency grid where the discontinuity correction starts
     '''
-    
     f_low = kwargs.get('f_low',20.0)
     f_high = kwargs.get('f_high',2048.0)
     f_ref = kwargs.get('f_ref',50.0)
@@ -123,7 +121,6 @@ def fd_model_difference(hf1,hf2,**kwargs):
     
     
 def parameter_dict_from_prior(prior,nsamples):
-    
     '''
     Takes a bilby prior object and constructs a dictionary of random samples
     
@@ -139,7 +136,6 @@ def parameter_dict_from_prior(prior,nsamples):
     parameter_dict: dictionary
         dictionary of nsamples random samples
     '''
-    
     parameter_dict = dict()
     for key in prior.keys():
         parameter = np.zeros(nsamples)
@@ -152,7 +148,6 @@ def parameter_dict_from_prior(prior,nsamples):
 
 
 def injection(data,**kwargs):
-    
     '''
     Pulls a sample out of a parameter dictionary
     
@@ -176,8 +171,7 @@ def injection(data,**kwargs):
     ==================
     injection: dictionary
         dictionary of injection parameters
-    '''
-    
+    ''' 
     index = kwargs.get('index',random.randint(0,len(data)))
     precession = kwargs.get('precession',False)
     tides = kwargs.get('tides',True)
@@ -209,7 +203,6 @@ def injection(data,**kwargs):
 
 
 def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs):
-    
     '''
     Generates samples of waveform uncertainty between two approximants and parameterizes the data with Chebyshev polynomial functions.
 
@@ -295,7 +288,6 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
             neutron star parameters injected into the waveform generators
 
     '''
-    
     f_low = kwargs.get('f_low',20.0)
     f_high = kwargs.get('f_high',2048.0)
     f_ref = kwargs.get('f_ref',50.0)
@@ -438,7 +430,6 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
 
 
 def recovery_from_parameterization(identity,data):
-    
     '''
     Converts a parameterized set of waveform difference (output of WaveformUncertainty.parameterization()) back into waveform difference arrays
     
@@ -454,7 +445,6 @@ def recovery_from_parameterization(identity,data):
     difference_array: numpy.ndarray
         array of the waveform difference converted from the parameterization; has the same shape as the frequency grid within the original matrix
     '''
-    
     if str(identity) == 'amplitude_difference':
         parameterized_curve = np.polynomial.chebyshev.chebval(data[1][0:data[4]],data[2])
         post_waveform_uncertainties = np.copy(data[1])
@@ -473,7 +463,6 @@ def recovery_from_parameterization(identity,data):
 
 
 def uncertainties_from_parameterization(data,**kwargs):
-    
     '''
     Takes all of the sets in a parameterized waveform difference matrix and takes the mean and standard deviation of amplitude and phase difference
     
@@ -501,7 +490,6 @@ def uncertainties_from_parameterization(data,**kwargs):
     linear_frequency_grid: numpy.ndarray
         only if linear=True, new linear frequency grid
     '''
-    
     linear = kwargs.get('linear',False)
     resolution = kwargs.get('resolution',None)
     
@@ -544,7 +532,6 @@ def uncertainties_from_parameterization(data,**kwargs):
 
 
 def WFU_prior(mean_amplitude_difference,amplitude_uncertainty,mean_phase_difference,phase_uncertainty,frequency_grid,nnodes,**kwargs):
-    
     '''
     Automatically generates a bilby prior object containing Gaussian waveform uncertainty parameter priors (alphas and betas)
     If given a pre-existing prior object, the waveform uncertainty parameters will be added to it
@@ -577,7 +564,6 @@ def WFU_prior(mean_amplitude_difference,amplitude_uncertainty,mean_phase_differe
     frequency_nodes: numpy.ndarray
         frequency nodes used by __WaveformGeneratorWFU() to generate waveform difference splines
     '''
-    
     prior = kwargs.get('prior',None)
     spacing = kwargs.get('spacing','linear')
     
@@ -608,7 +594,6 @@ def WFU_prior(mean_amplitude_difference,amplitude_uncertainty,mean_phase_differe
 
 
 class WaveformGeneratorWFU(object):
-    
     '''
     Modified WaveformGenerator object from bilby.gw to include waveform uncertainty corrections in the strain calculation
     To sample waveform uncertainty, include all relevant "alpha" and "beta" parameters in the prior.
@@ -626,7 +611,6 @@ class WaveformGeneratorWFU(object):
         if True, the waveform generator will attempt to pull beta parameters from the parameter dictionary (either an injection or the prior)
         default: None
     '''
-    
     duration = PropertyAccessor('_times_and_frequencies', 'duration')
     sampling_frequency = PropertyAccessor('_times_and_frequencies', 'sampling_frequency')
     start_time = PropertyAccessor('_times_and_frequencies', 'start_time')
