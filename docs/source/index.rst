@@ -29,3 +29,4 @@ Check out the :doc:`installation` section for instructions. General information 
    fd_model_difference
    parameter_dict_from_prior
    injection
+   parameterization
