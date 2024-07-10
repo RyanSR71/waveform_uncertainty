@@ -27,3 +27,4 @@ Check out the :doc:`installation` section for instructions. General information 
    :caption: API:
 
    fd_model_difference
+   parameter_dict_from_prior
