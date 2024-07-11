@@ -8,10 +8,6 @@ Amplitude difference is defined generally as:
 .. math::
 
     \begin{equation}
-    \nonumber
-        \Delta{A}_{\mu}(f;\theta)= \begin{cases} 
-          \frac{|\mu_{IMR}(f;\theta)|-|\mu_{EOB}(f;\theta)|}{|\mu_{IMR}(f;\theta)|} & f \leq f_{COR} \\
-          \Delta{A}_{\mu}(f_{COR};\theta) & f > f_{COR} 
-       \end{cases}
+        \Delta{A}=\frac{|h_{1}|-|h_{2}|}{|h_{1}|}
     \end{equation}
 
