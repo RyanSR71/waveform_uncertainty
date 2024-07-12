@@ -148,7 +148,7 @@ Where the :math:`\alpha` and :math:`\beta` parameters are spline parameters corr
 .. math::
 
     \begin{equation}
-        \alpha_{n}\sim\mathcal{N}(0,\delta{A}_{\mu}(f_{n}))\hspace{1cm}\beta_{n}\sim\mathcal{N}(0,\delta\Phi(f_{n}))
+        \alpha_{n}\sim\mathcal{N}(0,\delta{A}_{\mu}(f_{n}))\hspace{1cm}\beta_{n}\sim\mathcal{N}(0,\delta\Phi_{\mu}(f_{n}))
     \end{equation}
 
 
