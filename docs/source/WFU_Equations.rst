@@ -31,3 +31,68 @@ Raw phase difference contains overall phase and time shifts which need to be rem
     \end{equation}
 
 Where :math:`t_{c}` is an overall shift in coalescence time and :math:`\phi_{c}` is an overall phase shift. We can find these values by fitting a line to :math:`\Delta\phi` weighted by the power spectral density (PSD) data. The PSD data tells us the variance of the signal at each frequency point. This gives us information on :math:`t_{c}`. The 'y-intercept' of this line is :math:`\phi_{c}`.
+
+Waveform Model Differences
+--------------------------
+When finding the waveform differences between two waveform models, :math:`\mu`, we need to add some slight devitations from the general forms listed above. If the amplitude of the first waveform, :math:`|h_{1}|`, went to zero faster than the second waveform, :math:`|h_{2}|`, then we would get a discontinuity. This is shown with the following limit:
+
+.. math::
+
+    \begin{equation}
+        \lim_{|h_{1}|\to{0}}\left(\frac{|h_{1}|-|h_{2}|}{|h_{1}|}\right)=-\infty
+    \end{equation}
+
+This results in the :math:`\Delta{A}` curve abruptly going down to negative infinity. When dealing with waveform approximants, especially those that handle tidal defomabilities, this discontinuity is extremely common. To deal with these discontinuities, we simply cut off the curve at the discontinuity and hold it constant afterwards. We then define the following waveform model differences:
+
+.. math::
+
+    \begin{equation}
+        \Delta{A}_{\mu}(f;\theta)= \begin{cases} 
+          \frac{|\mu_{IMR}(f;\theta)|-|\mu_{EOB}(f;\theta)|}{|\mu_{IMR}(f;\theta)|} & f \leq f_{COR} \\
+          \Delta{A}_{\mu}(f_{COR};\theta) & f > f_{COR} 
+       \end{cases}
+    \end{equation}
+
+    \begin{equation}
+        \Delta\phi_{\mu}(f;\theta)= \begin{cases} 
+          \mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[\mu_{IMR}(f;\theta)]}{\mathrm{Re}[\mu_{IMR}(f;\theta)]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[\mu_{EOB}(f;\theta)]}{\mathrm{Re}[\mu_{EOB}(f;\theta)]}\right) & f \leq f_{COR} \\
+          \Delta\phi_{\mu}(f_{COR};\theta) & f > f_{COR} 
+       \end{cases}
+    \end{equation}
+
+    \begin{equation}
+        \Delta\Phi_{\mu}(f;\theta)= \begin{cases} 
+          \Delta\phi_{\mu}(f;\theta)-(2\pi{t}_{0}{f}+\phi_{0}) & f \leq f_{COR} \\
+          \Delta\Phi_{\mu}(f_{COR};\theta) & f > f_{COR} 
+       \end{cases}
+    \end{equation}
+
+Where :math:`\mu_{IMR}` is an `IMRPhenomPv2_NRTidalv2` waveform and :math:`\mu_{EOB}` is an `SEOBNRv4T_surrogate` waveform. :math:`f_{COR}`, the discontinuity correction frequency, is defined the following way:
+
+.. math::
+
+    \begin{equation}
+        \frac{\partial^{2}}{\partial{f}^{2}}\left(\Delta{A}_{\mu}(f_{COR};\theta)\right)=-10^{-5}
+    \end{equation}
+
+This definition comes from utilizing the fact that the slopes in the :math:`\Delta{A}_{\mu}` curve are very small up until the discontinuity.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
