@@ -4,6 +4,6 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "WaveformUncertainty"
-authors = [{name = "Ryan Johnson", email = "ryansr71@csu.fullerton.edu"}]
+authors = [{name = "Ryan Johnson", email = "ryansr71@csu.fullerton.edu"},{name = "Jocelyn Read", email = "jread@fullerton.edu"}]
 dynamic = ["version", "description"]
 dependencies = ['numpy','bilby','scipy']
