@@ -17,3 +17,43 @@ where h is our frequency domain stain and :math:`\mu(f;\theta)` is our waveform 
   \begin{equation}
       \mu=Ae^{i\phi}
   \end{equation}
+
+Now we can modify the model's amplitude and phase. We will do this by adding small deviations to both:
+
+\begin{equation}
+    \mu^{\prime}=(A+dA)e^{i(\phi+d\phi)}
+\end{equation}
+
+What are dA and :math:`d\phi` in terms of our waveform differences, :math:`\Delta{A}` and :math:`\Delta\Phi`? Let us look at the definitions of amplitude and phase difference:
+
+.. note::
+
+  We always use residual phase difference, so it will not be explicitly stated. If we use raw phase uncertainty, it will be make clear.
+
+.. math::
+    
+    \begin{equation}
+        \Delta{A}=\frac{|h_{1}|-|h_{2}|}{|h_{1}|}
+    \end{equation} 
+
+.. math::
+
+    \begin{equation}
+        \Delta\Phi=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{1}\right]}{\mathrm{Re}\left[h_{1}\right]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{2}\right]}{\mathrm{Re}\left[h_{2}\right]}\right)-(2\pi{t_{c}}f+\phi_{c})
+    \end{equation}
+
+We see that our phase difference is itself a phase, and can therefore be directly added to our model's phase. In other words: :math:`d\phi=\Delta\Phi`:
+
+.. math::
+
+  \begin{equation}
+      \mu^{\prime}=(A+dA)e^{i(\phi+\Delta\Phi)}
+  \end{equation}
+
+
+
+
+
+
+
+
