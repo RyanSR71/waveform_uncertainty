@@ -81,6 +81,26 @@ Where :math:`\mu_{IMR}` is an ``IMRPhenomPv2_NRTidalv2`` waveform and :math:`\mu
 
 This definition comes from utilizing the fact that the slopes in the :math:`\Delta{A}_{\mu}` curve are very small up until the discontinuity.
 
+Waveform Uncertainty
+--------------------
+Waveform uncertainties are the variabilities of the waveform's amplitude and phase at a given frequency; they are enveloped. We can find a model for waveform uncertainty by taking the standard deviation of many draws of waveform difference. We define amplitude uncertainty and phase uncertainty in this way:
+
+.. math::
+
+    \begin{equation}
+        \delta{A}(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta{A}_{i}(f)-\overline{\Delta{A}}(f)\right)}{N}}
+    \end{equation}
+
+.. math::
+
+    \begin{equation}
+        \delta\Phi(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta\Phi_{i}(f)-\overline{\Delta\Phi}(f)\right)}{N}}
+    \end{equation}
+
+.. note::
+
+    We will be using residual phase uncertainty, :math:`\Delta\Phi`, as our phase uncertainty from now on.
+
 
 
 
