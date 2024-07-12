@@ -28,7 +28,7 @@ polarization: string, optional, ('plus')
 psd_data: numpy.ndarray, optional, (None)
    array containing the psd data and their corresponding frequencies
 correction_parameter: float, optional, (-1e-5)
-   value at which to cut the second derivative of amplitude difference (see WFU Equations #1)
+   value at which to cut the second derivative of amplitude difference (see `Equations and Notation <https://waveformuncertainty.readthedocs.io/en/latest/WFU_Equations.html#waveform-model-differences>`_)
 
 Returns:
 --------
