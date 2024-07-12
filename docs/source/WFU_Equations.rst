@@ -1,8 +1,8 @@
 WFU Equations
 =============
-
+This work is in collaboration with and derived from past work by Dr. Jocelyn Read. See `Jocelyn Read 2023 Class. Quantum Grav. 40 135002 <https://arxiv.org/abs/2301.06630v2>`_.
 Frequency Domain Waveform Differences
---------------------
+-------------------------------------
 Amplitude difference is defined generally as:
 
 .. math::
