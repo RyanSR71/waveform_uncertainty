@@ -139,7 +139,7 @@ The likelihood function we use to sample over waveform uncertainty is
 
 .. math::
 
-    \begin{equation}
+    \small \begin{equation}
         \mathcal{L}(h|\theta,\alpha,\beta)=\prod_{j}\frac{1}{2\pi{P(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)\left(1+\Delta{A}_{\delta}(f_{j};\{f_{n},\alpha_{n}\})\right)\mathrm{exp}\left[i\Delta\Phi_{\delta}(f_{j};\{f_{n},\beta_{n}\})\right]|^{2}}{P(f_{j})}\right)
     \end{equation}
 
