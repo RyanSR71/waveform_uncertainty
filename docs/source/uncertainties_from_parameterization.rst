@@ -5,7 +5,7 @@ WaveformUncertainty.uncertainties_from_parameterization
 
    WaveformUncertainty.uncertainties_from_parameterization(data,linear=False,resolution=None)
 
-Takes all of the sets in a parameterized waveform difference matrix and takes the mean and standard deviation of amplitude and phase difference
+Takes all of the sets in a parameterized waveform difference matrix and takes the mean and standard deviation of amplitude and phase difference (See `WaveformUncertainty.parameterization <https://waveformuncertainty.readthedocs.io/en/latest/parameterization.html>`_)
 
 Parameters:
 -----------
