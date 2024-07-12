@@ -10,7 +10,7 @@ Following `Payne et al Phys. Rev. D 102, 122004 (2020) <https://arxiv.org/abs/20
       \mathcal{L}_{\varnothing}(h|\theta)=\prod_{j}\frac{1}{2\pi{P(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)|^{2}}{P(f_{j})}\right)
   \end{equation}
 
-where h is our frequency domain stain, P is our power spectral density (PSD) data, and :math:`\mu(f;\theta)` is our waveform model. To sample over waveform uncertainty, we will need to add waveform differences to the model. To start, let's rewrite the waveform model in terms of its amplitude, A, and phase, :math:`\phi`:
+where h is our frequency domain strain, P is our power spectral density (PSD) data, and :math:`\mu(f;\theta)` is our waveform model. To sample over waveform uncertainty, we will need to add waveform differences to the model. To start, let's rewrite the waveform model in terms of its amplitude, A, and phase, :math:`\phi`:
 
 .. math::
 
@@ -26,11 +26,11 @@ Now we can modify the model's amplitude and phase. We will do this by adding sma
       \mu^{\prime}=(A+dA)e^{i(\phi+d\phi)}
   \end{equation}
 
-What are dA and :math:`d\phi` in terms of our waveform differences, :math:`\Delta{A}` and :math:`\Delta\Phi`? Let us look at the definitions of amplitude and phase difference (See `Equations and Notation <https://waveformuncertainty.readthedocs.io/en/latest/WFU_Equations.html>`_ for details):
+What are :math:`dA` and :math:`d\phi` in terms of our waveform differences, :math:`\Delta{A}` and :math:`\Delta\Phi`? Let us look at the definitions of amplitude and phase difference (see `Equations and Notation <https://waveformuncertainty.readthedocs.io/en/latest/WFU_Equations.html>`_ for details):
 
 .. note::
 
-  We always use residual phase difference, so it will not be explicitly stated. If we use raw phase uncertainty, it will be make clear.
+  We always use residual phase difference, so it will not be explicitly stated. If we use raw phase difference, it will be make clear.
 
 .. math::
     
@@ -78,9 +78,9 @@ Using the definition of our model, :math:`\mu=Ae^{i\phi}`, we can rewrite our ne
 
 .. note:: 
 
-  This final expression we get matches equation 6 found in `Jocelyn Read 2023 Class. Quantum Grav. 40 135002 <https://arxiv.org/abs/2301.06630v2>`_, which serves as a good sanity check! 
+  This final expression we get matches Equation 6 in `Jocelyn Read 2023 Class. Quantum Grav. 40 135002 <https://arxiv.org/abs/2301.06630v2>`_, which serves as a good sanity check! 
 
-Using our new waveform model, :math:`\mu^{\prime}`, in the likelihood function, we arrive at the following form:
+Using our new waveform model, :math:`\mu^{\prime}`, in the likelihood function, we arrive at the following equation:
 
 .. math::
 
