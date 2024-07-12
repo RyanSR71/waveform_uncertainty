@@ -12,7 +12,7 @@ Amplitude difference is defined generally as:
         \Delta{A}=\frac{|h_{1}|-|h_{2}|}{|h_{1}|}
     \end{equation} 
 
-Where :math:`h_{1}` and :math:`h_{2}` are sets of frequency domain gravitational wave strain, which are complex. Amplitude difference is a relative error between the two waveforms relative to :math:`h_{1}`.
+where :math:`h_{1}` and :math:`h_{2}` are sets of frequency domain gravitational wave strain, which are complex. Amplitude difference is a relative error between the two waveforms relative to :math:`h_{1}`.
 
 Raw phase difference is then defined as:
 
@@ -30,7 +30,7 @@ Raw phase difference contains overall phase and time shifts which need to be rem
         \Delta\Phi=\Delta\phi-(2\pi{t_{c}}f+\phi_{c})
     \end{equation}
 
-Where :math:`t_{c}` is an overall shift in coalescence time and :math:`\phi_{c}` is an overall phase shift. We can find these values by fitting a line to :math:`\Delta\phi` weighted by the power spectral density (PSD) data. The PSD data tells us the variance of the signal at each frequency point. This gives us information on :math:`t_{c}`. The 'y-intercept' of this line is :math:`\phi_{c}`.
+where :math:`t_{c}` is an overall shift in coalescence time and :math:`\phi_{c}` is an overall phase shift. We can find these values by fitting a line to :math:`\Delta\phi` weighted by the power spectral density (PSD) data. The PSD data tells us the variance of the signal at each frequency point. This gives us information on :math:`t_{c}`. The 'y-intercept' of this line is :math:`\phi_{c}`.
 
 Waveform Model Differences
 --------------------------
@@ -71,7 +71,7 @@ This results in the :math:`\Delta{A}` curve abruptly going down to negative infi
        \end{cases}
     \end{equation}
 
-Where :math:`\mu_{IMR}` is an ``IMRPhenomPv2_NRTidalv2`` waveform and :math:`\mu_{EOB}` is an ``SEOBNRv4T_surrogate`` waveform. :math:`f_{COR}`, the discontinuity correction frequency, is defined the following way:
+where :math:`\mu_{IMR}` is an ``IMRPhenomPv2_NRTidalv2`` waveform and :math:`\mu_{EOB}` is an ``SEOBNRv4T_surrogate`` waveform. :math:`f_{COR}`, the discontinuity correction frequency, is defined the following way:
 
 .. math::
 
@@ -127,7 +127,7 @@ Computationally, generating individual waveform differences is a simple and quic
        \end{cases}
     \end{equation}
 
-Where :math:`T_{n}` are Chebyshev polynomials of the first kind. We see that instead of trying to carry around waveform models, which do not have simple functional forms, we can carry around a handful of coefficients, discontinuity correction frequencies, and the values the waveform differences level off at. With these parameters, we can reconstruct the original waveform differences within 2% in :math:`\Delta{A}` and :math:`2^{\circ}` in :math:`\Delta\Phi`. 
+where :math:`T_{n}` are Chebyshev polynomials of the first kind. We see that instead of trying to carry around waveform models, which do not have simple functional forms, we can carry around a handful of coefficients, discontinuity correction frequencies, and the values the waveform differences level off at. With these parameters, we can reconstruct the original waveform differences within 2% in :math:`\Delta{A}` and :math:`2^{\circ}` in :math:`\Delta\Phi`. 
 
 .. note::
 
@@ -143,7 +143,7 @@ The likelihood function we use to sample over waveform uncertainty is
         \mathcal{L}(h|\theta,\alpha,\beta)=\prod_{j}\frac{1}{2\pi{P(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)\left(1+\Delta{A}_{\delta}(f_{j};\{f_{n},\alpha_{n}\})\right)\mathrm{exp}\left[i\Delta\Phi_{\delta}(f_{j};\{f_{n},\beta_{n}\})\right]|^{2}}{P(f_{j})}\right)
     \end{equation}
 
-Where the :math:`\alpha` and :math:`\beta` parameters are spline parameters corresponding to frequency nodes :math:`f_{n}`. These parameters are defined as being draws from a normal distribution around zero with their standard deviations being our waveform uncertainties:
+where the :math:`\alpha` and :math:`\beta` parameters are spline parameters corresponding to frequency nodes :math:`f_{n}`. These parameters are defined as being draws from a normal distribution around zero with their standard deviations being our waveform uncertainties:
 
 .. math::
 
