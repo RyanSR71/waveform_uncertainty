@@ -88,7 +88,39 @@ Using our new waveform model, :math:`\mu^{\prime}`, in the likelihood function, 
       \mathcal{L}(h|\theta)=\prod_{j}\frac{1}{2\pi{P(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)(1+\Delta{A})\mathrm{exp}\left[i\Delta\Phi\right]|^{2}}{P(f_{j})}\right)
   \end{equation}
 
+To sample these waveform differences, we need to express :math:`\Delta{A}` and :math:`\Delta\Phi` in terms of a small number of parameters. The simplest way to do this is to use cubic splines. Cubic splines take points, or nodes, and fill the space between them with cubic functions. We redefine our waveform differences to be spline functions:
 
+.. math:: 
+
+  \begin{equation}
+      \Delta{A}\rightarrow\Delta{A}(f;\{f_{n},\alpha_{n}\})\hspace{1cm}\Delta\Phi\rightarrow\Delta\Phi(f;\{f_{n},\beta_{n}\})
+  \end{equation}
+
+where the :math:`\alpha` and :math:`\beta` parameters can be varied by bilby's samplers and :math:`f_{n}` are fixed frequency nodes.
+
+.. note::
+
+  Cubic functions are chosen to ensure that the whole function is continuous and that the function's first derivative is also continuous, which makes the function smooth. It takes four degrees of freedom to connect two points this way, which is the number of degrees of freedom that cubic functions have.
+
+We now need to know what prior distribution we are going to use to draw the :math:`\alpha` and :math:`\beta` parameters from. For this, we choose a Gaussian, or normal, distribution around zero with our waveform uncertainty model as the standard deviation:
+
+.. math::
+
+    \begin{equation}
+        \alpha_{n}\sim\mathcal{N}(0,\delta{A}_{\mu}(f_{n}))\hspace{1cm}\beta_{n}\sim\mathcal{N}(0,\delta\Phi_{\mu}(f_{n}))
+    \end{equation}
+
+Plugging our spline functions into the likelihood function gives us the final form of the likelihood equation:
+
+.. math::
+
+    \small \begin{equation}
+        \mathcal{L}(h|\theta,\alpha,\beta)=\prod_{j}\frac{1}{2\pi{P(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)\left(1+\Delta{A}_{\delta}(f_{j};\{f_{n},\alpha_{n}\})\right)\mathrm{exp}\left[i\Delta\Phi_{\delta}(f_{j};\{f_{n},\beta_{n}\})\right]|^{2}}{P(f_{j})}\right)
+    \end{equation}
+
+.. note::
+
+  We give :math:`\Delta{A}` and :math:`\Delta\Phi` the subscript, :math:`\delta`, to denote that these waveform difference models are drawn from waveform uncertainties :math:`\delta{A}` and :math:`\delta\Phi`.
 
 
 
