@@ -3,7 +3,7 @@
 # -- Project information
 
 project = 'WaveformUncertainty'
-copyright = '2024, Ryan Johnson (not actually copyrighted)'
+copyright = '2024, Ryan Johnson, No Rights Reserved'
 author = 'Ryan Johnson'
 
 release = '0.1'
@@ -32,11 +32,6 @@ templates_path = ['_templates']
 # -- Options for HTML output
 
 html_theme = 'sphinx_rtd_theme'
-html_theme_options = {
-  ...
-  "footer_items": ["sphinx-version"],
-  ...
-}
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
