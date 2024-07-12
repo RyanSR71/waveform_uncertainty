@@ -5,7 +5,7 @@ WaveformUncertainty.recovery_from_parameterization
 
    WaveformUncertainty.recovery_from_parameterization(identity,data)
 
-Converts a parameterized set of waveform difference (output of WaveformUncertainty.parameterization()) back into waveform difference arrays
+Converts a parameterized set of waveform difference back into waveform difference arrays (See `WaveformUncertainty.parameterization <https://waveformuncertainty.readthedocs.io/en/latest/parameterization.html>`_)
 
 Parameters:
 -----------
