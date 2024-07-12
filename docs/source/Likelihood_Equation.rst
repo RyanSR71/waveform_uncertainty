@@ -76,6 +76,10 @@ Using the definition of our model, :math:`\mu=Ae^{i\phi}`, we can rewrite our ne
       \mu^{\prime}=\mu(1+\Delta{A})e^{i\Delta\Phi}=\mu(1+\Delta{A})\mathrm{exp}[i\Delta\Phi]
   \end{equation}
 
+.. note:: 
+
+  This final expression we get matches equation 5 found in `Jocelyn Read 2023 Class. Quantum Grav. 40 135002 <https://arxiv.org/abs/2301.06630v2>`_. 
+
 Using our new waveform model, :math:`\mu^{\prime}`, in the likelihood function, we arrive at the following form:
 
 .. math::
