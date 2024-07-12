@@ -10,7 +10,7 @@ Following `Payne et al Phys. Rev. D 102, 122004 (2020) <https://arxiv.org/abs/20
       \mathcal{L}_{\varnothing}(h|\theta)=\prod_{j}\frac{1}{2\pi{P(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)|^{2}}{P(f_{j})}\right)
   \end{equation}
 
-where h is our frequency domain stain and :math:`\mu(f;\theta)` is our waveform model. To sample over waveform uncertainty, we will need to add waveform differences to the model. To start, let's rewrite the waveform model in terms of its amplitude, A, and phase, :math:`\phi`:
+where h is our frequency domain stain, P is our power spectral density (PSD) data, and :math:`\mu(f;\theta)` is our waveform model. To sample over waveform uncertainty, we will need to add waveform differences to the model. To start, let's rewrite the waveform model in terms of its amplitude, A, and phase, :math:`\phi`:
 
 .. math::
 
