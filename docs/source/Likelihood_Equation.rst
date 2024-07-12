@@ -26,7 +26,7 @@ Now we can modify the model's amplitude and phase. We will do this by adding sma
       \mu^{\prime}=(A+dA)e^{i(\phi+d\phi)}
   \end{equation}
 
-What are dA and :math:`d\phi` in terms of our waveform differences, :math:`\Delta{A}` and :math:`\Delta\Phi`? Let us look at the definitions of amplitude and phase difference:
+What are dA and :math:`d\phi` in terms of our waveform differences, :math:`\Delta{A}` and :math:`\Delta\Phi`? Let us look at the definitions of amplitude and phase difference (See `Equations and Notation <https://waveformuncertainty.readthedocs.io/en/latest/WFU_Equations.html>`_ for details):
 
 .. note::
 
