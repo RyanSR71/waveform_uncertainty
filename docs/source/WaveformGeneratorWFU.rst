@@ -4,11 +4,11 @@ WaveformUncertainty.WaveformGeneratorWFU
 .. code-block:: python
 
    class WaveformUncertainty.WaveformGeneratorWFU(duration=None,sampling_frequency=None,start_time=0,
-                                            frequency_domain_source_model=None,
-                                            time_domain_source_model=None,parameters=None,
-                                            parameter_conversion=None,waveform_arguments=None,
-                                            waveform_uncertainty_nodes=None,dA_sampling=False,
-                                            dphi_sampling=False)
+                                                  frequency_domain_source_model=None,
+                                                  time_domain_source_model=None,parameters=None,
+                                                  parameter_conversion=None,waveform_arguments=None,
+                                                  waveform_uncertainty_nodes=None,dA_sampling=False,
+                                                  dphi_sampling=False)
 
 Bases: ``object``
 
