@@ -1,7 +1,7 @@
 Welcome to WaveformUncertainty's documentation!
 ===================================
 
-**WaveformUncertainty** is a Python library for gravitational waveform uncertainty. This package relies on bilby and is essentially an addon to bilby. For more information, check out `Bilby's Documentation <https://lscsoft.docs.ligo.org/bilby/index.html>`_.
+**WaveformUncertainty** is a Python library for gravitational waveform uncertainty. This package relies on bilby and is essentially an addon to bilby. For more information, check out `Bilby's Documentation <https://lscsoft.docs.ligo.org/bilby/index.html>`_. This work is in collaboration with and derived from past work by Dr. Jocelyn Read. See `Jocelyn Read 2023 Class. Quantum Grav. 40 135002 <https://arxiv.org/abs/2301.06630v2>`_.
 
 Check out the :doc:`installation` section for instructions. General information is present in the Content tab, tutorials are in the Examples tab, and code documentation is in the API tab.
 
