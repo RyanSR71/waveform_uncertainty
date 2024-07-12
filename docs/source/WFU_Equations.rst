@@ -53,12 +53,16 @@ This results in the :math:`\Delta{A}` curve abruptly going down to negative infi
        \end{cases}
     \end{equation}
 
+.. math::
+
     \begin{equation}
         \Delta\phi_{\mu}(f;\theta)= \begin{cases} 
           \mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[\mu_{IMR}(f;\theta)]}{\mathrm{Re}[\mu_{IMR}(f;\theta)]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[\mu_{EOB}(f;\theta)]}{\mathrm{Re}[\mu_{EOB}(f;\theta)]}\right) & f \leq f_{COR} \\
           \Delta\phi_{\mu}(f_{COR};\theta) & f > f_{COR} 
        \end{cases}
     \end{equation}
+
+.. math::
 
     \begin{equation}
         \Delta\Phi_{\mu}(f;\theta)= \begin{cases} 
@@ -67,7 +71,7 @@ This results in the :math:`\Delta{A}` curve abruptly going down to negative infi
        \end{cases}
     \end{equation}
 
-Where :math:`\mu_{IMR}` is an `IMRPhenomPv2_NRTidalv2` waveform and :math:`\mu_{EOB}` is an `SEOBNRv4T_surrogate` waveform. :math:`f_{COR}`, the discontinuity correction frequency, is defined the following way:
+Where :math:`\mu_{IMR}` is an ``IMRPhenomPv2_NRTidalv2`` waveform and :math:`\mu_{EOB}` is an ``SEOBNRv4T_surrogate`` waveform. :math:`f_{COR}`, the discontinuity correction frequency, is defined the following way:
 
 .. math::
 
