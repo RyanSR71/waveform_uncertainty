@@ -133,6 +133,24 @@ Where :math:`T_{n}` are Chebyshev polynomials of the first kind. We see that ins
 
     The error margins on :math:`\Delta{A}_{T}` and :math:`\Delta\Phi_{T}` can be adjusted in this package's functions.
 
+Likelihood
+----------
+The likelihood function we use to sample over waveform uncertainty is
+
+.. math::
+
+    \begin{equation}
+        \mathcal{L}(h|\theta,\alpha,\beta)=\prod_{j}\frac{1}{2\pi{P(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)\left(1+\Delta{A}_{\delta}(f_{j};\{f_{n},\alpha_{n}\})\right)\mathrm{exp}\left[i\Delta\Phi_{\delta}(f_{j};\{f_{n},\beta_{n}\})\right]|^{2}}{P(f_{j})}\right)
+    \end{equation}
+
+Where the :math:`\alpha` and :math:`\beta` parameters are spline parameters corresponding to frequency nodes :math:`f_{n}`. These parameters are defined as being draws from a normal distribution around zero with their standard deviations being our waveform uncertainties:
+
+.. math::
+
+    \begin{equation}
+        \alpha_{n}\sim\mathcal{N}(0,\delta{A}_{\mu}(f_{n}))\hspace{1cm}\beta_{n}\sim\mathcal{N}(0,\delta\Phi(f_{n}))
+    \end{equation}
+
 
 
 
