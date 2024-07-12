@@ -81,6 +81,10 @@ Where :math:`\mu_{IMR}` is an ``IMRPhenomPv2_NRTidalv2`` waveform and :math:`\mu
 
 This definition comes from utilizing the fact that the slopes in the :math:`\Delta{A}_{\mu}` curve are very small up until the discontinuity.
 
+.. note::
+
+    The right hand side of the discontinuity correction frequency equation can be adjusted in this package's functions.
+
 Waveform Uncertainty
 --------------------
 Waveform uncertainties are the variabilities of the waveform's amplitude and phase at a given frequency; they are enveloped. We can find a model for waveform uncertainty by taking the standard deviation of many draws of waveform difference. We define our model amplitude uncertainty and phase uncertainty in this way:
@@ -123,7 +127,7 @@ Computationally, generating individual waveform differences is a simple and quic
        \end{cases}
     \end{equation}
 
-Where :math:`T_{n}` are Chebyshev polynomials of the first kind. We see that instead of trying to carry around waveform models, which do not have simple function forms, we can carry around a handful of coefficients, disconinuity correction frequencies, and the values the waveform differences level off at. With these parameters, we can reconstruct the original waveform differences within 2% :math:`\Delta{A}` and :math:`2^{/circ}` :math:`\Delta\Phi`. 
+Where :math:`T_{n}` are Chebyshev polynomials of the first kind. We see that instead of trying to carry around waveform models, which do not have simple function forms, we can carry around a handful of coefficients, disconinuity correction frequencies, and the values the waveform differences level off at. With these parameters, we can reconstruct the original waveform differences within 2% :math:`\Delta{A}` and :math:`2^{\circ}` :math:`\Delta\Phi`. 
 
 .. note::
 
