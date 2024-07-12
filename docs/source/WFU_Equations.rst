@@ -39,7 +39,7 @@ When finding the waveform differences between two waveform models, :math:`\mu`, 
 .. math::
 
     \begin{equation}
-        \lim_{|h_{1}|\to{0}}\left(\frac{|h_{1}|-|h_{2}|}{|h_{1}|}\right)=-\infty
+        \lim_{|h_{1}|\to{0^{+}}}\left(\frac{|h_{1}|-|h_{2}|}{|h_{1}|}\right)=-\infty
     \end{equation}
 
 This results in the :math:`\Delta{A}` curve abruptly going down to negative infinity. When dealing with waveform approximants, especially those that handle tidal defomabilities, this discontinuity is extremely common. To deal with these discontinuities, we simply cut off the curve at the discontinuity and hold it constant afterwards. We then define the following waveform model differences:
