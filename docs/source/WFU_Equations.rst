@@ -101,6 +101,34 @@ Waveform uncertainties are the variabilities of the waveform's amplitude and pha
 
     We will be using residual phase uncertainty, :math:`\Delta\Phi`, as our phase uncertainty from now on.
 
+Parameterization
+----------------
+Computationally, generating individual waveform differences is a simple and quick task. However, to generate waveform uncertainty, we need many draws of waveform differences; at least 1000 for a decent model. Generating this number of waveform differences can take a lot of time and is generally tedious to do every time we want waveform uncertainty. To solve this issue, we can parameterize each waveform difference curve and save the parameters in a file. That way, we can generate all of our draws of waveform differences once and can simply load in the data in seconds next time we need them. This is achieved using Chebyshev polynomial series:
+
+.. math:: 
+
+    \begin{equation}
+        \Delta{A}_{\mu}(f;\theta)\approx\Delta{A}_{T}(f;a,f_{COR},\Delta{A}_{\mu}(f_{COR};\theta))= \begin{cases} 
+          \sum_{i=0}^{N-1}a_{i}T_{i}(f) & f \leq f_{COR} \\
+          \Delta{A}_{\mu}(f_{COR};\theta) & f > f_{COR} 
+       \end{cases}
+    \end{equation}
+
+.. math::
+
+    \begin{equation}
+       \Delta\Phi_{\mu}(f;\theta)\approx\Delta\Phi_{T}(f;b,f_{COR},\Delta\Phi_{\mu}(f_{COR};\theta))= \begin{cases} 
+          \sum_{i=0}^{N-1}b_{i}T_{i}(f) & f \leq f_{COR} \\
+          \Delta\Phi_{\mu}(f_{COR};\theta) & f > f_{COR} 
+       \end{cases}
+    \end{equation}
+
+Where :math:`T_{n}` are Chebyshev polynomials of the first kind. We see that instead of trying to carry around waveform models, which do not have simple function forms, we can carry around a handful of coefficients, disconinuity correction frequencies, and the values the waveform differences level off at. With these parameters, we can reconstruct the original waveform differences within 2% :math:`\Delta{A}` and 2:math`^{/circle}` :math:`\Delta\Phi`. 
+
+.. note::
+
+    The error margins on :math:`\Delta{A}_{T}` and :math:`\Delta\Phi_{T}` can be adjusted in this package's functions.
+
 
 
 
