@@ -83,18 +83,18 @@ This definition comes from utilizing the fact that the slopes in the :math:`\Del
 
 Waveform Uncertainty
 --------------------
-Waveform uncertainties are the variabilities of the waveform's amplitude and phase at a given frequency; they are enveloped. We can find a model for waveform uncertainty by taking the standard deviation of many draws of waveform difference. We define amplitude uncertainty and phase uncertainty in this way:
+Waveform uncertainties are the variabilities of the waveform's amplitude and phase at a given frequency; they are enveloped. We can find a model for waveform uncertainty by taking the standard deviation of many draws of waveform difference. We define our model amplitude uncertainty and phase uncertainty in this way:
 
 .. math::
 
     \begin{equation}
-        \delta{A}(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta{A}_{i}(f)-\overline{\Delta{A}}(f)\right)}{N}}
+        \delta{A}_{\mu}(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta{A}_{\mu}(f;\theta_{i})-\overline{\Delta{A}_{\mu}}(f)\right)}{N}}
     \end{equation}
 
 .. math::
 
     \begin{equation}
-        \delta\Phi(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta\Phi_{i}(f)-\overline{\Delta\Phi}(f)\right)}{N}}
+        \delta\Phi_{\mu}(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta\Phi_{\mu}(f;\theta_{i})-\overline{\Delta\Phi_{\mu}}(f)\right)}{N}}
     \end{equation}
 
 .. note::
