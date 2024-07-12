@@ -123,7 +123,7 @@ Computationally, generating individual waveform differences is a simple and quic
        \end{cases}
     \end{equation}
 
-Where :math:`T_{n}` are Chebyshev polynomials of the first kind. We see that instead of trying to carry around waveform models, which do not have simple function forms, we can carry around a handful of coefficients, disconinuity correction frequencies, and the values the waveform differences level off at. With these parameters, we can reconstruct the original waveform differences within 2% :math:`\Delta{A}` and 2:math`^{/circle}` :math:`\Delta\Phi`. 
+Where :math:`T_{n}` are Chebyshev polynomials of the first kind. We see that instead of trying to carry around waveform models, which do not have simple function forms, we can carry around a handful of coefficients, disconinuity correction frequencies, and the values the waveform differences level off at. With these parameters, we can reconstruct the original waveform differences within 2% :math:`\Delta{A}` and 2:math:`^{/circle}` :math:`\Delta\Phi`. 
 
 .. note::
 
