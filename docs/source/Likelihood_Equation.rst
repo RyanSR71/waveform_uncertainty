@@ -78,7 +78,7 @@ Using the definition of our model, :math:`\mu=Ae^{i\phi}`, we can rewrite our ne
 
 .. note:: 
 
-  This final expression we get matches equation 5 found in `Jocelyn Read 2023 Class. Quantum Grav. 40 135002 <https://arxiv.org/abs/2301.06630v2>`_. 
+  This final expression we get matches equation 6 found in `Jocelyn Read 2023 Class. Quantum Grav. 40 135002 <https://arxiv.org/abs/2301.06630v2>`_, which serves as a good sanity check! 
 
 Using our new waveform model, :math:`\mu^{\prime}`, in the likelihood function, we arrive at the following form:
 
