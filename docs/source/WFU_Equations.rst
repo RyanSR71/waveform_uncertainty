@@ -66,7 +66,7 @@ This results in the :math:`\Delta{A}` curve abruptly going down to negative infi
 
     \begin{equation}
         \Delta\Phi_{\mu}(f;\theta)= \begin{cases} 
-          \Delta\phi_{\mu}(f;\theta)-(2\pi{t}_{0}{f}+\phi_{0}) & f \leq f_{COR} \\
+          \Delta\phi_{\mu}(f;\theta)-(2\pi{t}_{c}{f}+\phi_{c}) & f \leq f_{COR} \\
           \Delta\Phi_{\mu}(f_{COR};\theta) & f > f_{COR} 
        \end{cases}
     \end{equation}
