@@ -3,7 +3,7 @@ Installation
 
 To use WaveformUncertainty, install it with the following command:
 
-.. code-block:: python
+.. code-block:: console
 
    pip install git+https://github.com/RyanSR71/waveform_uncertainty
 
