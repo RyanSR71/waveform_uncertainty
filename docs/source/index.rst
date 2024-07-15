@@ -1,7 +1,7 @@
 Welcome to WaveformUncertainty's documentation!
 ===================================
 
-Document version:
+Package version:
 |version|
 |release|
 
