@@ -22,7 +22,7 @@ Because this package is in its early development, code may change drastically wi
 
 Compare this version with the version listed on the `Home Page <https://waveformuncertainty.readthedocs.io/en/latest/#>`_. If you need to upgrade the package, simply run the following:
 
-.. code-block:: 
+.. code-block:: console
 
    pip install git+https://github.com/RyanSR71/waveform_uncertainty --upgrade
 
