@@ -83,7 +83,7 @@ where :math:`C` is our "correction parameter", which is a small negative number 
 
 .. note::
 
-    The correction parameter, :math:`C`, can be adjusted in this package's functions. See `correction_parameter` in `WaveformUncertainty.fd_model_difference <https://waveformuncertainty.readthedocs.io/en/latest/fd_model_difference.html>`_.
+    The correction parameter, :math:`C`, can be adjusted in this package's functions. See ``correction_parameter`` in `WaveformUncertainty.fd_model_difference <https://waveformuncertainty.readthedocs.io/en/latest/fd_model_difference.html>`_.
 
 Waveform Uncertainty
 --------------------
