@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 import numpy as np
 import bilby
@@ -69,20 +69,24 @@ def fd_model_difference(hf1,hf2,**kwargs):
     
     bilby.core.utils.log.setup_logger(log_level=30)
     np.seterr(all='ignore')
-    
+
+    # setting up frequency grid and frequency indexes
     start_index = np.argmin(np.abs(hf1.frequency_array - f_ref))+1
     frequency_grid = np.geomspace(f_low,f_high,npoints)
     wf_freqs = np.geomspace(start_index,len(hf1.frequency_array)-1,npoints).astype(int)
-    
+
+    # waveform amplitudes
     amplitude_1 = np.abs(hf1.frequency_domain_strain()[f'{polarization}'][wf_freqs])
     amplitude_2 = np.abs(hf2.frequency_domain_strain()[f'{polarization}'][wf_freqs])
-    
+
+    # waveform phases
     phase_1 = np.unwrap(np.unwrap(np.unwrap(np.unwrap(np.unwrap(np.angle(hf1.frequency_domain_strain()[f'{polarization}'][wf_freqs]))))))
     phase_2 = np.unwrap(np.unwrap(np.unwrap(np.unwrap(np.unwrap(np.angle(hf2.frequency_domain_strain()[f'{polarization}'][wf_freqs]))))))
                      
     amplitude_difference = (amplitude_1-amplitude_2)/amplitude_1
     raw_phase_difference = phase_1-phase_2
-    
+
+    # fitting a line to raw_phase_difference weighted by PSDs and subtracting off that line
     if psd_data is not None:
         ref_amplitude = np.abs(hf1.frequency_domain_strain()['plus'][wf_freqs])
         ref_sigma = np.interp(hf1.frequency_array[wf_freqs], psd_data[:,0],psd_data[:,1])
@@ -90,6 +94,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
         fit = np.polyfit(hf1.frequency_array[wf_freqs],raw_phase_difference,1,w=align_weights)
         residual_phase_difference = raw_phase_difference - np.poly1d(fit)(hf1.frequency_array[wf_freqs])
 
+    # taking two frequency derivatives of amplitude_difference and comparing it to the correction parameter for f_COR calculation
     amplitude_difference_first_derivative = np.gradient(amplitude_difference)/np.gradient(frequency_grid)
     amplitude_difference_second_derivative = np.gradient(amplitude_difference_first_derivative)/np.gradient(frequency_grid)
 
@@ -99,20 +104,22 @@ def fd_model_difference(hf1,hf2,**kwargs):
             break
         else: 
             final_index = len(hf1.frequency_array[wf_freqs])-1
-        
+
+    # making the discontinuity correction to amplitude_difference
     amplitude_difference[final_index:] = amplitude_difference[final_index-1]
-    
     amplitude_difference_final_point = amplitude_difference[final_index-1]
-    
-    
+
+    # making the discontinuity correction to phase difference (raw or residual)
     if psd_data is not None:
-        residual_phase_difference[final_index:] = residual_phase_difference[final_index-1]
-        residual_phase_difference_final_point = residual_phase_difference[final_index-1]
-        return frequency_grid,amplitude_difference,residual_phase_difference,amplitude_difference_final_point,residual_phase_difference_final_point,final_index
+        phase_difference = np.copy(residual_phase_difference)
+        phase_difference[final_index:] = residual_phase_difference[final_index-1]
+        phase_difference_final_point = residual_phase_difference[final_index-1]
     else:
-        raw_phase_difference[final_index:] = raw_phase_difference[final_index-1]
-        raw_phase_difference_final_point = raw_phase_difference[final_index-1]
-        return frequency_grid,amplitude_difference,raw_phase_difference,amplitude_difference_final_point,raw_phase_difference_final_point,final_index
+        phase_difference = np.copy(raw_phase_difference)
+        phase_difference[final_index:] = raw_phase_difference[final_index-1]
+        phase_difference_final_point = raw_phase_difference[final_index-1]
+
+    return frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index
 
     
     
@@ -215,19 +222,26 @@ def recovery_from_parameterization(identity,data):
         array of the waveform difference converted from the parameterization; has the same shape as the frequency grid within the original matrix
     '''
     if str(identity) == 'amplitude_difference':
+        # reconstructing amplitude difference up to the discontinuity
         parameterized_curve = np.polynomial.chebyshev.chebval(data[1][0:data[4]],data[2])
+        # reconstructing amplitude difference after the discontinuity
         post_waveform_uncertainties = np.copy(data[1])
         post_waveform_uncertainties[data[4]-2:] = data[5]
     
     elif str(identity) == 'phase_difference':
+        # reconstructing phase difference up to the discontinuity
         parameterized_curve = np.polynomial.chebyshev.chebval(data[1][0:data[4]],data[3])
+        # reconstructing phase difference after the discontinuity
         post_waveform_uncertainties = np.copy(data[1])
         post_waveform_uncertainties[data[4]-2:] = data[6]
     
     else:
         raise Exception('Identity of the uncertainty must be "amplitude_difference" or "phase_difference".')
+
+    # combining both sides of the discontinuity
+    difference_array = np.concatenate((parameterized_curve[:-2],post_waveform_uncertainties[data[4]-2:]))
     
-    return np.concatenate((parameterized_curve[:-2],post_waveform_uncertainties[data[4]-2:]))
+    return difference_array
 
 
 
@@ -338,10 +352,12 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
     bilby.core.utils.log.setup_logger(log_level=30)
     
     if type(parameter_data)==bilby.core.prior.dict.PriorDict:
-        data = parameter_dict_from_prior(parameter_data,2*nsamples)
+        # converting a prior object to a dictionary
+        data = parameter_dict_from_prior(parameter_data,int((nsamples/fit_threshold)+1))
     else:
         data = parameter_data
-    
+
+    # generating random order of samples
     index_samples=list(range(len(data[list(data.keys())[0]])))
     indexes=[]
     for draws in range(len(index_samples)):
@@ -359,7 +375,8 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
         bar = '=' * filled_up_Length + '-' * (bar_length - filled_up_Length)
         sys.stdout.write('[%s] %s%s %s\r' %(bar, percentage, '%', suffix))
         sys.stdout.flush()
-    
+
+    # setting initial conditions
     trial = 0
     final_indexes = []
     extraneous_indexes = []
@@ -373,6 +390,7 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
     
         progressBar(progress,(nsamples))
 
+        # setting waveform generators
         hf1 = bilby.gw.WaveformGenerator(
             parameter_conversion=bilby.gw.conversion.convert_to_lal_binary_neutron_star_parameters,
             parameters=injection(data,index=index,precession=precession,tides=tides), 
@@ -389,7 +407,8 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
             sampling_frequency=sampling_frequency, 
             duration=duration
         )
-        
+
+        # calculating waveform model differences
         frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,
                                                                                                                                                              f_low=f_low,
                                                                                                                                                              f_high=f_high,
@@ -398,13 +417,15 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
                                                                                                                                                              polarization=polarization,
                                                                                                                                                              psd_data=psd_data,
                                                                                                                                                              correction_parameter=correction_parameter)
-        
+
+        # chebyshev polynomial fits and saving coefficients
         amplitude_difference_fit = np.polynomial.chebyshev.Chebyshev.fit((frequency_grid[0:final_index]),amplitude_difference[0:final_index],fit_parameters-1)
         amplitude_difference_parameters = amplitude_difference_fit.convert().coef
 
         phase_difference_fit = np.polynomial.chebyshev.Chebyshev.fit((frequency_grid[0:final_index]),phase_difference[0:final_index],fit_parameters-1)
         phase_difference_parameters = phase_difference_fit.convert().coef
 
+        #constructing output matrix
         output_matrix[index][0] = index
         output_matrix[index][1] = np.array(frequency_grid)
         output_matrix[index][2] = np.array(amplitude_difference_parameters)
@@ -415,24 +436,30 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
         output_matrix[index][7] = injection(data,index=index,precession=precession,tides=tides)
 
         final_indexes.append(index)
-        
+
+        # finding errors relative to error margins
         relative_amplitude_error = np.max(np.abs(100*((amplitude_difference-recovery_from_parameterization('amplitude_difference',output_matrix[index])))/([max_amplitude_error]*len(amplitude_difference))))
         relative_phase_error = np.max(np.abs((100*((phase_difference-recovery_from_parameterization('phase_difference',output_matrix[index])))/([max_phase_error*(2*np.pi/360)]*len(phase_difference)))))
 
+        # removing index if outside error margins
         if relative_amplitude_error>100 or relative_phase_error>100:
             final_indexes.remove(index)
             extraneous_indexes.append(index)
         else:
             progress += 1
 
+        # checking if parameterization rate is above fit threshold
         if 100*len(final_indexes)/(len(final_indexes)+len(extraneous_indexes)) < fit_threshold:
             trial += 1
+
+        # allows for 20 failures before killing the run
         if trial == 20:
             parameterization_rate = np.round(100*len(final_indexes)/(len(final_indexes)+len(extraneous_indexes)),2)
             raise Exception(f"Parameterization Rate Too Low; It must be above {fit_threshold}%, but was at {parameterization_rate}%.")
         if len(final_indexes) == nsamples:
             break
-    
+
+    # constructing the final parameterization table
     empty_data_matrix = np.zeros([len(final_indexes),8],dtype=object)
     count = 0
     for index in final_indexes:
@@ -484,33 +511,39 @@ def uncertainties_from_parameterization(data,**kwargs):
     '''
     linear = kwargs.get('linear',False)
     resolution = kwargs.get('resolution',None)
-    
+
+    # grabbing all of the waveform difference data
     amplitude_difference_data = [recovery_from_parameterization('amplitude_difference',data[index]) for index in range(len(data))]
     phase_difference_data = [recovery_from_parameterization('phase_difference',data[index]) for index in range(len(data))]
 
     if linear==True and resolution is not None:
-    
+
+        # constructing linear frequency grid
         linear_frequency_grid = np.arange(data[0][1][0],data[0][1][-1]+resolution,resolution)
-        
+
+        # interpolating waveform differences to the new linear frequency grid
         amplitude_difference = [np.interp(linear_frequency_grid,data[0][1],amplitude_difference_data[i]) for i in range(len(amplitude_difference_data))]
         phase_difference = [np.interp(linear_frequency_grid,data[0][1],phase_difference_data[i]) for i in range(len(phase_difference_data))]
-        
+
+        # mean and standard devitation along the vertical axis
         mean_amplitude_difference = np.mean(amplitude_difference,axis=0)
         amplitude_uncertainty = np.std(amplitude_difference,axis=0)
 
         mean_phase_difference = np.mean(phase_difference,axis=0)
         phase_uncertainty = np.std(phase_difference,axis=0)
-        
-        return mean_amplitude_difference,amplitude_uncertainty,mean_phase_difference,phase_uncertainty,linear_frequency_grid   
     
     else:
+
+        linear_frequency_grid = None
+
+        # mean and standard devitation along the vertical axis
         mean_amplitude_difference = np.mean(amplitude_difference_data,axis=0)
         amplitude_uncertainty = np.std(amplitude_difference_data,axis=0)
 
         mean_phase_difference = np.mean(phase_difference_data,axis=0)
         phase_uncertainty = np.std(phase_difference_data,axis=0)
         
-        return mean_amplitude_difference,amplitude_uncertainty,mean_phase_difference,phase_uncertainty
+    return mean_amplitude_difference,amplitude_uncertainty,mean_phase_difference,phase_uncertainty,linear_frequency_grid
         
 
 
@@ -552,17 +585,20 @@ def WFU_prior(mean_amplitude_difference,amplitude_uncertainty,mean_phase_differe
     
     if prior is None:
         prior = bilby.core.prior.PriorDict()
-    
+
+    # finding the positions of the frequency nodes
     if spacing == 'linear':
         frequency_scale = np.linspace(0,len(frequency_grid)-1,nnodes).astype(int)
     elif spacing == 'geometric':
+        # starting geometric progression away from 0 then manually adding zero (for good spacing)
         start_index = int(len(frequency_grid)/16)
         frequency_scale = [0]
         for i in range(nnodes-1):
             frequency_scale.append(np.geomspace(start_index,len(frequency_grid)-1,nnodes-1).astype(int)[i])
     
     frequency_nodes = frequency_grid[frequency_scale]
-    
+
+    # constructing prior distributions
     for i in range(len(frequency_scale)):
         prior[f'alpha_{i+1}'] = bilby.core.prior.Gaussian(name=f'alpha_{i+1}',latex_label=r'$\alpha_{n}$'.replace('n',str(i+1)),
                                                         mu=mean_amplitude_difference[frequency_scale[i]],
