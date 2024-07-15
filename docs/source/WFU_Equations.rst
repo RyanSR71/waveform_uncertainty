@@ -79,7 +79,7 @@ where :math:`\mu_{IMR}` is an ``IMRPhenomPv2_NRTidalv2`` waveform and :math:`\mu
         \frac{\partial^{2}}{\partial{f}^{2}}\left(\Delta{A}_{\mu}(f_{COR};\theta)\right)=C
     \end{equation}
 
-where C is our "correction parameter", which is a small negative number that is usually equal to :math:`-10^{-5}`. This definition comes from utilizing the fact that the slopes in the :math:`\Delta{A}_{\mu}` curve are very small up until the discontinuity.
+where :math:`C` is our "correction parameter", which is a small negative number that is usually equal to :math:`-10^{-5}`. This definition comes from utilizing the fact that the slopes in the :math:`\Delta{A}_{\mu}` curve are very small up until the discontinuity.
 
 .. note::
 
