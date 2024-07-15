@@ -6,7 +6,7 @@ project = 'WaveformUncertainty'
 copyright = '2024, Ryan Johnson, No Rights Reserved'
 author = 'Ryan Johnson'
 
-release = '0.1'
+release = 'beta'
 version = '0.1.1'
 
 # -- General configuration
