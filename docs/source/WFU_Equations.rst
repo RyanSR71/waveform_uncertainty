@@ -87,7 +87,7 @@ where :math:`C` is our "correction parameter", which is a small negative number 
 
 Waveform Uncertainty
 --------------------
-Waveform uncertainties are the variabilities of the waveform's amplitude and phase at a given frequency; they are enveloped. We can find a model for waveform uncertainty by taking the standard deviation of many draws of waveform difference. We define our model amplitude uncertainty and phase uncertainty in this way:
+Waveform uncertainties are the variabilities of the waveform's amplitude and phase at a given frequency. We can find a model for waveform uncertainty by taking the standard deviation of many draws of waveform difference. We define our model amplitude uncertainty and phase uncertainty in this way:
 
 .. math::
 
