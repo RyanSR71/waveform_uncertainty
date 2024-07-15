@@ -131,7 +131,7 @@ where :math:`T_{n}` are Chebyshev polynomials of the first kind. We see that ins
 
 .. note::
 
-    The error margins on :math:`\Delta{A}_{T}` and :math:`\Delta\Phi_{T}` can be adjusted in this package's functions.
+    The error margins on :math:`\Delta{A}_{T}` and :math:`\Delta\Phi_{T}` can be adjusted in this package's functions. See ``max_ampltitude_error`` and ``max_phase_error`` in `WaveformUncertainty.parameterization <https://waveformuncertainty.readthedocs.io/en/latest/parameterization.html>`_.
 
 Likelihood
 ----------
