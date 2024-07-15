@@ -25,3 +25,4 @@ Compare this version with the version listed on the `Home Page <https://waveform
 .. code-block:: 
 
    pip install git+https://github.com/RyanSR71/waveform_uncertainty --upgrade
+
