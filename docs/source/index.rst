@@ -25,7 +25,7 @@ Check out the :doc:`installation` section for instructions. General information 
    :caption: Examples:
 
    notebooks/Parameterization_Tutorial
-   notebooks/WFU_Sampling_Tutorial
+   WFU_Sampling_Tutorial
 
 .. toctree::
    :maxdepth: 1
