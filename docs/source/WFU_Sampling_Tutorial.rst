@@ -62,6 +62,4 @@ Using the standard deviations of our waveform differences, defined as our uncert
                                          mean_phase_difference=[0]*len(frequency_grid),phase_uncertainty=phase_uncertainty,spacing='geometric',
                                          frequency_grid=frequency_grid,nnodes=6,prior=prior)
 
-.. literalinclude:: setting_up_the_prior.py
-   :language: python
-   :linenos:
+
