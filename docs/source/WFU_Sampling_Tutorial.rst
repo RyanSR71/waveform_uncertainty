@@ -16,7 +16,7 @@ The following cell is everything we need to import to run this tutorial. We also
    from pesummary.io import read
    import WaveformUncertainty as wfu
 
-Here we set up a prior with bilby. The values here are based on a GW170817 posterior.
+Here we set up a GW170817-like prior with bilby.
 
 .. code-block:: python
 
