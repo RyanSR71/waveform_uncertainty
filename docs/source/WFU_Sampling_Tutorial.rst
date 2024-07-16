@@ -49,4 +49,4 @@ We then load in a set of parameterized waveform differences from which we will g
    parameterization = np.load("/home/ryanmatthew.johnson/Waveform_Uncertainty/files/parameterization_nsamples_1000.npy",allow_pickle=True)
 
    # calculating the means and standard deviations of the waveform differences
-   mean_amplitude_difference,amplitude_uncertainty,mean_phase_difference,phase_uncertainty,frequency_grid =   wfu.uncertainties_from_parameterization(parameterization,linear=True,resolution=0.1)
+   mean_amplitude_difference,amplitude_uncertainty,mean_phase_difference,phase_uncertainty,frequency_grid = wfu.uncertainties_from_parameterization(parameterization,linear=True,resolution=0.1)
