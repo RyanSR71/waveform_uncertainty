@@ -67,4 +67,38 @@ Using the standard deviations of our waveform differences, defined as our uncert
                                          phase_uncertainty=phase_uncertainty,spacing='geometric',
                                          frequency_grid=frequency_grid,nnodes=6,prior=prior)
 
+If we look at the prior, we confirm that the new parameters have been added properly:
 
+.. code-block:: python
+   :linenos:
+   :emphasize-lines: 1,2,3,4,5,6,7,8
+
+   {'mass_1': Uniform(minimum=1.37563293, maximum=1.80367393, name='mass_1', latex_label='$m_{1}$', unit=None, boundary=None),
+    'mass_2': Uniform(minimum=1.06371259, maximum=1.3758219, name='mass_2', latex_label='$m_{2}$', unit=None, boundary=None),
+    'a_1': Uniform(minimum=2.7020166e-06, maximum=0.04999694, name='a_1', latex_label='$a_{1}$', unit=None, boundary=None),
+    'a_2': Uniform(minimum=2.12868226e-06, maximum=0.04998414, name='a_2', latex_label='$a_{2}$', unit=None, boundary=None),
+    'luminosity_distance': bilby.gw.prior.UniformSourceFrame(minimum=12.27167145, maximum=52.94141976, cosmology='Planck15', name='luminosity_distance', latex_label='$d_{L}$', unit='Mpc', boundary=None),
+    'phi_12': Uniform(minimum=0.00022415, maximum=6.28307139, name='phi_12', latex_label='$\\Phi_{12}$', unit=None, boundary='periodic'),
+    'phi_jl': Uniform(minimum=0.00038279, maximum=6.28301577, name='phi_jl', latex_label='$\\Phi_{JL}$', unit=None, boundary='periodic'),
+    'tilt_1': Uniform(minimum=0.00465234, maximum=3.12823758, name='tilt_1', latex_label='$\\theta_{1}$', unit=None, boundary='periodic'),
+    'tilt_2': Uniform(minimum=0.01877421, maximum=3.13573364, name='tilt_2', latex_label='$\\theta_{2}$', unit=None, boundary='periodic'),
+    'theta_jn': Sine(minimum=0, maximum=3.141592653589793, name='theta_jn', latex_label='$\\theta_{JN}$', unit=None, boundary=None),
+    'phase': Uniform(minimum=8.9295926e-05, maximum=6.2830611, name='phase', latex_label='$\\Phi$', unit=None, boundary='periodic'),
+    'lambda_1': Uniform(minimum=0.00147326, maximum=3154.41685213, name='lambda_1', latex_label='$\\Lambda_{1}$', unit=None, boundary=None),
+    'lambda_2': Uniform(minimum=0.02966776, maximum=4598.76616739, name='lambda_2', latex_label='$\\Lambda_{2}$', unit=None, boundary=None),
+    'geocent_time': Uniform(minimum=1187008882.3, maximum=1187008882.5, name='geocent_time', latex_label='$t_{c}$', unit=None, boundary=None),
+    'dec': DeltaFunction(peak=-0.408084, name='dec', latex_label='$\\delta$', unit=None),
+    'ra': DeltaFunction(peak=3.44616, name='ra', latex_label='$\\alpha_{r}$', unit=None),
+    'psi': DeltaFunction(peak=1.56379256, name='psi', latex_label='$\\Psi$', unit=None),
+    'alpha_1': Gaussian(mu=0, sigma=0.0002863138141110437, name='alpha_1', latex_label='$\\alpha_{1}$', unit=None, boundary=None),
+    'alpha_2': Gaussian(mu=0, sigma=0.0002111657778097014, name='alpha_2', latex_label='$\\alpha_{2}$', unit=None, boundary=None),
+    'alpha_3': Gaussian(mu=0, sigma=0.0005556531964355042, name='alpha_3', latex_label='$\\alpha_{3}$', unit=None, boundary=None),
+    'alpha_4': Gaussian(mu=0, sigma=0.05461979925183364, name='alpha_4', latex_label='$\\alpha_{4}$', unit=None, boundary=None),
+    'alpha_5': Gaussian(mu=0, sigma=0.07832992981932922, name='alpha_5', latex_label='$\\alpha_{5}$', unit=None, boundary=None),
+    'alpha_6': Gaussian(mu=0, sigma=0.09815338457315673, name='alpha_6', latex_label='$\\alpha_{6}$', unit=None, boundary=None),
+    'beta_1': Gaussian(mu=0, sigma=0.004307822707691068, name='beta_1', latex_label='$\\beta_{1}$', unit=None, boundary=None),
+    'beta_2': Gaussian(mu=0, sigma=0.003255117320409567, name='beta_2', latex_label='$\\beta_{2}$', unit=None, boundary=None),
+    'beta_3': Gaussian(mu=0, sigma=0.02046268464258714, name='beta_3', latex_label='$\\beta_{3}$', unit=None, boundary=None),
+    'beta_4': Gaussian(mu=0, sigma=0.3368474229151774, name='beta_4', latex_label='$\\beta_{4}$', unit=None, boundary=None),
+    'beta_5': Gaussian(mu=0, sigma=1.2915211050896858, name='beta_5', latex_label='$\\beta_{5}$', unit=None, boundary=None),
+    'beta_6': Gaussian(mu=0, sigma=1.3594933709776011, name='beta_6', latex_label='$\\beta_{6}$', unit=None, boundary=None)}
