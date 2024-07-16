@@ -6,6 +6,8 @@ In this tutorial, we demonstrate using this package to construct a prior of wave
 The following cell is everything we need to import to run this tutorial. We also import the `WaveformUncertainty` package, which will need to be installed first. See `Installation <https://waveformuncertainty.readthedocs.io/en/latest/installation.html#installation>`_.
 
 .. code-block:: python
+   :linenos:
+   :emphasize-lines: all
 
    import numpy as np
    import bilby
