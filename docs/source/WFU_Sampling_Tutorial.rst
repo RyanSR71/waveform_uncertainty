@@ -16,6 +16,8 @@ The following cell is everything we need to import to run this tutorial. We also
    from pesummary.io import read
    import WaveformUncertainty as wfu
 
+Setting Up the Prior
+--------------------
 Here we set up a GW170817-like prior with bilby.
 
 .. code-block:: python
@@ -39,3 +41,12 @@ Here we set up a GW170817-like prior with bilby.
    prior['dec'] = bilby.core.prior.DeltaFunction(name='dec',latex_label=r'$\delta$',peak=-0.408084)
    prior['ra'] = bilby.core.prior.DeltaFunction(name='ra',latex_label=r'$\alpha$',peak=3.44616)
    prior['psi'] = bilby.core.prior.DeltaFunction(name='psi',latex_label=r'$\Psi$',peak=1.56379256)
+
+We then load in a set of parameterized waveform differences from which we will get our waveform uncertainties.
+
+.. code-block:: python
+
+   parameterization = np.load("/home/ryanmatthew.johnson/Waveform_Uncertainty/files/parameterization_nsamples_1000.npy",allow_pickle=True)
+
+   # calculating the means and standard deviations of the waveform differences
+   mean_amplitude_difference,amplitude_uncertainty,mean_phase_difference,phase_uncertainty,frequency_grid =    wfu.uncertainties_from_parameterization(parameterization,linear=True,resolution=0.1)
