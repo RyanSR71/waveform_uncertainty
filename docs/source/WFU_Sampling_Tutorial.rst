@@ -50,3 +50,13 @@ We then load in a set of parameterized waveform differences from which we will g
 
    # calculating the means and standard deviations of the waveform differences
    mean_amplitude_difference,amplitude_uncertainty,mean_phase_difference,phase_uncertainty,frequency_grid = wfu.uncertainties_from_parameterization(parameterization,linear=True,resolution=0.1)
+
+Using the standard deviations of our waveform differences, defined as our uncertainties, :math:`\delta{A}` and :math:`\delta\Phi`, we set up our prior distributions and add it to the previously defined prior.
+
+.. code-block:: python
+
+   # we set the means of amplitude and phase difference to zero to keep our prior consistent with zero
+   # we also choose to use 6 geometrically spaced frequency nodes, as that configuration yields the best results
+   prior,frequency_nodes = wfu.WFU_prior(mean_amplitude_difference=[0]*len(frequency_grid),amplitude_uncertainty=amplitude_uncertainty,
+                                         mean_phase_difference=[0]*len(frequency_grid),phase_uncertainty=phase_uncertainty,spacing='geometric',
+                                         frequency_grid=frequency_grid,nnodes=6,prior=prior)
