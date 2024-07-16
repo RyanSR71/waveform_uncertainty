@@ -22,6 +22,7 @@ Setting Up the Prior
 Here we set up a GW170817-like prior with bilby.
 
 .. code-block:: python
+   :linenos:
 
    prior = bilby.core.prior.PriorDict()
 
@@ -46,6 +47,7 @@ Here we set up a GW170817-like prior with bilby.
 We then load in a set of parameterized waveform differences from which we will get our waveform uncertainties.
 
 .. code-block:: python
+   :linenos:
 
    parameterization = np.load("/home/ryanmatthew.johnson/Waveform_Uncertainty/files/parameterization_nsamples_1000.npy",allow_pickle=True)
 
@@ -55,6 +57,7 @@ We then load in a set of parameterized waveform differences from which we will g
 Using the standard deviations of our waveform differences, defined as our uncertainties, :math:`\delta{A}` and :math:`\delta\Phi`, we set up our prior distributions and add it to the previously defined prior.
 
 .. code-block:: python
+   :linenos:
 
    # we set the means of amplitude and phase difference to zero to keep our prior consistent with zero
    # we also choose to use 6 geometrically spaced frequency nodes, as that configuration yields the best results
