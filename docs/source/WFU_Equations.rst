@@ -49,8 +49,8 @@ This results in the :math:`\Delta{A}` values abruptly going down to negative inf
     \begin{equation}
         \Delta{A}_{\mu}(f;\theta)= \begin{cases} 
           \frac{|\mu_{IMR}(f;\theta)|-|\mu_{EOB}(f;\theta)|}{|\mu_{IMR}(f;\theta)|} & f \leq f_{COR} \\
-          \Delta{A}_{\mu}(f_{COR};\theta) & f > f_{COR}, 
-       \end{cases}
+          \Delta{A}_{\mu}(f_{COR};\theta) & f > f_{COR}
+       \end{cases},
     \end{equation}
 
 .. math::
@@ -58,8 +58,8 @@ This results in the :math:`\Delta{A}` values abruptly going down to negative inf
     \begin{equation}
         \Delta\phi_{\mu}(f;\theta)= \begin{cases} 
           \mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[\mu_{IMR}(f;\theta)]}{\mathrm{Re}[\mu_{IMR}(f;\theta)]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[\mu_{EOB}(f;\theta)]}{\mathrm{Re}[\mu_{EOB}(f;\theta)]}\right) & f \leq f_{COR} \\
-          \Delta\phi_{\mu}(f_{COR};\theta) & f > f_{COR}, 
-       \end{cases}
+          \Delta\phi_{\mu}(f_{COR};\theta) & f > f_{COR}
+       \end{cases},
     \end{equation}
 
 .. math::
@@ -67,8 +67,8 @@ This results in the :math:`\Delta{A}` values abruptly going down to negative inf
     \begin{equation}
         \Delta\Phi_{\mu}(f;\theta)= \begin{cases} 
           \Delta\phi_{\mu}(f;\theta)-(2\pi{t}_{c}{f}+\phi_{c}) & f \leq f_{COR} \\
-          \Delta\Phi_{\mu}(f_{COR};\theta) & f > f_{COR}, 
-       \end{cases}
+          \Delta\Phi_{\mu}(f_{COR};\theta) & f > f_{COR} 
+       \end{cases},
     \end{equation}
 
 where :math:`\mu_{IMR}` is an ``IMRPhenomPv2_NRTidalv2`` waveform and :math:`\mu_{EOB}` is an ``SEOBNRv4T_surrogate`` waveform. :math:`f_{COR}`, the discontinuity correction frequency, is the frequency value at which the discontinuity occurs.
