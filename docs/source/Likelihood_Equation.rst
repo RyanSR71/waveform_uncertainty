@@ -113,7 +113,13 @@ We now need to know what prior distribution we are going to use to draw the :mat
 .. math::
 
     \begin{equation}
-        \alpha_{n}\sim\mathcal{N}(0,\delta{A}_{\mu}(f_{n}))\hspace{1cm}\beta_{n}\sim\mathcal{N}(0,\delta\Phi_{\mu}(f_{n})).
+        \alpha_{n}\sim\mathcal{N}(0,\delta{A}_{\mu}(f_{n})),
+    \end{equation}
+
+.. math::
+
+    \begin{equation}
+        \beta_{n}\sim\mathcal{N}(0,\delta\Phi_{\mu}(f_{n})).
     \end{equation}
 
 Plugging these spline functions into the likelihood function gives the final form of the likelihood equation:
