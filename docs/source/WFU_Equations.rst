@@ -9,7 +9,7 @@ Amplitude difference, :math:`\Delta{A}`, is defined generally as
 .. math::
     
     \begin{equation}
-        \Delta{A}=\frac{|h_{1}|-|h_{2}|}{|h_{1}|}\hspace{0.2cm},
+        \Delta{A}=\frac{|h_{1}|-|h_{2}|}{|h_{1}|},
     \end{equation} 
 
 where :math:`h_{1}` and :math:`h_{2}` are sets of frequency domain gravitational wave strain, which are complex. Amplitude difference is a relative error between the two waveforms relative to :math:`h_{1}`.
@@ -19,7 +19,7 @@ Raw phase difference, :math:`\Delta\phi`, is then defined as
 .. math::
 
     \begin{equation}
-        \Delta\phi=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{1}\right]}{\mathrm{Re}\left[h_{1}\right]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{2}\right]}{\mathrm{Re}\left[h_{2}\right]}\right)\hspace{0.2cm},
+        \Delta\phi=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{1}\right]}{\mathrm{Re}\left[h_{1}\right]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{2}\right]}{\mathrm{Re}\left[h_{2}\right]}\right),
     \end{equation} 
     
 Raw phase difference contains overall phase and time shifts which need to be removed for analysis. To do this, we find residual phase difference, :math:`\Delta\Phi`:
@@ -27,7 +27,7 @@ Raw phase difference contains overall phase and time shifts which need to be rem
 .. math::
 
     \begin{equation}
-        \Delta\Phi=\Delta\phi-(2\pi{t_{c}}f+\phi_{c})\hspace{0.2cm},
+        \Delta\Phi=\Delta\phi-(2\pi{t_{c}}f+\phi_{c}),
     \end{equation}
 
 where :math:`t_{c}` is coalescence time and :math:`\phi_{c}` is coalescence phase. We can find these values by fitting a line to :math:`\Delta\phi` weighted by the power spectral density (PSD) data. The PSD data tells us the variance of the signal at each frequency point. This gives us information on :math:`t_{c}`. The 'y-intercept' of this line is :math:`\phi_{c}`. We then subtract this line from raw phase difference to get residual phase difference.
@@ -39,7 +39,7 @@ When finding the waveform differences between two waveform models, :math:`\mu`, 
 .. math::
 
     \begin{equation}
-        \lim_{|h_{1}|\to{0}}\left(\frac{|h_{1}|-|h_{2}|}{|h_{1}|}\right)=-\infty\hspace{0.2cm}.
+        \lim_{|h_{1}|\to{0}}\left(\frac{|h_{1}|-|h_{2}|}{|h_{1}|}\right)=-\infty.
     \end{equation}
 
 This results in the :math:`\Delta{A}` values abruptly going down to negative infinity. When dealing with waveform approximants, especially those that handle tidal defomabilities, this discontinuity is extremely common. To deal with these discontinuities, we cut off the waveform differences at the discontinuity and hold it constant afterwards. We then define the following waveform model differences:
@@ -84,13 +84,13 @@ Waveform uncertainties are the variabilities of the waveform's amplitude and pha
 .. math::
 
     \begin{equation}
-        \delta{A}_{\mu}(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta{A}_{\mu}(f;\theta_{i})-\overline{\Delta{A}_{\mu}}(f)\right)^{2}}{N}}\hspace{0.2cm},
+        \delta{A}_{\mu}(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta{A}_{\mu}(f;\theta_{i})-\overline{\Delta{A}_{\mu}}(f)\right)^{2}}{N}},
     \end{equation}
 
 .. math::
 
     \begin{equation}
-        \delta\Phi_{\mu}(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta\Phi_{\mu}(f;\theta_{i})-\overline{\Delta\Phi_{\mu}}(f)\right)^{2}}{N}}\hspace{0.2cm}.
+        \delta\Phi_{\mu}(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta\Phi_{\mu}(f;\theta_{i})-\overline{\Delta\Phi_{\mu}}(f)\right)^{2}}{N}}.
     \end{equation}
 
 .. note::
@@ -132,7 +132,7 @@ The likelihood function we use to sample over waveform uncertainty is
 .. math::
 
     \small \begin{equation}
-        \mathcal{L}(h|\theta,\alpha,\beta)=\prod_{j}\frac{1}{2\pi{P(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)\left(1+\Delta{A}_{\delta}(f_{j};\{f_{n},\alpha_{n}\})\right)\mathrm{exp}\left[i\Delta\Phi_{\delta}(f_{j};\{f_{n},\beta_{n}\})\right]|^{2}}{P(f_{j})}\right)\hspace{0.2cm},
+        \mathcal{L}(h|\theta,\alpha,\beta)=\prod_{j}\frac{1}{2\pi{P(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)\left(1+\Delta{A}_{\delta}(f_{j};\{f_{n},\alpha_{n}\})\right)\mathrm{exp}\left[i\Delta\Phi_{\delta}(f_{j};\{f_{n},\beta_{n}\})\right]|^{2}}{P(f_{j})}\right),
     \end{equation}
 
 where :math:`h` is frequency domain gravitational wave strain, :math:`\theta` is a set of source parameters for the waveform approximants, the :math:`\alpha` and :math:`\beta` parameters are spline parameters corresponding to frequency nodes :math:`f_{n}`, :math:`P` is power spectral density data, :math:`\mu` is a frequency domain waveform model, :math:`\Delta{A}_{\delta}` is a waveform difference model drawn from waveform uncertainty, and :math:`\Delta\Phi_{\delta}` is a waveform difference model drawn from waveform uncertainty. The waveform uncertainty parameters, :math:`\alpha` and :math:`\beta`, are defined as being draws from a normal distribution around zero with their standard deviations being our waveform uncertainties, :math:`\delta{A}` and :math:`\delta\Phi`:
@@ -140,13 +140,13 @@ where :math:`h` is frequency domain gravitational wave strain, :math:`\theta` is
 .. math::
 
     \begin{equation}
-        \alpha_{n}\sim\mathcal{N}(0,\delta{A}_{\mu}(f_{n}))\hspace{0.2cm},
+        \alpha_{n}\sim\mathcal{N}(0,\delta{A}_{\mu}(f_{n})),
     \end{equation}
 
 .. math::
 
     \begin{equation}
-        \beta_{n}\sim\mathcal{N}(0,\delta\Phi_{\mu}(f_{n}))\hspace{0.2cm}.
+        \beta_{n}\sim\mathcal{N}(0,\delta\Phi_{\mu}(f_{n})).
     \end{equation}
 
 
