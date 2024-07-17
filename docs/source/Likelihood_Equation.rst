@@ -93,7 +93,13 @@ To sample these waveform differences, we need to express :math:`\Delta{A}` and :
 .. math:: 
 
   \begin{equation}
-      \Delta{A}\rightarrow\Delta{A}(f;\{f_{n},\alpha_{n}\})\hspace{0.5cm}\mathrm{&}\hspace{0.5cm}\Delta\Phi\rightarrow\Delta\Phi(f;\{f_{n},\beta_{n}\}),
+      \Delta{A}\rightarrow\Delta{A}(f;\{f_{n},\alpha_{n}\}),
+  \end{equation}
+
+.. math:: 
+
+  \begin{equation}
+      \Delta\Phi\rightarrow\Delta\Phi(f;\{f_{n},\beta_{n}\}),
   \end{equation}
 
 where the :math:`\alpha` and :math:`\beta` parameters can be varied by bilby's samplers and :math:`f_{n}` are fixed frequency nodes.
