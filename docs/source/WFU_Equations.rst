@@ -4,22 +4,22 @@ This work is in collaboration with and derived from past work by Dr. Jocelyn Rea
 
 Frequency Domain Waveform Differences
 -------------------------------------
-Amplitude difference is defined generally as:
+Amplitude difference is defined generally as
 
 .. math::
     
     \begin{equation}
-        \Delta{A}=\frac{|h_{1}|-|h_{2}|}{|h_{1}|}
+        \Delta{A}=\frac{|h_{1}|-|h_{2}|}{|h_{1}|},
     \end{equation} 
 
 where :math:`h_{1}` and :math:`h_{2}` are sets of frequency domain gravitational wave strain, which are complex. Amplitude difference is a relative error between the two waveforms relative to :math:`h_{1}`.
 
-Raw phase difference is then defined as:
+Raw phase difference is then defined as
 
 .. math::
 
     \begin{equation}
-        \Delta\phi=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{1}\right]}{\mathrm{Re}\left[h_{1}\right]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{2}\right]}{\mathrm{Re}\left[h_{2}\right]}\right)
+        \Delta\phi=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{1}\right]}{\mathrm{Re}\left[h_{1}\right]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{2}\right]}{\mathrm{Re}\left[h_{2}\right]}\right).
     \end{equation} 
     
 Raw phase difference contains overall phase and time shifts which need to be removed for analysis. To do this, we find residual phase difference:
