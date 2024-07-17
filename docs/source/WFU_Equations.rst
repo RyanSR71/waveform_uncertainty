@@ -14,7 +14,7 @@ Amplitude difference, :math:`\Delta{A}`, is defined generally as
 
 where :math:`h_{1}` and :math:`h_{2}` are sets of frequency domain gravitational wave strain, which are complex. Amplitude difference is a relative error between the two waveforms relative to :math:`h_{1}`.
 
-Raw phase difference, :math:`\Delta\phi` is then defined as
+Raw phase difference, :math:`\Delta\phi`, is then defined as
 
 .. math::
 
