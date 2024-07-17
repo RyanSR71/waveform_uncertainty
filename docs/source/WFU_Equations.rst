@@ -22,7 +22,7 @@ Raw phase difference, :math:`\Delta\phi`, is then defined as
         \Delta\phi=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{1}\right]}{\mathrm{Re}\left[h_{1}\right]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{2}\right]}{\mathrm{Re}\left[h_{2}\right]}\right).
     \end{equation} 
     
-Raw phase difference contains overall phase and time shifts which need to be removed for analysis. To do this, we find residual phase difference, :math`\Delta\Phi`:
+Raw phase difference contains overall phase and time shifts which need to be removed for analysis. To do this, we find residual phase difference, :math:`\Delta\Phi`:
 
 .. math::
 
