@@ -28,4 +28,4 @@ phase_uncertainty: numpy.ndarray
     standard deviations of the phase difference
 linear_frequency_grid: numpy.ndarray
     only if ``linear=True``, new linear frequency grid
-    if ``linear=False``, will return ``None```
+    if ``linear=False``, will return ``None``
