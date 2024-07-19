@@ -34,7 +34,7 @@ where :math:`t_{c}` is coalescence time and :math:`\phi_{c}` is coalescence phas
 
 Waveform Model Differences
 --------------------------
-When finding the waveform differences between two waveform models, :math:`\mu`, we need to add some slight devitations from the general forms listed above. If the amplitude of the first waveform, :math:`|h_{1}|`, went to zero faster than the second waveform, :math:`|h_{2}|`, then we would get a discontinuity. This is shown with the following limit:
+When finding the waveform differences between two waveform models, :math:`\mu`, we need to add some slight deviatations from the general forms listed above. If the amplitude of the first waveform, :math:`|h_{1}|`, went to zero faster than the second waveform, :math:`|h_{2}|`, then we would get a discontinuity. This is shown with the following limit:
 
 .. math::
 
