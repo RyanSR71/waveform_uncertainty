@@ -127,6 +127,8 @@ where :math:`T_{n}` are Chebyshev polynomials of the first kind. We see that ins
 
 Likelihood
 ----------
+Parameter estimation is a process that chooses random samples to compare a model to data. Using the model and the data, the likelihood of the samples can be found. Samples are drawn thousands of times in order to map out the likelihood, which results in probability distributions for the values of the samples. 
+
 The likelihood function we use to sample over waveform uncertainty is
 
 .. math::
