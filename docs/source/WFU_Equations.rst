@@ -71,7 +71,7 @@ This results in the :math:`\Delta{A}` values abruptly going down to negative inf
        \end{cases}\hspace{0.2cm},
     \end{equation}
 
-where :math:`\mu_{IMR}` is an ``IMRPhenomPv2_NRTidalv2`` waveform and :math:`\mu_{EOB}` is an ``SEOBNRv4T_surrogate`` waveform. :math:`f_{COR}`, the discontinuity correction frequency, is the frequency value at which the discontinuity occurs.
+where :math:`\mu_{IMR}` is an ``IMRPhenomPv2_NRTidalv2`` waveform and :math:`\mu_{EOB}` is an ``SEOBNRv4T_surrogate`` waveform. The discontinuity correction frequency, :math:`f_{COR}`, is the frequency value at which the discontinuity occurs.
 
 .. note::
 
