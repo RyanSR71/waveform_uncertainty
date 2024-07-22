@@ -9,9 +9,23 @@ Compact Binary Inspiral Gravitional Waves are gravitational waves that result fr
 .. math::
 
     \begin{equation}
-        h(f)=A(f)e^{i\phi(f)}.
+        h(f)=A(f)\mathrm{exp}\left({i\phi(f)}\right).
     \end{equation}
 
+From the waveform itself, we can find the amplitude and phase with
+
+.. math::
+
+    \begin{equation}
+        A(f)=h(f)^{*}h(f)=|h(f)|,
+    \end{equation}
+
+and
+
+.. math::
+
+    \begin{equation}
+        \phi(f)=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[h(f)]}{\mathrm{Re}[h(f)]}\right).
 
 Frequency Domain Waveform Differences
 -------------------------------------
