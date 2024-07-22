@@ -33,10 +33,6 @@ templates_path = ['_templates']
 
 html_theme = 'sphinx_rtd_theme'
 pygments_style = "sphinx"
-div[role=contentinfo] {
-	visibility: hidden;
-	position: relative;
-}
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
