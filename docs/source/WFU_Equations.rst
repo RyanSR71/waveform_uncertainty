@@ -26,6 +26,7 @@ and
 
     \begin{equation}
         \phi(f)=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[h(f)]}{\mathrm{Re}[h(f)]}\right).
+    \end{equation}
 
 Frequency Domain Waveform Differences
 -------------------------------------
