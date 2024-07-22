@@ -4,7 +4,7 @@ This work is in collaboration with and derived from past work by Dr. Jocelyn Rea
 
 Compact Binary Inspiral Gravitational Waves
 -------------------------------------------
-Compact Binary Inspiral Gravitional Waves are gravitational waves that result from the inspiral of two compact objects, such as black holes and neutron stars. As the two objects fall together, they orbit around each other faster and faster, sending out louder and louder gravitational waves. This reaches a peak amplitude at the moment the objects come together. We can detect these gravitational waves using large Michelson interferometers, such as LIGO Hanford and LIGO Livingston. The waveform we receive is in the form of complex strain values. In the frequency domain, we represent the waveform in terms of its amplitude, :math:`A`, and phase, :math:`\phi`:
+Compact Binary Inspiral Gravitional Waves are gravitational waves that result from the inspiral of two compact objects, such as black holes and neutron stars. As the two objects fall together, they orbit around each other faster, sending out louder gravitational waves. This reaches a peak amplitude at the moment the objects come together. We can detect these gravitational waves using large Michelson interferometers, such as LIGO Hanford and LIGO Livingston. The waveform we receive is in the form of gravitational wave strain, :math:`h`, which is complex. In the frequency domain, we represent the waveform in terms of its amplitude, :math:`A`, and phase, :math:`\phi`:
 
 .. math::
 
