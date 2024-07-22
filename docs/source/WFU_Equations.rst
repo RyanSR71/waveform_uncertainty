@@ -17,7 +17,7 @@ From the waveform itself, we can find the amplitude and phase with
 .. math::
 
     \begin{equation}
-        A(f)=h(f)^{*}h(f)=|h(f)|,
+        A(f)=\sqrt{h(f)^{*}h(f)}=|h(f)|,
     \end{equation}
 
 and
