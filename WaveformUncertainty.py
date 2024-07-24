@@ -67,7 +67,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
 
     f_low = hf1.waveform_arguments['f_low']
     f_high = hf1.waveform_arguments['f_high']
-    f_ref = hf1.waveform_arguments['f_ref']
+    f_ref = hf1.waveform_arguments['reference_frequency']
     
     bilby.core.utils.log.setup_logger(log_level=30)
     np.seterr(all='ignore')
