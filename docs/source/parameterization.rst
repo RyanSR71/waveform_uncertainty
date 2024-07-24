@@ -50,7 +50,9 @@ max_dphi_error: float [degrees], optional, (2)
 psd_data: numpy.ndarray, optional, (None)
     array containing the psd data and their corresponding frequencies
 correction_parameter: float, optional, (-1e-5)
-    value at which to cut the second derivative of amplitude difference (see `Equations and Notation <https://waveformuncertainty.readthedocs.io/en/latest/WFU_Equations.html#waveform-model-differences>`_)
+    value at which to cut the second derivative of amplitude difference
+ref_amplitude: numpy.ndarray, optional, (None)
+   reference amplitude for residual phase calculation; will be generated automatically if not given
 polarization: string, optional, ('plus')
     polarization of the strain data {'plus','cross'}
 fit_threshold: float [%], optional, (75)
