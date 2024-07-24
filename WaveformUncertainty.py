@@ -417,14 +417,15 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
 
     # setting the reference amplitude
     if ref_amplitude is None:
-            reference_waveform = bilby.gw.WaveformGenerator(
+        reference_waveform = bilby.gw.WaveformGenerator(
                 parameter_conversion=bilby.gw.conversion.convert_to_lal_binary_neutron_star_parameters,
                 parameters=injection(data,precession=precession,tides=tides), 
                 waveform_arguments=wfargs1,
                 frequency_domain_source_model=bilby.gw.source.lal_binary_neutron_star, 
                 sampling_frequency=sampling_frequency, 
                 duration=duration
-        )
+            )
+            
         ref_amplitude = np.abs(reference_waveform.frequency_domain_strain()[f'{polarization}'])
     
     for index in indexes:
