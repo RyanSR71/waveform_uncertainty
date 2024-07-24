@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 import numpy as np
 import bilby
@@ -20,8 +20,13 @@ def fd_model_difference(hf1,hf2,**kwargs):
     
     Parameters
     ===================
-    hf1 & hf2: bilby.gw.waveform_generator.WaveformGenerator
-        frequency domain waveform generator object WITH injected parameters (for strain calculation)
+    hf1: bilby.gw.waveform_generator.WaveformGenerator
+        frequency domain waveform generator object
+    hf2: bilby.gw.waveform_generator.WaveformGenerator
+        frequency domain waveform generator object
+    injection: dict, optional
+        injection parameters if waveform generators do not have parameters in them
+        default: None
     f_low: float, optional
         minimum frequency
         default: 20.0
@@ -59,6 +64,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
     final_index: int
         position within the frequency grid where the discontinuity correction starts
     '''
+    injection = kwargs.get('injection',None)
     f_low = kwargs.get('f_low',20.0)
     f_high = kwargs.get('f_high',2048.0)
     f_ref = kwargs.get('f_ref',50.0)
@@ -75,6 +81,16 @@ def fd_model_difference(hf1,hf2,**kwargs):
     frequency_grid = np.geomspace(f_low,f_high,npoints)
     wf_freqs = np.geomspace(start_index,len(hf1.frequency_array)-1,npoints).astype(int)
 
+    # adding injection parameters to waveform generators
+    try:
+        hf1.parameters
+    except:
+        hf1.frequency_domain_strain(parameters=injection)
+    try:
+        hf2.parameters
+    except:
+        hf2.frequency_domain_strain(parameters=injection)
+    
     # waveform amplitudes
     amplitude_1 = np.abs(hf1.frequency_domain_strain()[f'{polarization}'][wf_freqs])
     amplitude_2 = np.abs(hf2.frequency_domain_strain()[f'{polarization}'][wf_freqs])
