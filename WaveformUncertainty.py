@@ -48,6 +48,9 @@ def fd_model_difference(hf1,hf2,**kwargs):
     correction_parameter: float, optional
         value at which to cut the second derivative of amplitude difference (see WFU_equations #1)
         default: -1e-5
+    ref_amplitude: numpy.ndarray, optional
+        array of gravitational waveform amplitude
+        default None
         
     Returns
     ==================
@@ -72,6 +75,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
     correction_parameter = kwargs.get('correction_parameter',-1e-5)
+    ref_amplitude = kwargs.get('ref_amplitude',None)
     
     bilby.core.utils.log.setup_logger(log_level=30)
     np.seterr(all='ignore')
@@ -108,7 +112,8 @@ def fd_model_difference(hf1,hf2,**kwargs):
 
     # fitting a line to raw_phase_difference weighted by PSDs and subtracting off that line
     if psd_data is not None:
-        ref_amplitude = np.abs(hf1.frequency_domain_strain()['plus'][wf_freqs])
+        if ref_amplitude is None:
+            ref_amplitude = np.abs(hf1.frequency_domain_strain()[f'{polarization}'][wf_freqs])
         ref_sigma = np.interp(hf1.frequency_array[wf_freqs], psd_data[:,0],psd_data[:,1])
         align_weights = ref_amplitude*ref_amplitude / ref_sigma * hf1.frequency_array[wf_freqs]
         fit = np.polyfit(hf1.frequency_array[wf_freqs],raw_phase_difference,1,w=align_weights)
