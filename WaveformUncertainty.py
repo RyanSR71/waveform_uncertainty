@@ -76,11 +76,6 @@ def fd_model_difference(hf1,hf2,**kwargs):
     bilby.core.utils.log.setup_logger(log_level=30)
     np.seterr(all='ignore')
 
-    # setting up frequency grid and frequency indexes
-    start_index = np.argmin(np.abs(hf1.frequency_array - f_ref))+1
-    frequency_grid = np.geomspace(f_low,f_high,npoints)
-    wf_freqs = np.geomspace(start_index,len(hf1.frequency_array)-1,npoints).astype(int)
-
     # adding injection parameters to waveform generators
     try:
         hf1.parameters
@@ -91,6 +86,11 @@ def fd_model_difference(hf1,hf2,**kwargs):
     except:
         hf2.frequency_domain_strain(parameters=injection)
     
+    # setting up frequency grid and frequency indexes
+    start_index = np.argmin(np.abs(hf1.frequency_array - f_ref))+1
+    frequency_grid = np.geomspace(f_low,f_high,npoints)
+    wf_freqs = np.geomspace(start_index,len(hf1.frequency_array)-1,npoints).astype(int)
+
     # waveform amplitudes
     amplitude_1 = np.abs(hf1.frequency_domain_strain()[f'{polarization}'][wf_freqs])
     amplitude_2 = np.abs(hf2.frequency_domain_strain()[f'{polarization}'][wf_freqs])
