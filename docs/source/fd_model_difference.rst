@@ -12,9 +12,11 @@ Generates frequency domain waveform differences between two models hf1 and hf2 (
 Parameters:
 -----------
 hf1: bilby.gw.waveform_generator.WaveformGenerator
-   frequency domain waveform generator object WITH injected parameters (for strain calculation)
+   frequency domain waveform generator object
 hf2: bilby.gw.waveform_generator.WaveformGenerator
-   frequency domain waveform generator object WITH injected parameters (for strain calculation)
+   frequency domain waveform generator object
+injection: dictionary, optional, None
+   dictionary of injection parameters if waveform generators do not have parameters; if they do not, this argument is not optional 
 f_low: float, optional, (20.0)
    minimum frequency
 f_high: float, optional, (2048.0)
@@ -28,7 +30,9 @@ polarization: string, optional, ('plus')
 psd_data: numpy.ndarray, optional, (None)
    array containing the psd data and their corresponding frequencies
 correction_parameter: float, optional, (-1e-5)
-   value at which to cut the second derivative of amplitude difference (see `Equations and Notation <https://waveformuncertainty.readthedocs.io/en/latest/WFU_Equations.html#waveform-model-differences>`_)
+   value at which to cut the second derivative of amplitude difference
+ref_amplitude: numpy.ndarray, optional, None
+   reference amplitude for residual phase calculation; will be generated automatically if not given
 
 Returns:
 --------
