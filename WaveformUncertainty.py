@@ -325,6 +325,9 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
     correction_parameter: float, optional
         value at which to cut the second derivative of amplitude difference (see WFU_equations #1)
         default: -1e-5
+    ref_amplitude: numpy.ndarray, optional
+        reference amplitude for residual phase calculation
+        default: None
     polarization: string, optional
         polarization of the strain data (plus or cross)
         default: 'plus'
@@ -363,6 +366,7 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
     correction_parameter = kwargs.get('correction_parameter',-1e-5)
+    ref_amplitude = kwargs.get('ref_amplitude',None)
     precession = kwargs.get('precession',False)
     tides = kwargs.get('tides',True)
     fit_parameters = kwargs.get('fit_parameters',15)
@@ -410,6 +414,18 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
     start = tm.time()
     
     print("Generating Waveform Differences and Parameterizing...")
+
+    # setting the reference amplitude
+    if ref_amplitude is None:
+            reference_waveform = bilby.gw.WaveformGenerator(
+                parameter_conversion=bilby.gw.conversion.convert_to_lal_binary_neutron_star_parameters,
+                parameters=injection(data,precession=precession,tides=tides), 
+                waveform_arguments=wfargs1,
+                frequency_domain_source_model=bilby.gw.source.lal_binary_neutron_star, 
+                sampling_frequency=sampling_frequency, 
+                duration=duration
+        )
+        ref_amplitude = np.abs(reference_waveform.frequency_domain_strain()[f'{polarization}'])
     
     for index in indexes:
     
@@ -434,14 +450,7 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
         )
 
         # calculating waveform model differences
-        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,
-                                                                                                                                                             f_low=f_low,
-                                                                                                                                                             f_high=f_high,
-                                                                                                                                                             f_ref=f_ref,
-                                                                                                                                                             npoints=npoints,
-                                                                                                                                                             polarization=polarization,
-                                                                                                                                                             psd_data=psd_data,
-                                                                                                                                                             correction_parameter=correction_parameter)
+        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,f_low=f_low,f_high=f_high,f_ref=f_ref,npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter=correction_parameter,ref_amplitude=ref_amplitude)
 
         # chebyshev polynomial fits and saving coefficients
         amplitude_difference_fit = np.polynomial.chebyshev.Chebyshev.fit((frequency_grid[0:final_index]),amplitude_difference[0:final_index],fit_parameters-1)
