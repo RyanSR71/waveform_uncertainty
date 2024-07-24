@@ -8,8 +8,8 @@ WaveformUncertainty.parameterization
                                         npoints=1000,f_low=20.0,f_high=2048.0,f_ref=50.0,
                                         sampling_frequency=4096,duration=256,
                                         max_amplitude_error=2,max_phase_error=2,psd_data=None,
-                                        correction_parameter=-1e-5,ref_amplitude=None,polarization='plus',
-                                        fit_threshold=75)
+                                        correction_parameter=-1e-5,ref_amplitude=None,
+                                        polarization='plus',fit_threshold=75)
 
 Generates samples of waveform differences between two approximants and parameterizes the data (See `Equations and Notation <https://waveformuncertainty.readthedocs.io/en/latest/WFU_Equations.html#parameterization>`_)
 
