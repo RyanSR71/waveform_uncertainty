@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.3.1"
+__version__ = "0.3.2"
 
 import numpy as np
 import bilby
@@ -27,15 +27,6 @@ def fd_model_difference(hf1,hf2,**kwargs):
     injection: dict, optional
         injection parameters if waveform generators do not have parameters in them
         default: None
-    f_low: float, optional
-        minimum frequency
-        default: 20.0
-    f_high: float, optional
-        maximum frequency
-        default: 2048.0
-    f_ref: float, optional
-        reference frequency
-        default: 50.0
     npoints: int, optional
         length of the desired frequency grid
         default: 1000
@@ -68,14 +59,15 @@ def fd_model_difference(hf1,hf2,**kwargs):
         position within the frequency grid where the discontinuity correction starts
     '''
     injection = kwargs.get('injection',None)
-    f_low = kwargs.get('f_low',20.0)
-    f_high = kwargs.get('f_high',2048.0)
-    f_ref = kwargs.get('f_ref',50.0)
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
     correction_parameter = kwargs.get('correction_parameter',-1e-5)
     ref_amplitude = kwargs.get('ref_amplitude',None)
+
+    f_low = hf1.waveform_arguments['f_low']
+    f_high = hf1.waveform_arguments['f_high']
+    f_ref = hf1.waveform_arguments['f_ref']
     
     bilby.core.utils.log.setup_logger(log_level=30)
     np.seterr(all='ignore')
@@ -451,7 +443,7 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
         )
 
         # calculating waveform model differences
-        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,f_low=f_low,f_high=f_high,f_ref=f_ref,npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter=correction_parameter,ref_amplitude=ref_amplitude)
+        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter=correction_parameter,ref_amplitude=ref_amplitude)
 
         # chebyshev polynomial fits and saving coefficients
         amplitude_difference_fit = np.polynomial.chebyshev.Chebyshev.fit((frequency_grid[0:final_index]),amplitude_difference[0:final_index],fit_parameters-1)
