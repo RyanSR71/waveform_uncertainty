@@ -37,7 +37,7 @@ ref_amplitude: numpy.ndarray, optional, None
 Returns:
 --------
 frequency_grid: numpy.ndarray
-   frequency grid that corresponds to the uncertainty arrays
+   array of frequencies that corresponds to the uncertainty arrays
 amplitude_difference: numpy.ndarray
    array of amplitude difference values
 phase_difference: numpy.ndarray
