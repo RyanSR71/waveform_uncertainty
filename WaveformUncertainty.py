@@ -297,7 +297,7 @@ def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
         default: None
     correction_parameter: float, optional
         value at which to cut the second derivative of amplitude difference (see WFU_equations #1)
-        default: -1e-5
+        default: 1e-5
     ref_amplitude: numpy.ndarray, optional
         reference amplitude for residual phase calculation
         default: None
@@ -335,7 +335,7 @@ def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
-    correction_parameter = kwargs.get('correction_parameter',-1e-5)
+    correction_parameter = kwargs.get('correction_parameter',1e-5)
     ref_amplitude = kwargs.get('ref_amplitude',None)
     precession = kwargs.get('precession',False)
     tides = kwargs.get('tides',True)
