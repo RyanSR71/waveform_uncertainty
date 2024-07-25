@@ -366,9 +366,6 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
         indexes.append(index)
         index_samples.remove(index)
     
-    wfargs1 = dict(waveform_approximant=approximant1, reference_frequency=f_ref, catch_waveform_errors=True)
-    wfargs2 = dict(waveform_approximant=approximant2, reference_frequency=f_ref, catch_waveform_errors=True)
-    
     def progressBar(count_value, total, suffix=''): #To Do
         bar_length = 100
         filled_up_Length = int(round(bar_length* count_value / float(total)))
