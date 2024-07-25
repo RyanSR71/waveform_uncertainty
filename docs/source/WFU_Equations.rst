@@ -2,9 +2,9 @@ Equations and Notation
 ======================
 This work is in collaboration with and derived from past work by Dr. Jocelyn Read. See `Jocelyn Read 2023 Class. Quantum Grav. 40 135002 <https://arxiv.org/abs/2301.06630v2>`_.
 
-Compact Binary Inspiral Gravitational Waves
--------------------------------------------
-Compact Binary Inspiral Gravitional Waves are gravitational waves that result from the inspiral of two compact objects, such as black holes and neutron stars. As the two objects fall together, they orbit around each other faster, sending out louder gravitational waves. This reaches a peak amplitude at the moment the objects come together. We can detect these gravitational waves using large Michelson interferometers, such as LIGO Hanford and LIGO Livingston. The waveform we receive is in the form of gravitational wave strain, :math:`h`, which is complex. In the frequency domain, we represent the waveform in terms of its amplitude, :math:`A`, and phase, :math:`\phi`:
+Introduction
+------------
+Compact Binary Inspiral Gravitional Waves, as the name suggests, are gravitational waves that result from the inspiral of two compact objects, such as black holes and neutron stars. As the two objects fall together, they orbit around each other faster and faster, sending out more intense gravitational waves. This reaches a peak amplitude at the moment the objects come together. We can detect these gravitational waves using large Michelson interferometers, such as LIGO Hanford and LIGO Livingston. The waveform we receive is in the form of gravitational wave strain, :math:`h`, which is complex. In the frequency domain, we represent the waveform in terms of its amplitude, :math:`A`, and phase, :math:`\phi`:
 
 .. math::
 
@@ -28,7 +28,9 @@ and
         \phi(f)=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[h(f)]}{\mathrm{Re}[h(f)]}\right).
     \end{equation}
 
-Using these waveforms and our best understanding and models of general relativity, we can work backwards from the signal to infer the properties of the two objects that created the gravitational waves. We do this with parameter estimation, which uses Bayesian statistics alongside a waveform model, or waveform approximant, to show a probability distribution of the parameters in the system, such as source masses, spins, and tidal deformabilties. The waveform approximants we use, such as ``IMRPhenomPv2_NRTidalv2`` and ``SEOBNRv4T_surrogate``, approximate the system well, but are not perfect. The error between the approximated waveform and the true waveform is waveform uncertainty, which is defined in the amplitude and phase of the waveform; :math:`\delta{A}` and :math:`\delta\Phi` respectively. ``WaveformUncertainty`` introduces a method of correcting for these uncertainties by adding waveform difference parameters to the waveform model, allowing the waveform differences to be sampled during a parameter estimation run. This negates the waveform uncertainty as it molds the waveform approximant to the true waveform, eliminating the error. 
+Using these waveforms and our best understanding and models of general relativity, we can work backwards from the signal to infer the properties of the two objects that created the gravitational waves. We do this with parameter estimation, which uses Bayesian statistics alongside a waveform model, or waveform approximant, to show a probability distribution for the parameters in the system; such as source masses, spins, and tidal deformabilties; which is known as the posterior. The waveform approximants we use, such as ``IMRPhenomPv2_NRTidalv2`` and ``SEOBNRv4T_surrogate``, approximate the system well, but are not perfect. The error between the approximated waveform and the true waveform is waveform uncertainty, which is defined in the amplitude and phase of the waveform as :math:`\delta{A}` and :math:`\delta\Phi` respectively. 
+
+``WaveformUncertainty`` introduces a method of correcting for these uncertainties by adding waveform difference parameters to the waveform model, allowing the waveform differences to be sampled during a parameter estimation run. This process molds the approximated waveform to the true waveform, eliminating the error and returning a more accurate posterior. The following sections will introduce the necessary equations and notation behind the functions and usage of this package.
 
 Frequency Domain Waveform Differences
 -------------------------------------
@@ -125,8 +127,34 @@ Waveform uncertainties are the variabilities of the waveform's amplitude and pha
 
     We will be using residual phase uncertainty, :math:`\Delta\Phi`, as our phase uncertainty from now on.
 
-Parameterization
-----------------
+Likelihood and Sampling
+-----------------------
+Parameter estimation, in the context of gravitational waves, is a process that utilizes Bayes' Theorem and Bayesian statistics to infer the properties of the objects that created the gravitational waves. Given a waveform model and the gravitational wave data, a sampler, such as ``nestle`` or ``dynesty`` can choose random samples for each parameter in the system. This random draw is then put into the model, which is then compared to the gravitational wave data. This comparison is done using a likelihood function, which peaks when the model and the data match. Repeating this process many times maps out the likelihood for each parameter. 
+
+The likelihood function we use to sample over waveform uncertainty is
+
+.. math::
+
+    \small \begin{equation}
+        \mathcal{L}(h|\theta,\alpha,\beta)=\prod_{j}\frac{1}{2\pi{P(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)\left(1+\Delta{A}_{\delta}(f_{j};\{f_{n},\alpha_{n}\})\right)\mathrm{exp}\left[i\Delta\Phi_{\delta}(f_{j};\{f_{n},\beta_{n}\})\right]|^{2}}{P(f_{j})}\right),
+    \end{equation}
+
+where :math:`h` is frequency domain gravitational wave strain, :math:`\theta` is a set of source parameters for the waveform approximants, :math:`\alpha` and :math:`\beta` parameters are spline parameters corresponding to frequency nodes :math:`f_{n}`, :math:`j` is an index corresponding to frequency bins, :math:`\Delta{f}` is the distance between frequency bins, :math:`P` is power spectral density data, :math:`\mu` is a frequency domain waveform model, :math:`\Delta{A}_{\delta}` is a waveform difference model drawn from waveform uncertainty, and :math:`\Delta\Phi_{\delta}` is a waveform difference model drawn from waveform uncertainty. The waveform uncertainty parameters, :math:`\alpha` and :math:`\beta`, are defined as being draws from a normal distribution around zero with their standard deviations being our waveform uncertainties, :math:`\delta{A}` and :math:`\delta\Phi`:
+
+.. math::
+
+    \begin{equation}
+        \alpha_{n}\sim\mathcal{N}(0,\delta{A}_{\mu}(f_{n})),
+    \end{equation}
+
+.. math::
+
+    \begin{equation}
+        \beta_{n}\sim\mathcal{N}(0,\delta\Phi_{\mu}(f_{n})).
+    \end{equation}
+
+Parameterizing Waveform Differences
+-----------------------------------
 Computationally, generating individual waveform differences is a simple and quick task. However, to generate waveform uncertainty, we need many sets of waveform differences; at least 1000 for a decent model. Generating this number of waveform differences can take a lot of time and is generally tedious to do every time we want waveform uncertainty. To solve this issue, we can parameterize each waveform difference curve and save the parameters in a file. That way, we can generate all of our draws of waveform differences once and can simply load in the data in seconds next time we need them. This is achieved using Chebyshev polynomial series up to the discontinuity, as shown here:
 
 .. math:: 
@@ -152,48 +180,3 @@ where :math:`T_{n}` are Chebyshev polynomials of the first kind. We see that ins
 .. note::
 
     The error margins on :math:`\Delta{A}_{T}` and :math:`\Delta\Phi_{T}` can be adjusted in this package's functions. See ``max_ampltitude_error`` and ``max_phase_error`` in `WaveformUncertainty.parameterization <https://waveformuncertainty.readthedocs.io/en/latest/parameterization.html>`_.
-
-Likelihood
-----------
-Parameter estimation is a process that chooses random samples to compare a model to data. Using the model and the data, the likelihood of the samples can be found. Samples are drawn thousands of times in order to map out the likelihood, which peaks when the data and the model match. The output of a parameter estimation run is the posterior, which consists of the probability distributions of each parameter sampled over the run. 
-
-The likelihood function we use to sample over waveform uncertainty is
-
-.. math::
-
-    \small \begin{equation}
-        \mathcal{L}(h|\theta,\alpha,\beta)=\prod_{j}\frac{1}{2\pi{P(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)\left(1+\Delta{A}_{\delta}(f_{j};\{f_{n},\alpha_{n}\})\right)\mathrm{exp}\left[i\Delta\Phi_{\delta}(f_{j};\{f_{n},\beta_{n}\})\right]|^{2}}{P(f_{j})}\right),
-    \end{equation}
-
-where :math:`h` is frequency domain gravitational wave strain, :math:`\theta` is a set of source parameters for the waveform approximants, :math:`\alpha` and :math:`\beta` parameters are spline parameters corresponding to frequency nodes :math:`f_{n}`, :math:`j` is an index corresponding to frequency bins, :math:`\Delta{f}` is the distance between frequency bins, :math:`P` is power spectral density data, :math:`\mu` is a frequency domain waveform model, :math:`\Delta{A}_{\delta}` is a waveform difference model drawn from waveform uncertainty, and :math:`\Delta\Phi_{\delta}` is a waveform difference model drawn from waveform uncertainty. The waveform uncertainty parameters, :math:`\alpha` and :math:`\beta`, are defined as being draws from a normal distribution around zero with their standard deviations being our waveform uncertainties, :math:`\delta{A}` and :math:`\delta\Phi`:
-
-.. math::
-
-    \begin{equation}
-        \alpha_{n}\sim\mathcal{N}(0,\delta{A}_{\mu}(f_{n})),
-    \end{equation}
-
-.. math::
-
-    \begin{equation}
-        \beta_{n}\sim\mathcal{N}(0,\delta\Phi_{\mu}(f_{n})).
-    \end{equation}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
