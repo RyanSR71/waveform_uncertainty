@@ -3,7 +3,7 @@ WaveformUncertainty.fd_model_difference
 
 .. code-block:: python
 
-   WaveformUncertainty.fd_model_difference(hf1,hf2,injection=None,f_low=20.0,f_high=2048.0,f_ref=50.0,
+   WaveformUncertainty.fd_model_difference(hf1,hf2,injection=None,
                                            npoints=1000,polarization='plus',psd_data=None,
                                            correction_parameter=-1e-5,ref_amplitude=None)
 
@@ -17,12 +17,6 @@ hf2: bilby.gw.waveform_generator.WaveformGenerator
    frequency domain waveform generator object
 injection: dictionary, optional, None
    dictionary of injection parameters if waveform generators do not have parameters; if they do not, this argument is not optional 
-f_low: float, optional, (20.0)
-   minimum frequency
-f_high: float, optional, (2048.0)
-   maximum frequency
-f_ref: float, optional, (50.0)
-   reference frequency
 npoints: int, optional, (1000)
    length of the desired frequency grid
 polarization: string, optional, ('plus')
