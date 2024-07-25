@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 
 import numpy as np
 import bilby
@@ -90,8 +90,8 @@ def fd_model_difference(hf1,hf2,**kwargs):
     phase_1 = np.angle(hf1.frequency_domain_strain()[f'{polarization}'][wf_freqs])
     phase_2 = np.angle(hf2.frequency_domain_strain()[f'{polarization}'][wf_freqs])
                      
-    amplitude_difference = (amplitude_1-amplitude_2)/amplitude_1
-    raw_phase_difference = phase_1-phase_2
+    amplitude_difference = (amplitude_2-amplitude_1)/amplitude_1
+    raw_phase_difference = phase_2-phase_1
 
     # removing phase shifts of 2pi
     while any(value > 6 for value in [(raw_phase_difference[i+1]-raw_phase_difference[i]) for i in range(len(raw_phase_difference)-2)]):
