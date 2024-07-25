@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.4.1"
+__version__ = "0.4.2"
 
 import numpy as np
 import bilby
@@ -112,7 +112,10 @@ def fd_model_difference(hf1,hf2,**kwargs):
     amplitude_difference_second_derivative = np.gradient(amplitude_difference_first_derivative)/np.gradient(frequency_grid)
 
     for i in range(len(amplitude_difference_second_derivative)):
-        if amplitude_difference_second_derivative[i] > correction_parameter:
+        if correction_parameter is None:
+            final_index = len(hf1.frequency_array[wf_freqs])-1
+            break
+        elif amplitude_difference_second_derivative[i] > correction_parameter:
             final_index = i
             break
         else: 
