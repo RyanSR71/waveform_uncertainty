@@ -50,21 +50,21 @@ Returns:
 --------
 parameterized_data: numpy.ndarray
     table containing the index, frequency_grid, dA_fit_parameters, dphi_fit_parameters, final_index, dA_final_point, dphi_final_point,
-    and injection_parameters for each draw of waveform uncertainty
+    and injection_parameters for each draw of waveform difference
       
     index: int
-        position within the list of indexes the waveform uncertainty draws were drawn from (only for debugging purposes)
+        position within the list of indexes the waveform difference draws were drawn from (only for debugging purposes)
     frequency_grid: numpy.ndarray
         frequencies corresponding to the frequency parameters specified
     dA_fit_parameters: numpy.ndarray
-        parameters corresponding to the parameterization of the amplitude uncertainty
+        parameters corresponding to the parameterization of the amplitude difference
     dphi_fit_parameters: numpy.ndarray
-        parameters corresponding to the parameterization of the phase uncertainty
+        parameters corresponding to the parameterization of the phase difference
     final_index: int
-        position within the frequency grid where the tidal correction starts
+        position within the frequency grid where the discontinuity correction occurs
     dA_final_point: float
-        value of the amplitude uncertainty that the tidal correction levels off at
+        value of the amplitude difference at the discontinuity correction
     dphi_final_point: float
-        value of the phase uncertainty that the tidal correction levels off at
+        value of the phase difference at the discontinuity correction
     injection parameters: dictionary
         neutron star parameters injected into the waveform generators
