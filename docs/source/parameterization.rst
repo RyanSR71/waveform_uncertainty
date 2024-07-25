@@ -6,7 +6,7 @@ WaveformUncertainty.parameterization
    WaveformUncertainty.parameterization(hf1,hf1,parameter_data,nsamples,
                                         precession=False,tides=True,fit_parameters=15,
                                         npoints=1000,max_amplitude_error=2,max_phase_error=2,
-                                        psd_data=None,correction_parameter=-1e-5,
+                                        psd_data=None,correction_parameter=1e-5,
                                         ref_amplitude=None,polarization='plus',fit_threshold=75)
 
 Generates samples of waveform differences between two approximants and parameterizes the data (See `Equations and Notation <https://waveformuncertainty.readthedocs.io/en/latest/WFU_Equations.html#parameterization>`_)
@@ -37,7 +37,7 @@ max_dphi_error: float [degrees], optional, (2)
     maximum allowed error between the phase uncertainty and its parameterization
 psd_data: numpy.ndarray, optional, (None)
     array containing the psd data and their corresponding frequencies
-correction_parameter: float, optional, (-1e-5)
+correction_parameter: float, optional, (1e-5)
     value at which to cut the second derivative of amplitude difference
 ref_amplitude: numpy.ndarray, optional, (None)
    reference amplitude for residual phase calculation; will be generated automatically if not given
