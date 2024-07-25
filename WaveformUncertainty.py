@@ -38,7 +38,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
         default: None
     correction_parameter: float, optional
         value at which to cut the second derivative of amplitude difference (see WFU_equations #1)
-        default: -1e-5
+        default: 1e-5
     ref_amplitude: numpy.ndarray, optional
         array of gravitational waveform amplitude
         default None
@@ -62,7 +62,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
-    correction_parameter = kwargs.get('correction_parameter',-1e-5)
+    correction_parameter = kwargs.get('correction_parameter',1e-5)
     ref_amplitude = kwargs.get('ref_amplitude',None)
 
     f_low = hf1.waveform_arguments['f_low']
@@ -108,11 +108,11 @@ def fd_model_difference(hf1,hf2,**kwargs):
         residual_phase_difference = raw_phase_difference - np.poly1d(fit)(hf1.frequency_array[wf_freqs])
 
     # taking two frequency derivatives of amplitude_difference and comparing it to the correction parameter for f_COR calculation
-    amplitude_difference_first_derivative = np.gradient(-1*amplitude_difference)/np.gradient(frequency_grid)
+    amplitude_difference_first_derivative = np.gradient(amplitude_difference)/np.gradient(frequency_grid)
     amplitude_difference_second_derivative = np.gradient(amplitude_difference_first_derivative)/np.gradient(frequency_grid)
 
     for i in range(len(amplitude_difference_second_derivative)):
-        if amplitude_difference_second_derivative[i] < correction_parameter:
+        if amplitude_difference_second_derivative[i] > correction_parameter:
             final_index = i
             break
         else: 
