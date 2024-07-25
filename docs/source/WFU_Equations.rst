@@ -69,10 +69,10 @@ When finding the waveform differences between two waveform models, :math:`\mu`, 
 .. math::
 
     \begin{equation}
-        \lim_{|h_{1}|\to{0}}\left(\frac{|h_{2}|-|h_{1}|}{|h_{1}|}\right)=-\infty.
+        \lim_{|h_{1}|\to{0}}\left(\frac{|h_{2}|-|h_{1}|}{|h_{1}|}\right)=\infty.
     \end{equation}
 
-This results in the :math:`\Delta{A}` values abruptly going down to negative infinity. When dealing with waveform approximants, especially those that handle tidal deformabilities, this discontinuity is extremely common. To deal with these discontinuities, we cut off the waveform differences at the discontinuity and hold it constant afterwards. We then define the following waveform model differences:
+This results in the :math:`\Delta{A}` values abruptly increasing to infinity. When using waveform approximants, especially those that handle tidal deformabilities, this discontinuity is extremely common. To deal with these discontinuities, we cut off the waveform differences at the discontinuity and hold it constant afterwards. We then define the following waveform model differences:
 
 .. math::
 
