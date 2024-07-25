@@ -175,7 +175,7 @@ Computationally, generating individual waveform differences is a simple and quic
        \end{cases}\hspace{0.2cm},
     \end{equation}
 
-where :math:`T_{n}` are Chebyshev polynomials of the first kind. We see that instead of trying to carry around waveform models, which do not have simple functional forms, we can carry around a handful of coefficients, discontinuity correction frequencies, and the values the waveform differences level off at. With these parameters, we can reconstruct the original waveform differences within 2% in :math:`\Delta{A}` and :math:`2^{\circ}` in :math:`\Delta\Phi`. 
+where :math:`T_{n}` are Chebyshev polynomials of the first kind. In a file, we store the Chebyshev coefficients, :math:`a` and :math:`b`, the discontinuity correction frequency, :math:`f_{COR}`, the values of the waveform differences at :math:`f_{COR}`, :math:`\Delta{A}_{\mu}(f_{COR},\theta})` and :math:`\Delta\Phi_{\mu}(f_{COR},\theta})`, and other parameters needed to store the data. With these parameters, we can reconstruct the original waveform differences within 2% in :math:`\Delta{A}` and :math:`2^{\circ}` in :math:`\Delta\Phi`. 
 
 .. note::
 
