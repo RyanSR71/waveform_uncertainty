@@ -24,7 +24,7 @@ polarization: string, optional, ('plus')
 psd_data: numpy.ndarray, optional, (None)
    array containing the psd data and their corresponding frequencies
 correction_parameter: float, optional, (1e-5)
-   value at which to cut the second derivative of amplitude difference
+   value at which to cut the second derivative of amplitude difference; if None, correction will not occur
 ref_amplitude: numpy.ndarray, optional, None
    reference amplitude for residual phase calculation; will be generated automatically if not given
 
