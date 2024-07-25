@@ -38,8 +38,10 @@ max_dphi_error: float [degrees], optional, (2)
     maximum allowed error between the phase uncertainty and its parameterization
 psd_data: numpy.ndarray, optional, (None)
     array containing the psd data and their corresponding frequencies
-correction_parameter: float, optional, (1e-5)
+correction_parameter_A: float, optional, (1e-5)
     value at which to cut the second derivative of amplitude difference; if None, correction will not occur
+correction_parameter_B: int, optional, (0)
+    index at which to start the search for any discontinuity
 ref_amplitude: numpy.ndarray, optional, (None)
    reference amplitude for residual phase calculation; will be generated automatically if not given
 polarization: string, optional, ('plus')
