@@ -28,6 +28,8 @@ and
         \phi(f)=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[h(f)]}{\mathrm{Re}[h(f)]}\right).
     \end{equation}
 
+Using these waveforms and our best understanding and models of general relativity, we can work backwards from the signal to infer the properties of the two objects that created the gravitational waves. We do this with parameter estimation, which uses Bayesian statistics alongside a waveform model, or waveform approximant, to show a probability distribution of the parameters in the system, such as source masses, spins, and tidal deformabilties. The waveform approximants we use, such as ``IMRPhenomPv2_NRTidalv2`` and ``SEOBNRv4T_surrogate``, approximate the system well, but are not perfect. The error between the approximated waveform and the true waveform is '`Waveform Uncertainty`', which lives in the amplitude and phase of the waveform, :math:`\delta{A}` and :math:`\delta\Phi` respectively. ``WaveformUncertainty`` introduces a method of correcting for these uncertainties by adding waveform difference parameters to the waveform model, allowing the waveform differences to be sampled during a parameter estimation run. This negates the waveform uncertainty as it molds the waveform approximant to the true waveform, eliminating the error. 
+
 Frequency Domain Waveform Differences
 -------------------------------------
 Amplitude difference, :math:`\Delta{A}`, is defined generally as
