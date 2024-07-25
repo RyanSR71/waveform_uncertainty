@@ -35,13 +35,13 @@ Now we consider what :math:`dA` and :math:`d\phi` are in terms of our waveform d
 .. math::
     
     \begin{equation}
-        \Delta{A}=\frac{|h_{1}|-|h_{2}|}{|h_{1}|},
+        \Delta{A}=\frac{|h_{2}|-|h_{1}|}{|h_{1}|},
     \end{equation} 
 
 .. math::
 
     \begin{equation}
-        \Delta\Phi=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{1}\right]}{\mathrm{Re}\left[h_{1}\right]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{2}\right]}{\mathrm{Re}\left[h_{2}\right]}\right)-(2\pi{t_{c}}f+\phi_{c}).
+        \Delta\Phi=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{2}\right]}{\mathrm{Re}\left[h_{2}\right]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{1}\right]}{\mathrm{Re}\left[h_{1}\right]}\right)-(2\pi{t_{c}}f+\phi_{c}).
     \end{equation}
 
 We see that our phase difference, :math:`\Delta\Phi`, is itself a phase, and can therefore be directly added to our model's phase. In other words: :math:`d\phi=\Delta\Phi`:
