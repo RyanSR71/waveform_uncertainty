@@ -78,7 +78,7 @@ This results in the :math:`\Delta{A}` values abruptly going down to negative inf
 
     \begin{equation}
         \Delta{A}_{\mu}(f;\theta)= \begin{cases} 
-          \frac{|\mu_{EBO}(f;\theta)|-|\mu_{IMR}(f;\theta)|}{|\mu_{IMR}(f;\theta)|} & f \leq f_{COR} \\
+          \frac{|\mu_{EOB}(f;\theta)|-|\mu_{IMR}(f;\theta)|}{|\mu_{IMR}(f;\theta)|} & f \leq f_{COR} \\
           \Delta{A}_{\mu}(f_{COR};\theta) & f > f_{COR}
        \end{cases}\hspace{0.2cm},
     \end{equation}
