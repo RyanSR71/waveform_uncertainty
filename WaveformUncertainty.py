@@ -73,13 +73,8 @@ def fd_model_difference(hf1,hf2,**kwargs):
     np.seterr(all='ignore')
 
     # adding injection parameters to waveform generators
-    try:
-        hf1.parameters
-    except:
+    if injection is not None:
         hf1.frequency_domain_strain(parameters=injection)
-    try:
-        hf2.parameters
-    except:
         hf2.frequency_domain_strain(parameters=injection)
     
     # setting up frequency grid and frequency indexes
