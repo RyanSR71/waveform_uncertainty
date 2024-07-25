@@ -302,9 +302,12 @@ def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
     psd_data: numpy.ndarray, optional
         array containing the psd data and their corresponding frequencies
         default: None
-    correction_parameter: float, optional
-        value at which to cut the second derivative of amplitude difference (see WFU_equations #1)
+    correction_parameter_A: float, optional
+        value at which to cut the second derivative of amplitude difference; if None, correction will not occur
         default: 1e-5
+    correction_parameter_B: int, optional
+        index at which to start the search for any discontinuity
+        default: 0
     ref_amplitude: numpy.ndarray, optional
         reference amplitude for residual phase calculation
         default: None
