@@ -5,7 +5,8 @@ WaveformUncertainty.fd_model_difference
 
    WaveformUncertainty.fd_model_difference(hf1,hf2,injection=None,npoints=1000,
                                            polarization='plus',psd_data=None,
-                                           correction_parameter_A=1e-5,correction_parameter_B=0,ref_amplitude=None)
+                                           correction_parameter_A=1e-5,correction_parameter_B=0,
+                                           ref_amplitude=None)
 
 Generates frequency domain waveform differences between two models hf1 and hf2 (See `Equations and Notation <https://waveformuncertainty.readthedocs.io/en/latest/WFU_Equations.html#waveform-model-differences>`_)
 
