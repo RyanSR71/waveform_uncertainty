@@ -39,7 +39,7 @@ Amplitude difference, :math:`\Delta{A}`, is defined generally as
 .. math::
     
     \begin{equation}
-        \Delta{A}=\frac{|h_{1}|-|h_{2}|}{|h_{1}|},
+        \Delta{A}=\frac{|h_{2}|-|h_{1}|}{|h_{1}|},
     \end{equation} 
 
 where :math:`h_{1}` and :math:`h_{2}` are sets of frequency domain gravitational wave strain, which are complex. Amplitude difference is a relative error between the two waveforms relative to :math:`h_{1}`.
@@ -49,7 +49,7 @@ Raw phase difference, :math:`\Delta\phi`, is then defined as
 .. math::
 
     \begin{equation}
-        \Delta\phi=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{1}\right]}{\mathrm{Re}\left[h_{1}\right]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{2}\right]}{\mathrm{Re}\left[h_{2}\right]}\right),
+        \Delta\phi=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{2}\right]}{\mathrm{Re}\left[h_{2}\right]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{1}\right]}{\mathrm{Re}\left[h_{1}\right]}\right),
     \end{equation} 
     
 Raw phase difference contains overall phase and time shifts which need to be removed for analysis. To do this, we find residual phase difference, :math:`\Delta\Phi`:
@@ -69,7 +69,7 @@ When finding the waveform differences between two waveform models, :math:`\mu`, 
 .. math::
 
     \begin{equation}
-        \lim_{|h_{1}|\to{0}}\left(\frac{|h_{1}|-|h_{2}|}{|h_{1}|}\right)=-\infty.
+        \lim_{|h_{1}|\to{0}}\left(\frac{|h_{2}|-|h_{1}|}{|h_{1}|}\right)=-\infty.
     \end{equation}
 
 This results in the :math:`\Delta{A}` values abruptly going down to negative infinity. When dealing with waveform approximants, especially those that handle tidal deformabilities, this discontinuity is extremely common. To deal with these discontinuities, we cut off the waveform differences at the discontinuity and hold it constant afterwards. We then define the following waveform model differences:
@@ -78,7 +78,7 @@ This results in the :math:`\Delta{A}` values abruptly going down to negative inf
 
     \begin{equation}
         \Delta{A}_{\mu}(f;\theta)= \begin{cases} 
-          \frac{|\mu_{IMR}(f;\theta)|-|\mu_{EOB}(f;\theta)|}{|\mu_{IMR}(f;\theta)|} & f \leq f_{COR} \\
+          \frac{|\mu_{EBO}(f;\theta)|-|\mu_{IMR}(f;\theta)|}{|\mu_{IMR}(f;\theta)|} & f \leq f_{COR} \\
           \Delta{A}_{\mu}(f_{COR};\theta) & f > f_{COR}
        \end{cases}\hspace{0.2cm},
     \end{equation}
@@ -87,7 +87,7 @@ This results in the :math:`\Delta{A}` values abruptly going down to negative inf
 
     \begin{equation}
         \Delta\phi_{\mu}(f;\theta)= \begin{cases} 
-          \mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[\mu_{IMR}(f;\theta)]}{\mathrm{Re}[\mu_{IMR}(f;\theta)]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[\mu_{EOB}(f;\theta)]}{\mathrm{Re}[\mu_{EOB}(f;\theta)]}\right) & f \leq f_{COR} \\
+          \mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[\mu_{EOB}(f;\theta)]}{\mathrm{Re}[\mu_{EOB}(f;\theta)]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[\mu_{IMR}(f;\theta)]}{\mathrm{Re}[\mu_{IMR}(f;\theta)]}\right) & f \leq f_{COR} \\
           \Delta\phi_{\mu}(f_{COR};\theta) & f > f_{COR}
        \end{cases}\hspace{0.2cm},
     \end{equation}
