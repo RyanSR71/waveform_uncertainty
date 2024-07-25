@@ -3,22 +3,20 @@ WaveformUncertainty.parameterization
 
 .. code-block:: python
 
-   WaveformUncertainty.parameterization(approximant1,approximant2,parameter_data,nsamples,
+   WaveformUncertainty.parameterization(hf1,hf1,parameter_data,nsamples,
                                         precession=False,tides=True,fit_parameters=15,
-                                        npoints=1000,f_low=20.0,f_high=2048.0,f_ref=50.0,
-                                        sampling_frequency=4096,duration=256,
-                                        max_amplitude_error=2,max_phase_error=2,psd_data=None,
-                                        correction_parameter=-1e-5,ref_amplitude=None,
-                                        polarization='plus',fit_threshold=75)
+                                        npoints=1000,max_amplitude_error=2,max_phase_error=2,
+                                        psd_data=None,correction_parameter=-1e-5,
+                                        ref_amplitude=None,polarization='plus',fit_threshold=75)
 
 Generates samples of waveform differences between two approximants and parameterizes the data (See `Equations and Notation <https://waveformuncertainty.readthedocs.io/en/latest/WFU_Equations.html#parameterization>`_)
 
 Parameters:
 -----------
-approximant1: string
-    name of the first waveform approximant
-approximant2: string
-    name of the second waveform approximant
+hf1: bilby.gw.waveform_generator.WaveformGenerator
+    frequency domain waveform generator object
+hf2: bilby.gw.waveform_generator.WaveformGenerator
+    frequency domain waveform generator object
 parameter_data: dictionary or bilby.core.prior.dict.PriorDict
     dictionary containing neutron star parameter samples or a bilby prior object that will be converted into a dictionary
 nsamples: int
@@ -33,16 +31,6 @@ fit_parameters: int, optional, (15)
     number of terms to use in the parameterization
 npoints: int, optional, (1000)
     length of the desired frequency grid
-f_low: float, optional, (20.0)
-    lower bound on the frequency grid
-f_high: float, optional, (2048.0)
-    upper bound on the frequency grid
-f_ref: float, optional, (50.0)
-    reference frequency
-sampling_frequency: float, optional, (4096)
-    sampling frequency or sampling rate
-duration: float, optional, (256)
-    duration of the signal
 max_dA_error: float [%], optional, (2)
     maximum allowed error between the amplitude uncertainty and its parameterization
 max_dphi_error: float [degrees], optional, (2)
