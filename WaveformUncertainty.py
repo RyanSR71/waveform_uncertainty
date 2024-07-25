@@ -262,7 +262,7 @@ def recovery_from_parameterization(identity,data):
 
 
 
-def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs):
+def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
     '''
     Generates samples of waveform uncertainty between two approximants and parameterizes the data with Chebyshev polynomial functions.
 
