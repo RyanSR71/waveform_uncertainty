@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.3.2"
+__version__ = "0.4.0"
 
 import numpy as np
 import bilby
@@ -268,10 +268,10 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
 
     Parameters
     ==================
-    approximant1: string
-        name of the first waveform approximant
-    approximant2: string
-        name of the second waveform approximant
+    hf1: bilby.gw.waveform_generator.WaveformGenerator
+        frequency domain waveform generator object
+    hf2: bilby.gw.waveform_generator.WaveformGenerator
+        frequency domain waveform generator object
     parameter_data: dictionary or bilby.core.prior.dict.PriorDict
         dictionary containing neutron star parameter samples or a bilby prior object that will be converted into a dictionary
     nsamples: int
@@ -290,21 +290,6 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
     npoints: int, optional
         length of the desired frequency grid
         default: 1000
-    f_low: float, optional
-        lower bound on the frequency grid
-        default: 20.0
-    f_high: float, optional
-        upper bound on the frequency grid
-        default: 2048.0
-    f_ref: float, optional
-        reference frequency
-        default: 50.0
-    sampling_frequency: float, optional
-        sampling frequency or sampling rate
-        default: 4096
-    duration: float, optional
-        duration of the signal
-        default: 256
     max_dA_error: float [%], optional
         maximum allowed error between the amplitude uncertainty and its parameterization
         default: 2 
@@ -351,9 +336,6 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
             neutron star parameters injected into the waveform generators
 
     '''
-    f_low = kwargs.get('f_low',20.0)
-    f_high = kwargs.get('f_high',2048.0)
-    f_ref = kwargs.get('f_ref',50.0)
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
@@ -362,12 +344,10 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
     precession = kwargs.get('precession',False)
     tides = kwargs.get('tides',True)
     fit_parameters = kwargs.get('fit_parameters',15)
-    sampling_frequency = kwargs.get('sampling_frequency',4096)
-    duration = kwargs.get('duration',256)
     max_amplitude_error = kwargs.get('max_amplitude_error',2)
     max_phase_error = kwargs.get('max_phase_error',2)
     fit_threshold = kwargs.get('fit_threshold',75)
-        
+    
     np.seterr(all='ignore')
     progress = 1
     bilby.core.utils.log.setup_logger(log_level=30)
@@ -409,41 +389,14 @@ def parameterization(approximant1,approximant2,parameter_data,nsamples,**kwargs)
 
     # setting the reference amplitude
     if ref_amplitude is None:
-        reference_waveform = bilby.gw.WaveformGenerator(
-                parameter_conversion=bilby.gw.conversion.convert_to_lal_binary_neutron_star_parameters,
-                parameters=injection(data,precession=precession,tides=tides), 
-                waveform_arguments=wfargs1,
-                frequency_domain_source_model=bilby.gw.source.lal_binary_neutron_star, 
-                sampling_frequency=sampling_frequency, 
-                duration=duration
-            )
-            
-        ref_amplitude = np.abs(reference_waveform.frequency_domain_strain()[f'{polarization}'])
+        ref_amplitude = np.abs(hf1.frequency_domain_strain(parameters=injection(parameter_data,precession=precession,tides=tides))[f'{polarization}'])
     
     for index in indexes:
     
         progressBar(progress,(nsamples))
 
-        # setting waveform generators
-        hf1 = bilby.gw.WaveformGenerator(
-            parameter_conversion=bilby.gw.conversion.convert_to_lal_binary_neutron_star_parameters,
-            parameters=injection(data,index=index,precession=precession,tides=tides), 
-            waveform_arguments=wfargs1,
-            frequency_domain_source_model=bilby.gw.source.lal_binary_neutron_star, 
-            sampling_frequency=sampling_frequency, 
-            duration=duration
-        )
-        hf2 = bilby.gw.WaveformGenerator(
-            parameter_conversion=bilby.gw.conversion.convert_to_lal_binary_neutron_star_parameters,
-            parameters=injection(data,index=index,precession=precession,tides=tides), 
-            waveform_arguments=wfargs2,
-            frequency_domain_source_model=bilby.gw.source.lal_binary_neutron_star, 
-            sampling_frequency=sampling_frequency, 
-            duration=duration
-        )
-
         # calculating waveform model differences
-        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter=correction_parameter,ref_amplitude=ref_amplitude)
+        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,injection=injection(parameter_data,index=index,precession=precession,tides=tides),npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter=correction_parameter,ref_amplitude=ref_amplitude)
 
         # chebyshev polynomial fits and saving coefficients
         amplitude_difference_fit = np.polynomial.chebyshev.Chebyshev.fit((frequency_grid[0:final_index]),amplitude_difference[0:final_index],fit_parameters-1)
