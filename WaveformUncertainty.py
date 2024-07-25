@@ -106,6 +106,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
     if psd_data is not None:
         if ref_amplitude is None:
             ref_amplitude = np.abs(hf1.frequency_domain_strain()[f'{polarization}'][wf_freqs])
+        ref_amplitude = np.interp(hf1.frequency_array[wf_freqs],f_high*np.linspace(0,1,len(ref_amplitude)),ref_amplitude)
         ref_sigma = np.interp(hf1.frequency_array[wf_freqs], psd_data[:,0],psd_data[:,1])
         align_weights = ref_amplitude*ref_amplitude / ref_sigma * hf1.frequency_array[wf_freqs]
         fit = np.polyfit(hf1.frequency_array[wf_freqs],raw_phase_difference,1,w=align_weights)
