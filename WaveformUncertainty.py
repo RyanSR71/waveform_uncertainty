@@ -433,7 +433,8 @@ def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
         # allows for 20 failures before killing the run
         if trial == 20:
             parameterization_rate = np.round(100*len(final_indexes)/(len(final_indexes)+len(extraneous_indexes)),2)
-            raise Exception(f"Parameterization Rate Too Low; It must be above {fit_threshold}%, but was at {parameterization_rate}%.")
+            raise Exception(f"Parameterization Rate Too Low; It must be above {fit_threshold}%, but was at {parameterization_rate}%. {len(final_indexes)+len(extraneous_indexes)}")
+        
         if len(final_indexes) == nsamples:
             break
 
