@@ -108,7 +108,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
         residual_phase_difference = raw_phase_difference - np.poly1d(fit)(hf1.frequency_array[wf_freqs])
 
     # taking two frequency derivatives of amplitude_difference and comparing it to the correction parameter for f_COR calculation
-    amplitude_difference_first_derivative = np.gradient(amplitude_difference)/np.gradient(frequency_grid)
+    amplitude_difference_first_derivative = np.gradient(-1*amplitude_difference)/np.gradient(frequency_grid)
     amplitude_difference_second_derivative = np.gradient(amplitude_difference_first_derivative)/np.gradient(frequency_grid)
 
     for i in range(len(amplitude_difference_second_derivative)):
