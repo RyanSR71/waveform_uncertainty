@@ -116,7 +116,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
     amplitude_difference_second_derivative = np.gradient(amplitude_difference_first_derivative)/np.gradient(frequency_grid)
 
     for i in range(correction_parameter_B,len(amplitude_difference_second_derivative)):
-        if correction_parameter is None:
+        if correction_parameter_A is None:
             final_index = len(hf1.frequency_array[wf_freqs])-1
             break
         elif amplitude_difference_second_derivative[i] > correction_parameter_A:
