@@ -3,7 +3,7 @@ WaveformUncertainty.parameterization
 
 .. code-block:: python
 
-   WaveformUncertainty.parameterization(hf1,hf1,parameter_data,nsamples,
+   WaveformUncertainty.parameterization(hf1,hf2,parameter_data,nsamples,
                                         precession=False,tides=True,fit_parameters=15,
                                         npoints=1000,max_amplitude_error=2,max_phase_error=2,
                                         psd_data=None,correction_parameter_A=1e-5,
