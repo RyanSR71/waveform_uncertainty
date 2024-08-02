@@ -120,12 +120,32 @@ Waveform uncertainties are the variabilities of the waveform's amplitude and pha
 .. math::
 
     \begin{equation}
-        \delta\Phi_{\mu}(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta\Phi_{\mu}(f;\theta_{i})-\overline{\Delta\Phi_{\mu}}(f)\right)^{2}}{N}}.
+        \delta\Phi_{\mu}(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta\Phi_{\mu}(f;\theta_{i})-\overline{\Delta\Phi_{\mu}}(f)\right)^{2}}{N}},
     \end{equation}
+
+where :math:`\theta_{i}` is a set of source parameters and :math:`N` is the number of draws of waveform difference.
 
 .. note::
 
     We will be using residual phase uncertainty, :math:`\Delta\Phi`, as our phase uncertainty from now on.
+
+To define our prior, we also define the means of many sets of waveform difference, :math:`\overline{\Delta{A}_{\mu}}` and :math:`\overline{\Delta\Phi_{\mu}}`:
+
+.. math::
+
+\begin{equation}
+    \overline{\Delta{A}_{\mu}}(f)=\frac{\sum_{i=1}^{N}(\Delta{A}_{\mu}(f;\theta_{i}))}{N},
+\end{equation}
+
+and
+
+\begin{equation}
+    \overline{\Delta\Phi_{\mu}}(f)=\frac{\sum_{i=1}^{N}(\Delta\Phi_{\mu}(f;\theta_{i}))}{N}.
+\end{equation}
+
+.. note::
+
+    For both the waveform uncertainties (:math:`\delta{A}_{\mu}` and :math:`\delta\Phi_{\mu}`) and the mean waveform differences (:math:`\overline{\Delta{A}_{\mu}}` and :math:`\overline{\Delta\Phi_{\mu}}`), each draw has different source parameters, denoted by :math:`\theta_{i}`.
 
 Likelihood and Sampling
 -----------------------
@@ -135,7 +155,7 @@ The likelihood function we use to sample over waveform uncertainty is
 
 .. math::
 
-    \small \begin{equation}
+    \begin{equation}
         \mathcal{L}(h|\theta,\alpha,\beta)=\prod_{j}\frac{1}{2\pi{S_{n}(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)\cdot\nu(f_{j};\alpha,\beta)|^{2}}{S_{n}(f_{j})}\right),
     \end{equation}
 
