@@ -60,7 +60,7 @@ Raw phase difference contains overall phase and time shifts which need to be rem
         \Delta\Phi=\Delta\phi-(2\pi{t_{c}}f+\phi_{c}),
     \end{equation}
 
-where :math:`t_{c}` is coalescence time and :math:`\phi_{c}` is coalescence phase. We can find these values by fitting a line to :math:`\Delta\phi` weighted by :math:`\frac{P(f)}{A(f)^{2}}`, where :math:`P(f)` is power spectral density (PSD) data and :math:`A(f)` is the amplitude of the waveform. The PSD data tells us the variance of the signal at each frequency point. We then subtract this line from raw phase difference to get residual phase difference.
+where :math:`t_{c}` is coalescence time and :math:`\phi_{c}` is coalescence phase. We can find these values by fitting a line to :math:`\Delta\phi` weighted by :math:`\frac{S_{n}(f)}{A(f)^{2}}`, where :math:`S_{n}(f)` is power spectral density (PSD) data and :math:`A(f)` is the amplitude of the waveform. The PSD data tells us the variance of the signal at each frequency point. We then subtract this line from raw phase difference to get residual phase difference.
 
 Waveform Model Differences
 --------------------------
@@ -136,22 +136,34 @@ The likelihood function we use to sample over waveform uncertainty is
 .. math::
 
     \small \begin{equation}
-        \mathcal{L}(h|\theta,\alpha,\beta)=\prod_{j}\frac{1}{2\pi{P(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)\left(1+\Delta{A}_{\delta}(f_{j};\{f_{n},\alpha_{n}\})\right)\mathrm{exp}\left[i\Delta\Phi_{\delta}(f_{j};\{f_{n},\beta_{n}\})\right]|^{2}}{P(f_{j})}\right),
+        \mathcal{L}(h|\theta,\alpha,\beta)=\prod_{j}\frac{1}{2\pi{S_{n}(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)\cdot\nu(f_{j};\alpha,\beta)|^{2}}{S_{n}(f_{j})}\right),
     \end{equation}
 
-where :math:`h` is frequency domain gravitational wave strain, :math:`\theta` is a set of source parameters for the waveform approximants, :math:`\alpha` and :math:`\beta` parameters are spline parameters corresponding to frequency nodes :math:`f_{n}`, :math:`j` is an index corresponding to frequency bins, :math:`\Delta{f}` is the distance between frequency bins, :math:`P` is power spectral density data, :math:`\mu` is a frequency domain waveform model, :math:`\Delta{A}_{\delta}` is a waveform difference model drawn from waveform uncertainty, and :math:`\Delta\Phi_{\delta}` is a waveform difference model drawn from waveform uncertainty. The waveform uncertainty parameters, :math:`\alpha` and :math:`\beta`, are defined as being draws from a normal distribution around zero with their standard deviations being our waveform uncertainties, :math:`\delta{A}` and :math:`\delta\Phi`:
+where :math:`h` is frequency domain gravitational wave strain, :math:`\theta` is a set of source parameters for the waveform approximants, :math:`\alpha` and :math:`\beta` parameters are spline parameters corresponding to frequency nodes :math:`f_{n}`, :math:`j` is an index corresponding to frequency bins, :math:`\Delta{f}` is the distance between frequency bins, :math:`S_{n}` is power spectral density data, :math:`\mu` is a frequency domain waveform model, and :math:`\nu` is a function of waveform differences known as the model correction function. The model correction function serves to match the waveform model to the data by taking into account waveform uncertainty. It is defined as
 
 .. math::
 
     \begin{equation}
-        \alpha_{n}\sim\mathcal{N}(0,\delta{A}_{\mu}(f_{n})),
+        \nu(f;\alpha,\beta)=(1+\Delta{A}_{\delta}(f;\{f_{k},\alpha_{k}\})\mathrm{exp}[i\Delta\Phi_{\delta}(f;\{f_{k},\beta_{k}\})],
     \end{equation}
+
+where :math:`\Delta{A}_{\delta}` is an amplitude difference function defined by waveform uncertainty, :math:`f_{k}` is a set of frequency nodes, :math:`\alpha` is a set of amplitude difference spline nodes, :math:`\Delta\Phi_{\delta}` is a phase difference function, and :math:`\beta` is a set of phase difference spline nodes. Each :math:`\alpha` and :math:`\beta` parameter is a draw from a Gaussian distribution. Their priors are defined as
 
 .. math::
 
     \begin{equation}
-        \beta_{n}\sim\mathcal{N}(0,\delta\Phi_{\mu}(f_{n})).
-    \end{equation}
+        P(\alpha_{k})=\frac{(2\pi)^{-\frac{1}{2}}}{\delta{A}_{\mu}(f_{k})}\mathrm{exp}\left[-\frac{1}{2}\left(\frac{\Delta{A}_{\mu}(f_{k},\theta)-\overline{\Delta{A}_{\mu}}(f_{k})}{\delta{A}_{\mu}(f_{k})}\right)^{2}\right]
+    \end{equation},
+
+and
+
+.. math::
+
+    \begin{equation}
+        P(\beta_{k})=\frac{(2\pi)^{-\frac{1}{2}}}{\delta\Phi_{\mu}(f_{k})}\mathrm{exp}\left[-\frac{1}{2}\left(\frac{\Delta\Phi_{\mu}(f_{k};\theta)-\overline{\Delta\Phi_{\mu}}(f_{k})}{\delta\Phi_{\mu}(f_{k})}\right)^{2}\right]
+    \end{equation},
+
+where :math:`\delta{A}_{\mu}(f)` and :math:`\delta\Phi_{\mu}(f)` are amplitude and phase uncertainty respectively, :math:`\overline{\Delta{A}_{\mu}}(f)` and :math:`\overline{\Delta\Phi_{\mu}}(f)` are mean amplitude and phase differences respectively, and :math:`\Delta{A}_{\mu}(f;\theta)` and :math:`\Delta\Phi_{\mu}(f;\theta)` are model amplitude and phase difference respectively.
 
 Parameterizing Waveform Differences
 -----------------------------------
