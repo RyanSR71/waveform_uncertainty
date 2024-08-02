@@ -133,15 +133,17 @@ To define our prior, we also define the means of many sets of waveform differenc
 
 .. math::
 
-\begin{equation}
-    \overline{\Delta{A}_{\mu}}(f)=\frac{\sum_{i=1}^{N}(\Delta{A}_{\mu}(f;\theta_{i}))}{N},
-\end{equation}
+    \begin{equation}
+        \overline{\Delta{A}_{\mu}}(f)=\frac{\sum_{i=1}^{N}(\Delta{A}_{\mu}(f;\theta_{i}))}{N},
+    \end{equation}
 
 and
 
-\begin{equation}
-    \overline{\Delta\Phi_{\mu}}(f)=\frac{\sum_{i=1}^{N}(\Delta\Phi_{\mu}(f;\theta_{i}))}{N}.
-\end{equation}
+..math::
+
+    \begin{equation}
+        \overline{\Delta\Phi_{\mu}}(f)=\frac{\sum_{i=1}^{N}(\Delta\Phi_{\mu}(f;\theta_{i}))}{N}.
+    \end{equation}
 
 .. note::
 
