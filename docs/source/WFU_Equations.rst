@@ -139,7 +139,7 @@ To define our prior, we also define the means of many sets of waveform differenc
 
 and
 
-..math::
+.. math::
 
     \begin{equation}
         \overline{\Delta\Phi_{\mu}}(f)=\frac{\sum_{i=1}^{N}(\Delta\Phi_{\mu}(f;\theta_{i}))}{N}.
