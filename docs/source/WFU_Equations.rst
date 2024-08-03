@@ -78,7 +78,7 @@ This results in the :math:`\Delta{A}` values abruptly increasing to infinity. Wh
 
     \begin{equation}
         \Delta{A}_{\mu}(f;\theta)= \begin{cases} 
-          \frac{|\mu_{EOB}(f;\theta)|-|\mu_{IMR}(f;\theta)|}{|\mu_{IMR}(f;\theta)|} & f \leq f_{COR} \\
+          \frac{|\mu_{2}(f;\theta)|-|\mu_{1}(f;\theta)|}{|\mu_{1}(f;\theta)|} & f \leq f_{COR} \\
           \Delta{A}_{\mu}(f_{COR};\theta) & f > f_{COR}
        \end{cases}\hspace{0.2cm},
     \end{equation}
@@ -87,7 +87,7 @@ This results in the :math:`\Delta{A}` values abruptly increasing to infinity. Wh
 
     \begin{equation}
         \Delta\phi_{\mu}(f;\theta)= \begin{cases} 
-          \mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[\mu_{EOB}(f;\theta)]}{\mathrm{Re}[\mu_{EOB}(f;\theta)]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[\mu_{IMR}(f;\theta)]}{\mathrm{Re}[\mu_{IMR}(f;\theta)]}\right) & f \leq f_{COR} \\
+          \mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[\mu_{2}(f;\theta)]}{\mathrm{Re}[\mu_{2}(f;\theta)]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[\mu_{1}(f;\theta)]}{\mathrm{Re}[\mu_{1}(f;\theta)]}\right) & f \leq f_{COR} \\
           \Delta\phi_{\mu}(f_{COR};\theta) & f > f_{COR}
        \end{cases}\hspace{0.2cm},
     \end{equation}
@@ -101,11 +101,7 @@ This results in the :math:`\Delta{A}` values abruptly increasing to infinity. Wh
        \end{cases}\hspace{0.2cm},
     \end{equation}
 
-where :math:`\mu_{IMR}` is an ``IMRPhenomPv2_NRTidalv2`` waveform and :math:`\mu_{EOB}` is an ``SEOBNRv4T_surrogate`` waveform. The discontinuity correction frequency, :math:`f_{COR}`, is the frequency value at which the discontinuity occurs.
-
-.. note::
-
-    We use ``IMRPhenomPv2_NRTidalv2`` and ``SEOBNRv4T_surrogate`` as our waveform approximants because these two are the best for binary neutron stars and use fundamentally different ways of solving the system.
+where :math:`\mu_{1}` and :math:`\mu_{2}` are waveform models and :math:`\theta` is a set of source parameters used by the models to generate the waveform. The discontinuity correction frequency, :math:`f_{COR}`, is the frequency value at which the discontinuity occurs. The model waveform differences are defined in such a way that adding them to :math:`\mu_{1}` will match it's amplitude and phase to :math:`\mu_{2}`. For that reason, we often call :math:`\mu_{2}` the reference waveform.
 
 Waveform Uncertainty
 --------------------
