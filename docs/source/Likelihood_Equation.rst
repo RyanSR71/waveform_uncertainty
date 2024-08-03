@@ -7,10 +7,10 @@ Following `Payne et al Phys. Rev. D 102, 122004 (2020) <https://arxiv.org/abs/20
 .. math::
 
   \begin{equation}
-      \mathcal{L}_{\varnothing}(h|\theta)=\prod_{j}\frac{1}{2\pi{P(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)|^{2}}{P(f_{j})}\right),
+      \mathcal{L}_{\varnothing}(h|\theta)=\prod_{j}\frac{1}{2\pi{S_{n}(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)|^{2}}{S_{n}(f_{j})}\right),
   \end{equation}
 
-where :math:`h` is frequency domain gravitational wave strain, :math:`\theta` is a set of source parameters for the waveform approximants, :math:`j` is an index corresponding to frequency bins, :math:`\Delta{f}` is the distance between frequency bins, :math:`P` is power spectral density data, and :math:`\mu` is a frequency domain waveform model. To sample over waveform uncertainty, we will need to add waveform differences to the model. To start, we rewrite the waveform model in terms of its amplitude, :math:`A`, and phase, :math:`\phi`:
+where :math:`h` is frequency domain gravitational wave strain, :math:`\theta` is a set of source parameters for the waveform approximants, :math:`j` is an index corresponding to frequency bins, :math:`\Delta{f}` is the distance between frequency bins, :math:`S_{n}` is power spectral density data, and :math:`\mu` is a frequency domain waveform model. To sample over waveform uncertainty, we will need to add waveform differences to the model. To start, we rewrite the waveform model in terms of its amplitude, :math:`A`, and phase, :math:`\phi`:
 
 .. math::
 
@@ -85,7 +85,7 @@ Using our new waveform model, :math:`\mu^{\prime}`, in the likelihood function, 
 .. math::
 
   \begin{equation}
-      \mathcal{L}(h|\theta)=\prod_{j}\frac{1}{2\pi{P(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)(1+\Delta{A})\mathrm{exp}\left[i\Delta\Phi\right]|^{2}}{P(f_{j})}\right).
+      \mathcal{L}(h|\theta)=\prod_{j}\frac{1}{2\pi{S_{n}(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)(1+\Delta{A})\mathrm{exp}\left[i\Delta\Phi\right]|^{2}}{S_{n}(f_{j})}\right).
   \end{equation}
 
 To sample these waveform differences, we need to express :math:`\Delta{A}` and :math:`\Delta\Phi` in terms of a small number of parameters. The simplest way to do this is to use cubic splines. Cubic splines take points, or nodes, and fill the space between them with cubic functions. We redefine our waveform differences to be spline functions:
@@ -93,16 +93,16 @@ To sample these waveform differences, we need to express :math:`\Delta{A}` and :
 .. math:: 
 
   \begin{equation}
-      \Delta{A}\rightarrow\Delta{A}(f;\{f_{n},\alpha_{n}\}),
+      \Delta{A}\rightarrow\Delta{A}(f;\{f_{k},\alpha_{k}\}),
   \end{equation}
 
 .. math:: 
 
   \begin{equation}
-      \Delta\Phi\rightarrow\Delta\Phi(f;\{f_{n},\beta_{n}\}),
+      \Delta\Phi\rightarrow\Delta\Phi(f;\{f_{k},\beta_{k}\}),
   \end{equation}
 
-where the :math:`\alpha` and :math:`\beta` parameters can be varied by bilby's samplers and :math:`f_{n}` are fixed frequency nodes.
+where the :math:`\alpha` and :math:`\beta` parameters can be varied by bilby's samplers and :math:`f_{k}` are fixed frequency nodes.
 
 .. note::
 
@@ -113,13 +113,13 @@ We now need to know what prior distribution we are going to use to draw the :mat
 .. math::
 
     \begin{equation}
-        \alpha_{n}\sim\mathcal{N}(0,\delta{A}_{\mu}(f_{n})),
+        \alpha_{k}\sim\mathcal{N}(\overline{\Delta{A}_{\mu}}(f_{k}),\delta{A}_{\mu}(f_{k})),
     \end{equation}
 
 .. math::
 
     \begin{equation}
-        \beta_{n}\sim\mathcal{N}(0,\delta\Phi_{\mu}(f_{n})).
+        \beta_{k}\sim\mathcal{N}(\overline{\Delta\Phi_{\mu}}(f_{k}),\delta\Phi_{\mu}(f_{k})).
     \end{equation}
 
 Plugging these spline functions into the likelihood function gives the final form of the likelihood equation:
@@ -127,14 +127,28 @@ Plugging these spline functions into the likelihood function gives the final for
 .. math::
 
     \small \begin{equation}
-        \mathcal{L}(h|\theta,\alpha,\beta)=\prod_{j}\frac{1}{2\pi{P(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)\left(1+\Delta{A}_{\delta}(f_{j};\{f_{n},\alpha_{n}\})\right)\mathrm{exp}\left[i\Delta\Phi_{\delta}(f_{j};\{f_{n},\beta_{n}\})\right]|^{2}}{P(f_{j})}\right).
+        \mathcal{L}(h|\theta,\alpha,\beta)=\prod_{j}\frac{1}{2\pi{S_{n}(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)\left(1+\Delta{A}_{\delta}(f_{j};\{f_{k},\alpha_{k}\})\right)\mathrm{exp}\left[i\Delta\Phi_{\delta}(f_{j};\{f_{k},\beta_{k}\})\right]|^{2}}{S_{n}(f_{j})}\right).
     \end{equation}
 
 .. note::
 
   We give :math:`\Delta{A}` and :math:`\Delta\Phi` the subscript, :math:`\delta`, to denote that these waveform difference models are drawn from waveform uncertainties :math:`\delta{A}` and :math:`\delta\Phi`.
 
+If we make the subsitution:
 
+.. math::
+
+  \begin{equation}
+      \nu(f;\alpha,\beta)=(1+\Delta{A}_{\delta}(f;\{f_{k},\alpha_{k}\})\mathrm{exp}[i\Delta\Phi_{\delta}(f;\{f_{k},\beta_{k}\})],
+  \end{equation}
+
+where :math:`\nu` is the model correction function, we can write the likelihood function in a more convenient form:
+
+.. math::
+
+  \begin{equation}
+      \mathcal{L}(h|\theta,\alpha,\beta)=\prod_{j}\frac{1}{2\pi{S_{n}(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)\cdot\nu(f_{j};\alpha,\beta)|^{2}}{S_{n}(f_{j})}\right).
+  \end{equation}
 
 
 
