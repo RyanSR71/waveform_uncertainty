@@ -7,8 +7,9 @@ WaveformUncertainty.parameterization
                                         precession=False,tides=True,fit_parameters=15,
                                         npoints=1000,max_amplitude_error=2,max_phase_error=2,
                                         psd_data=None,correction_parameter_A=1e-5,
-                                        correction_parameter_B=0,ref_amplitude=None,
-                                        polarization='plus',fit_threshold=75)
+                                        correction_parameter_B=0,correction_parameter_C=2,
+                                        ref_amplitude=None,polarization='plus',
+                                        fit_threshold=75)
 
 Generates samples of waveform differences between two approximants and parameterizes the data (See `Equations and Notation <https://waveformuncertainty.readthedocs.io/en/latest/WFU_Equations.html#parameterization>`_)
 
@@ -42,6 +43,8 @@ correction_parameter_A: float, optional, (1e-5)
     value at which to cut the second derivative of amplitude difference; if None, correction will not occur
 correction_parameter_B: int, optional, (0)
     index at which to start the search for any discontinuity
+correction_parameter_C: int, optional, (2)
+    number of amplitude difference derivatives for the discontinuity correction
 ref_amplitude: numpy.ndarray, optional, (None)
    reference amplitude for residual phase calculation; will be generated automatically if not given
 polarization: string, optional, ('plus')
