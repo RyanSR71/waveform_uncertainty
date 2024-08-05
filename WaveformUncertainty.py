@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.4.3"
+__version__ = "0.4.4"
 
 import numpy as np
 import bilby
@@ -98,7 +98,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
     raw_phase_difference = phase_2-phase_1
 
     # removing phase shifts of 2pi
-    while any(value > 6 for value in [(raw_phase_difference[i+1]-raw_phase_difference[i]) for i in range(len(raw_phase_difference)-2)]):
+    while any(value > 6 for value in [np.abs(raw_phase_difference[i+1]-raw_phase_difference[i]) for i in range(len(raw_phase_difference)-2)]):
         raw_phase_difference = np.unwrap(raw_phase_difference)
 
     # fitting a line to raw_phase_difference weighted by PSDs and subtracting off that line
