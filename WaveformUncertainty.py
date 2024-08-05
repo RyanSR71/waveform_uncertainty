@@ -124,7 +124,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
         if correction_parameter_A is None:
             final_index = len(hf1.frequency_array[wf_freqs])-1
             break
-        elif amplitude_difference_derivative[i] > correction_parameter_A:
+        elif np.abs(amplitude_difference_derivative[i]) > correction_parameter_A:
             final_index = i
             break
         else: 
