@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.4.4"
+__version__ = "0.4.5"
 
 import numpy as np
 import bilby
@@ -42,6 +42,9 @@ def fd_model_difference(hf1,hf2,**kwargs):
     correction_parameter_B: int, optional
         index at which to start the search for any discontinuity
         default: 0
+    correction_parameter_C: int, optional
+        number of dA derivatives to take for discontinuity correction
+        default: 2
     ref_amplitude: numpy.ndarray, optional
         array of gravitational waveform amplitude
         default None
@@ -67,6 +70,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
     psd_data = kwargs.get('psd_data',None)
     correction_parameter_A = kwargs.get('correction_parameter_A',1e-5)
     correction_parameter_B = kwargs.get('correction_parameter_B',0)
+    correction_parameter_C = kwargs.get('correction_parameter_C',2)
     ref_amplitude = kwargs.get('ref_amplitude',None)
 
     f_low = hf1.waveform_arguments['f_low']
@@ -112,14 +116,15 @@ def fd_model_difference(hf1,hf2,**kwargs):
         residual_phase_difference = raw_phase_difference - np.poly1d(fit)(hf1.frequency_array[wf_freqs])
 
     # taking two frequency derivatives of amplitude_difference and comparing it to the correction parameter for f_COR calculation
-    amplitude_difference_first_derivative = np.gradient(amplitude_difference)/np.gradient(frequency_grid)
-    amplitude_difference_second_derivative = np.gradient(amplitude_difference_first_derivative)/np.gradient(frequency_grid)
+    amplitude_difference_derivative = np.copy(amplitude_difference)
+    for i in range(correction_parameter_C):
+        amplitude_difference_derivative = np.gradient(amplitude_difference_derivative)/np.gradient(frequency_grid)
 
-    for i in range(correction_parameter_B,len(amplitude_difference_second_derivative)):
+    for i in range(correction_parameter_B,len(amplitude_difference_derivative)):
         if correction_parameter_A is None:
             final_index = len(hf1.frequency_array[wf_freqs])-1
             break
-        elif amplitude_difference_second_derivative[i] > correction_parameter_A:
+        elif amplitude_difference_derivative[i] > correction_parameter_A:
             final_index = i
             break
         else: 
