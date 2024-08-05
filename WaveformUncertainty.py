@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.4.5"
+__version__ = "0.4.6"
 
 import numpy as np
 import bilby
@@ -313,6 +313,9 @@ def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
     correction_parameter_B: int, optional
         index at which to start the search for any discontinuity
         default: 0
+    correction_parameter_C: int, optional
+        number of amplitude difference derivatives to take for the discontinuity correction
+        default: 2
     ref_amplitude: numpy.ndarray, optional
         reference amplitude for residual phase calculation
         default: None
@@ -350,7 +353,9 @@ def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
-    correction_parameter = kwargs.get('correction_parameter',1e-5)
+    correction_parameter_A = kwargs.get('correction_parameter_A',1e-5)
+    correction_parameter_B = kwargs.get('correction_parameter_B',0)
+    correction_parameter_C = kwargs.get('correction_parameter_C',2)
     ref_amplitude = kwargs.get('ref_amplitude',None)
     precession = kwargs.get('precession',False)
     tides = kwargs.get('tides',True)
