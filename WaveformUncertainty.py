@@ -409,7 +409,7 @@ def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
         progressBar(progress,(nsamples))
 
         # calculating waveform model differences
-        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,injection=injection(parameter_data,index=index,precession=precession,tides=tides),npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter=correction_parameter,ref_amplitude=ref_amplitude)
+        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,injection=injection(parameter_data,index=index,precession=precession,tides=tides),npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter_A=correction_parameter_A,correction_parameter_B=correction_parameter_B,correction_parameter_C=correction_parameter_C,ref_amplitude=ref_amplitude)
 
         # chebyshev polynomial fits and saving coefficients
         amplitude_difference_fit = np.polynomial.chebyshev.Chebyshev.fit((frequency_grid[0:final_index]),amplitude_difference[0:final_index],fit_parameters-1)
