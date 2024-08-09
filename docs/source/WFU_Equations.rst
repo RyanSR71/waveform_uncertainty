@@ -72,7 +72,21 @@ When finding the waveform differences between two waveform models, :math:`\mu`, 
         \lim_{|h_{1}|\to{0}}\left(\frac{|h_{2}|-|h_{1}|}{|h_{1}|}\right)=\infty.
     \end{equation}
 
-This results in the :math:`\Delta{A}` values abruptly increasing to infinity. When using waveform approximants, especially those that handle tidal deformabilities, this discontinuity is extremely common. To deal with these discontinuities, we cut off the waveform differences at the discontinuity and hold it constant afterwards. We then define the following waveform model differences:
+This results in the :math:`\Delta{A}` values abruptly increasing to infinity. When using waveform approximants, especially those that handle tidal deformabilities, this discontinuity is extremely common. If :math:`|h_{2}|` instead goes to zero faster than :math:`|h_{1}|`, we observe the following:
+
+.. math::
+
+    \begin{equation}
+        \lim_{|h_{2}|\to{0}}\left(\frac{|h_{2}|-|h_{1}|}{|h_{1}|}\right)=-1.
+    \end{equation}
+
+This results in the amplitude difference abruptly cutting to :math:`-1`. While this is not necessarily a discontinuity, it will be treated as such.
+
+.. note::
+
+    Both of these discontinuities are related to each other in that swapping :math:`h_{1}` and :math:`h_{2}` in the amplitude difference equation switches the nature of the discontinuity from one to the other.
+
+To deal with these discontinuities, we cut off the waveform differences at the discontinuity and hold it constant afterwards. We then define the following waveform model differences:
 
 .. math::
 
@@ -119,13 +133,13 @@ Waveform uncertainties are the variabilities of the waveform's amplitude and pha
         \delta\Phi_{\mu}(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta\Phi_{\mu}(f;\theta_{i})-\overline{\Delta\Phi_{\mu}}(f)\right)^{2}}{N}},
     \end{equation}
 
-where :math:`\theta_{i}` is a set of source parameters and :math:`N` is the number of draws of waveform difference.
+where :math:`\theta_{i}` is a set of source parameters, :math:`N` is the number of draws of waveform difference, and :math:`\overline{\Delta{A}_{\mu}}` and :math:`\overline{\Delta\Phi_{\mu}}` are the mean waveform differences.
 
 .. note::
 
     We will be using residual phase uncertainty, :math:`\Delta\Phi`, as our phase uncertainty from now on.
 
-To define our prior, we also define the means of many sets of waveform difference, :math:`\overline{\Delta{A}_{\mu}}` and :math:`\overline{\Delta\Phi_{\mu}}`:
+The mean waveform difference are defined in amplitude and phase, :math:`\overline{\Delta{A}_{\mu}}` and :math:`\overline{\Delta\Phi_{\mu}}` respectively, and are defined as:
 
 .. math::
 
@@ -139,7 +153,7 @@ and
 
     \begin{equation}
         \overline{\Delta\Phi_{\mu}}(f)=\frac{\sum_{i=1}^{N}(\Delta\Phi_{\mu}(f;\theta_{i}))}{N}.
-    \end{equation}
+    \end{equation} 
 
 .. note::
 
@@ -157,7 +171,7 @@ The likelihood function we use to sample over waveform uncertainty is
         \mathcal{L}(h|\theta,\alpha,\beta)=\prod_{j}\frac{1}{2\pi{S_{n}(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|h(f_{j})-\mu(f_{j};\theta)\cdot\nu(f_{j};\alpha,\beta)|^{2}}{S_{n}(f_{j})}\right),
     \end{equation}
 
-where :math:`h` is frequency domain gravitational wave strain, :math:`\theta` is a set of source parameters for the waveform approximants, :math:`\alpha` and :math:`\beta` parameters are spline parameters corresponding to frequency nodes :math:`f_{n}`, :math:`j` is an index corresponding to frequency bins, :math:`\Delta{f}` is the distance between frequency bins, :math:`S_{n}` is power spectral density data, :math:`\mu` is a frequency domain waveform model, and :math:`\nu` is a function of waveform differences known as the model correction function. The model correction function serves to match the waveform model to the data by taking into account waveform uncertainty. It is defined as
+where :math:`h` is frequency domain gravitational wave strain, :math:`\theta` is a set of source parameters for the waveform approximants, :math:`\alpha` and :math:`\beta` parameters are spline parameters corresponding to frequency nodes :math:`f_{k}`, :math:`j` is an index corresponding to frequency bins, :math:`\Delta{f}` is the distance between frequency bins (step frequency), :math:`S_{n}` is power spectral density data, :math:`\mu` is a frequency domain waveform model, and :math:`\nu` is a function of waveform differences known as the model correction function. The model correction function serves to match the waveform model to the data by taking into account waveform uncertainty. It is defined as
 
 .. math::
 
