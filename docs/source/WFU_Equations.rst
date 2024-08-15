@@ -38,7 +38,7 @@ and
         \phi(f)=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}[\tilde{h}(f)]}{\mathrm{Re}[\tilde{h}(f)]}\right).
     \end{equation}
 
-Using these waveforms and our best understanding and models of general relativity, we can work backwards from the signal to infer the properties of the two objects that created the gravitational waves. We do this with parameter estimation, which uses Bayesian statistics alongside a waveform model, or waveform approximant, to show a probability distribution for the parameters in the system; such as source masses, spins, and tidal deformabilties; which is known as the posterior. The waveform approximants we use, such as ``IMRPhenomPv2_NRTidalv2`` and ``SEOBNRv4T_surrogate``, approximate the system well, but are not perfect. The error between the approximated waveform and the true waveform is waveform uncertainty, which is defined in the amplitude and phase of the waveform as :math:`\delta{A}` and :math:`\delta\Phi` respectively. 
+Using these waveforms and our best understanding and models of general relativity, we can work backwards from the signal to infer the properties of the two objects that created the gravitational waves. We do this with parameter estimation, which uses Bayesian statistics alongside a waveform model, or waveform approximant, to show a probability distribution for the parameters in the system; such as source masses, spins, and tidal deformabilties; which is known as the posterior. The waveform approximants we use, such as ``IMRPhenomPv2_NRTidalv2`` and ``SEOBNRv4T_surrogate``, approximate the system well, but are not perfect. The error between the approximated waveform and the true waveform is waveform uncertainty, which is defined in the amplitude and phase of the waveform as :math:`\delta\mathcal{A}` and :math:`\delta\Phi` respectively. 
 
 ``WaveformUncertainty`` introduces a method of correcting for these uncertainties by adding waveform difference parameters to the waveform model, allowing the waveform differences to be sampled during a parameter estimation run. This process molds the approximated waveform to the true waveform, eliminating the error and returning a more accurate posterior. The following sections will introduce the necessary equations and notation behind the functions and usage of this package.
 
@@ -67,7 +67,7 @@ Raw phase difference contains overall phase and time shifts which need to be rem
 .. math::
 
     \begin{equation}
-        \Delta\Phi=\Delta\phi-(2\pi{t_{c}}f+\phi_{c}),
+        \Delta\Phi(f)=\Delta\phi(f)-(2\pi{t_{c}}f+\phi_{c}),
     \end{equation}
 
 where :math:`t_{c}` is coalescence time and :math:`\phi_{c}` is coalescence phase. We can find these values by fitting a line to :math:`\Delta\phi` weighted by :math:`\frac{S_{n}(f)}{A(f)^{2}}`, where :math:`S_{n}(f)` is power spectral density (PSD) data and :math:`A(f)` is the amplitude of the waveform. The PSD data tells us the variance of the signal at each frequency point. We then subtract this line from raw phase difference to get residual phase difference.
