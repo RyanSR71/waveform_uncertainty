@@ -785,6 +785,3 @@ class WaveformGeneratorWFU(object):
             raise AttributeError('Either time or frequency domain source '
                                  'model must be provided.')
         return set(utils.infer_parameters_from_function(model))
-            raise AttributeError('Either time or frequency domain source '
-                                 'model must be provided.')
-        return set(utils.infer_parameters_from_function(model))
