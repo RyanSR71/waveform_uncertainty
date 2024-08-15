@@ -9,7 +9,7 @@ Compact Binary Inspiral Gravitional Waves, as the name suggests, are gravitation
 .. math::
 
     \begin{equation}
-        h(f)=A(t)\mathrm{exp}\left({i\psi(t)}\right),
+        h(t)=A(t)\mathrm{exp}\left({i\psi(t)}\right),
     \end{equation}
 
 where :math:`A(t)` is the time domain amplitude and :math:`\psi(t)` is the time domain phase. 
