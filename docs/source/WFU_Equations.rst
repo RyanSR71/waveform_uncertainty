@@ -229,8 +229,8 @@ Computationally, generating individual waveform differences is a simple and quic
        \end{cases}\hspace{0.2cm},
     \end{equation}
 
-where :math:`T_{n}` are Chebyshev polynomials of the first kind. In a file, we store the Chebyshev coefficients, :math:`a` and :math:`b`; the discontinuity correction frequency, :math:`f_{COR}`; the values of the waveform differences at :math:`f_{COR}`, :math:`\Delta{A}_{\mu}(f_{COR};\theta)` and :math:`\Delta\Phi_{\mu}(f_{COR};\theta)`; and other parameters needed to store the data. With these parameters, we can reconstruct the original waveform differences within 2% in :math:`\Delta{A}` and :math:`2^{\circ}` in :math:`\Delta\Phi`. 
+where :math:`T_{n}` are Chebyshev polynomials of the first kind. In a file, we store the Chebyshev coefficients, :math:`a` and :math:`b`; the discontinuity correction frequency, :math:`f_{COR}`; the values of the waveform differences at :math:`f_{COR}`, :math:`\Delta\mathcal{A}_{\mu}(f_{COR};\theta)` and :math:`\Delta\Phi_{\mu}(f_{COR};\theta)`; and other parameters needed to store the data. With these parameters, we can reconstruct the original waveform differences within 2% in :math:`\Delta\mathcal{A}` and :math:`2^{\circ}` in :math:`\Delta\Phi`. 
 
 .. note::
 
-    The error margins on :math:`\Delta{A}_{T}` and :math:`\Delta\Phi_{T}` can be adjusted in this package's functions. See ``max_ampltitude_error`` and ``max_phase_error`` in `WaveformUncertainty.parameterization <https://waveformuncertainty.readthedocs.io/en/latest/parameterization.html>`_.
+    The error margins on :math:`\Delta\mathcal{A}_{T}` and :math:`\Delta\Phi_{T}` can be adjusted in this package's functions. See ``max_ampltitude_error`` and ``max_phase_error`` in `WaveformUncertainty.parameterization <https://waveformuncertainty.readthedocs.io/en/latest/parameterization.html>`_.
