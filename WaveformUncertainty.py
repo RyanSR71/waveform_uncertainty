@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.4.6"
+__version__ = "0.4.7"
 
 import numpy as np
 import bilby
@@ -570,7 +570,7 @@ def WFU_prior(mean_amplitude_difference,amplitude_uncertainty,mean_phase_differe
     Returns
     ==================
     prior: bilby.core.prior.PriorDict
-        prior containing the waveform uncertainty parameters (alphas and betas)
+        prior containing the waveform uncertainty parameters (alphas and phis)
     frequency_nodes: numpy.ndarray
         frequency nodes used by __WaveformGeneratorWFU() to generate waveform difference splines
     '''
@@ -598,7 +598,7 @@ def WFU_prior(mean_amplitude_difference,amplitude_uncertainty,mean_phase_differe
                                                         mu=mean_amplitude_difference[frequency_scale[i]],
                                                           sigma=amplitude_uncertainty[frequency_scale[i]])
     for i in range(len(frequency_scale)):
-        prior[f'beta_{i+1}'] = bilby.core.prior.Gaussian(name=f'beta_{i+1}',latex_label=r'$\beta_{n}$'.replace('n',str(i+1)),
+        prior[f'phi_{i+1}'] = bilby.core.prior.Gaussian(name=f'phi_{i+1}',latex_label=r'$\varphi_{n}$'.replace('n',str(i+1)),
                                                         mu=mean_phase_difference[frequency_scale[i]],
                                                          sigma=phase_uncertainty[frequency_scale[i]])
     
