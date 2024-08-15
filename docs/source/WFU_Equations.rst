@@ -205,7 +205,7 @@ and
         P(\varphi_{k})=\frac{(2\pi)^{-\frac{1}{2}}}{\delta\Phi_{\mu}(f_{k})}\mathrm{exp}\left[-\frac{1}{2}\left(\frac{\Delta\Phi-\overline{\Delta\Phi_{\mu}}(f_{k})}{\delta\Phi_{\mu}(f_{k})}\right)^{2}\right]
     \end{equation},
 
-where :math:`\delta{A}_{\mu}(f)` and :math:`\delta\Phi_{\mu}(f)` are amplitude and phase uncertainty respectively, :math:`\overline{\Delta{A}_{\mu}}(f)` and :math:`\overline{\Delta\Phi_{\mu}}(f)` are mean amplitude and phase differences respectively, and :math:`\Delta{A}_{\mu}(f;\theta)` and :math:`\Delta\Phi_{\mu}(f;\theta)` are model amplitude and phase difference respectively.
+where :math:`\delta\mathcal{A}_{\mu}(f)` and :math:`\delta\Phi_{\mu}(f)` are amplitude and phase uncertainty respectively, :math:`\overline{\Delta\mathcal{A}_{\mu}}(f)` and :math:`\overline{\Delta\Phi_{\mu}}(f)` are mean amplitude and phase differences respectively, and :math:`\Delta\mathcal{A}_{\mu}(f;\theta)` and :math:`\Delta\Phi_{\mu}(f;\theta)` are model amplitude and phase difference respectively.
 
 Parameterizing Waveform Differences
 -----------------------------------
