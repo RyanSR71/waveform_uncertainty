@@ -70,7 +70,7 @@ Raw phase difference contains overall phase and time shifts which need to be rem
         \Delta\Phi(f)=\Delta\phi(f)-(2\pi{t_{c}}f+\phi_{c}),
     \end{equation}
 
-where :math:`t_{c}` is coalescence time and :math:`\phi_{c}` is coalescence phase. We can find these values by fitting a line to :math:`\Delta\phi` weighted by :math:`\frac{S_{n}(f)}{A(f)^{2}}`, where :math:`S_{n}(f)` is power spectral density (PSD) data and :math:`A(f)` is the amplitude of the waveform. The PSD data tells us the variance of the signal at each frequency point. We then subtract this line from raw phase difference to get residual phase difference.
+where :math:`t_{c}` is coalescence time and :math:`\phi_{c}` is coalescence phase. We can find these values by fitting a line to :math:`\Delta\phi` weighted by :math:`\frac{S_{n}(f)}{\mathcal{A}(f)^{2}}`, where :math:`S_{n}(f)` is power spectral density (PSD) data and :math:`\mathcal{A}(f)` is the amplitude of the waveform. The PSD data tells us the variance of the signal at each frequency point. We then subtract this line from raw phase difference to get residual phase difference.
 
 Waveform Model Differences
 --------------------------
