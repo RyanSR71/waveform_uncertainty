@@ -10,12 +10,12 @@ Following `Payne et al Phys. Rev. D 102, 122004 (2020) <https://arxiv.org/abs/20
       \mathcal{L}_{\varnothing}(h|\theta)=\prod_{j}\frac{1}{2\pi{S_{n}(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|\tilde{h}(f_{j})-\mu(f_{j};\theta)|^{2}}{S_{n}(f_{j})}\right),
   \end{equation}
 
-where :math:`h` is gravitational wave strain data, :math:`\theta` is a set of source parameters for the waveform approximants, :math:`j` is an index corresponding to frequency bins, :math:`\Delta{f}` is the distance between frequency bins, :math:`S_{n}` is power spectral density data, and :math:`\mu` is a frequency domain waveform model. To sample over waveform uncertainty, we will need to add waveform differences to the model. To start, we rewrite the waveform model in terms of its amplitude, :math:`\mathcal{A}`, and phase, :math:`\phi`:
+where :math:`h` is gravitational wave strain data, :math:`\theta` is a set of source parameters for the waveform approximants, :math:`j` is an index corresponding to frequency bins, :math:`\Delta{f}` is the distance between frequency bins, :math:`S_{n}` is power spectral density data, and :math:`\mu` is a frequency domain waveform model. To sample over waveform uncertainty, we will need to add waveform differences to the model. To start, we rewrite the waveform model in terms of its amplitude, :math:`{A}`, and phase, :math:`\phi`:
 
 .. math::
 
   \begin{equation}
-      \mu=\mathcal{A}e^{i\phi}.
+      \mu={A}e^{i\phi}.
   \end{equation}
 
 Now we can modify the model's amplitude and phase. We will do this by adding small deviations to both:
@@ -23,10 +23,10 @@ Now we can modify the model's amplitude and phase. We will do this by adding sma
 .. math::
 
   \begin{equation}
-      \mu^{\prime}=(\mathcal{A}+d\mathcal{A})e^{i(\phi+d\phi)}.
+      \mu^{\prime}=({A}+d{A})e^{i(\phi+d\phi)}.
   \end{equation}
 
-Now we consider what :math:`d\mathcal{A}` and :math:`d\phi` are in terms of our waveform differences, :math:`\Delta\mathcal{A}` and :math:`\Delta\Phi`. We look at the definitions of amplitude and phase difference (see `Equations and Notation <https://waveformuncertainty.readthedocs.io/en/latest/WFU_Equations.html>`_ for details):
+Now we consider what :math:`d{A}` and :math:`d\phi` are in terms of our waveform differences, :math:`\Delta{A}` and :math:`\Delta\Phi`. We look at the definitions of amplitude and phase difference (see `Equations and Notation <https://waveformuncertainty.readthedocs.io/en/latest/WFU_Equations.html>`_ for details):
 
 .. note::
 
@@ -35,7 +35,7 @@ Now we consider what :math:`d\mathcal{A}` and :math:`d\phi` are in terms of our 
 .. math::
     
     \begin{equation}
-        \Delta\mathcal{A}=\frac{|\tilde{h}_{2}|-|\tilde{h}_{1}|}{|\tilde{h}_{1}|},
+        \Delta{A}=\frac{|\tilde{h}_{2}|-|\tilde{h}_{1}|}{|\tilde{h}_{1}|},
     \end{equation} 
 
 .. math::
@@ -49,31 +49,31 @@ We see that our phase difference, :math:`\Delta\Phi`, is itself a phase, and can
 .. math::
 
   \begin{equation}
-      \mu^{\prime}=(\mathcal{A}+d\mathcal{A})e^{i(\phi+\Delta\Phi)}.
+      \mu^{\prime}=({A}+d{A})e^{i(\phi+\Delta\Phi)}.
   \end{equation}
 
-Amplitude difference, :math:`\Delta\mathcal{A}`, however, cannot be directly added to our model's amplitude. Amplitude difference is a relative error, so to get it in a form that we can use, we need to multiply it by the model's amplitude, or :math:`dA=A\Delta{A}`:
+Amplitude difference, :math:`\Delta{A}`, however, cannot be directly added to our model's amplitude. Amplitude difference is a relative error, so to get it in a form that we can use, we need to multiply it by the model's amplitude, or :math:`dA=A\Delta{A}`:
 
 .. math::
 
   \begin{equation}
-      \mu^{\prime}=(\mathcal{A}+\mathcal{A}\Delta\mathcal{A})e^{i(\phi+\Delta\Phi)}.
+      \mu^{\prime}=({A}+{A}\Delta{A})e^{i(\phi+\Delta\Phi)}.
   \end{equation}
 
-Now we can rearrange this equation using basic algebra; we will pull out the common factor, :math:`\mathcal{A}`, and split the exponential term into two exponentials:
+Now we can rearrange this equation using basic algebra; we will pull out the common factor, :math:`{A}`, and split the exponential term into two exponentials:
 
 .. math::
 
   \begin{equation}
-      \mu^{\prime}=\mathcal{A}(1+\Delta\mathcal{A})e^{i\phi}e^{i\Delta\Phi}.
+      \mu^{\prime}={A}(1+\Delta{A})e^{i\phi}e^{i\Delta\Phi}.
   \end{equation}
 
-Using the definition of our model, :math:`\mu=\mathcal{A}e^{i\phi}`, we can rewrite our new model in terms of :math:`\mu`:
+Using the definition of our model, :math:`\mu={A}e^{i\phi}`, we can rewrite our new model in terms of :math:`\mu`:
 
 .. math::
 
   \begin{equation}
-      \mu^{\prime}=\mu(1+\Delta\mathcal{A})e^{i\Delta\Phi}=\mu(1+\Delta\mathcal{A})\mathrm{exp}[i\Delta\Phi].
+      \mu^{\prime}=\mu(1+\Delta{A})e^{i\Delta\Phi}=\mu(1+\Delta{A})\mathrm{exp}[i\Delta\Phi].
   \end{equation}
 
 .. note:: 
@@ -85,15 +85,15 @@ Using our new waveform model, :math:`\mu^{\prime}`, in the likelihood function, 
 .. math::
 
   \begin{equation}
-      \mathcal{L}(h|\theta)=\prod_{j}\frac{1}{2\pi{S_{n}(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|\tilde{h}(f_{j})-\mu(f_{j};\theta)(1+\Delta\mathcal{A})\mathrm{exp}\left[i\Delta\Phi\right]|^{2}}{S_{n}(f_{j})}\right).
+      \mathcal{L}(h|\theta)=\prod_{j}\frac{1}{2\pi{S_{n}(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|\tilde{h}(f_{j})-\mu(f_{j};\theta)(1+\Delta{A})\mathrm{exp}\left[i\Delta\Phi\right]|^{2}}{S_{n}(f_{j})}\right).
   \end{equation}
 
-To sample these waveform differences, we need to express :math:`\Delta\mathcal{A}` and :math:`\Delta\Phi` in terms of a small number of parameters. The simplest way to do this is to use cubic splines. Cubic splines take points, or nodes, and fill the space between them with cubic functions. We redefine our waveform differences to be spline functions:
+To sample these waveform differences, we need to express :math:`\Delta{A}` and :math:`\Delta\Phi` in terms of a small number of parameters. The simplest way to do this is to use cubic splines. Cubic splines take points, or nodes, and fill the space between them with cubic functions. We redefine our waveform differences to be spline functions:
 
 .. math:: 
 
   \begin{equation}
-      \Delta\mathcal{A}\rightarrow\Delta\mathcal{A}(f;\{f_{k},\alpha_{k}\}),
+      \Delta{A}\rightarrow\Delta{A}(f;\{f_{k},\alpha_{k}\}),
   \end{equation}
 
 .. math:: 
@@ -113,7 +113,7 @@ We now need to know what prior distribution we are going to use to draw the :mat
 .. math::
 
     \begin{equation}
-        \alpha_{k}\sim\mathcal{N}(\overline{\Delta\mathcal{A}_{\mu}}(f_{k}),\delta\mathcal{A}_{\mu}(f_{k})),
+        \alpha_{k}\sim\mathcal{N}(\overline{\Delta{A}_{\mu}}(f_{k}),\delta{A}_{\mu}(f_{k})),
     \end{equation}
 
 .. math::
@@ -127,19 +127,19 @@ Plugging these spline functions into the likelihood function gives the final for
 .. math::
 
     \small \begin{equation}
-        \mathcal{L}(h|\theta,\alpha,\varphi)=\prod_{j}\frac{1}{2\pi{S_{n}(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|\tilde{h}(f_{j})-\mu(f_{j};\theta)\left(1+\Delta\mathcal{A}_{\delta}(f_{j};\{f_{k},\alpha_{k}\})\right)\mathrm{exp}\left[i\Delta\Phi_{\delta}(f_{j};\{f_{k},\varphi_{k}\})\right]|^{2}}{S_{n}(f_{j})}\right).
+        \mathcal{L}(h|\theta,\alpha,\varphi)=\prod_{j}\frac{1}{2\pi{S_{n}(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|\tilde{h}(f_{j})-\mu(f_{j};\theta)\left(1+\Delta{A}_{\delta}(f_{j};\{f_{k},\alpha_{k}\})\right)\mathrm{exp}\left[i\Delta\Phi_{\delta}(f_{j};\{f_{k},\varphi_{k}\})\right]|^{2}}{S_{n}(f_{j})}\right).
     \end{equation}
 
 .. note::
 
-  We give :math:`\Delta\mathcal{A}` and :math:`\Delta\Phi` the subscript, :math:`\delta`, to denote that these waveform difference models are drawn from waveform uncertainties :math:`\delta\mathcal{A}` and :math:`\delta\Phi`.
+  We give :math:`\Delta{A}` and :math:`\Delta\Phi` the subscript, :math:`\delta`, to denote that these waveform difference models are drawn from waveform uncertainties :math:`\delta{A}` and :math:`\delta\Phi`.
 
 If we make the subsitution:
 
 .. math::
 
   \begin{equation}
-      \nu(f;\alpha,\varphi)=(1+\Delta\mathcal{A}_{\delta}(f;\{f_{k},\alpha_{k}\})\mathrm{exp}[i\Delta\Phi_{\delta}(f;\{f_{k},\varphi_{k}\})],
+      \nu(f;\alpha,\varphi)=(1+\Delta{A}_{\delta}(f;\{f_{k},\alpha_{k}\})\mathrm{exp}[i\Delta\Phi_{\delta}(f;\{f_{k},\varphi_{k}\})],
   \end{equation}
 
 where :math:`\nu` is the model correction function, we can write the likelihood function in a more convenient form:
