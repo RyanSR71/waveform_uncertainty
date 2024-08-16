@@ -10,7 +10,7 @@ Following `Payne et al Phys. Rev. D 102, 122004 (2020) <https://arxiv.org/abs/20
       \mathcal{L}_{\varnothing}(h|\theta)=\prod_{j}\frac{1}{2\pi{S_{n}(f_{j})}}\mathrm{exp}\left(-2\Delta{f}\frac{|\tilde{h}(f_{j})-\mu(f_{j};\theta)|^{2}}{S_{n}(f_{j})}\right),
   \end{equation}
 
-where :math:`h` is gravitational wave strain data, :math:`\theta` is a set of source parameters for the waveform approximants, :math:`j` is an index corresponding to frequency bins, :math:`\Delta{f}` is the distance between frequency bins, :math:`S_{n}` is power spectral density data, and :math:`\mu` is a frequency domain waveform model. To sample over waveform uncertainty, we will need to add waveform differences to the model. To start, we rewrite the waveform model in terms of its amplitude, :math:`A`, and phase, :math:`\phi`:
+where :math:`h` is gravitational wave strain data, :math:`\theta` is a set of source parameters for the waveform approximants, :math:`j` is an index corresponding to frequency bins, :math:`\Delta{f}` is the distance between frequency bins, :math:`S_{n}` is power spectral density data, and :math:`\mu` is a frequency domain waveform model. To sample over waveform uncertainty, we will need to add waveform differences to the model. To start, we rewrite the waveform model in terms of its amplitude, :math:`\mathcal{A}`, and phase, :math:`\phi`:
 
 .. math::
 
@@ -35,13 +35,13 @@ Now we consider what :math:`d\mathcal{A}` and :math:`d\phi` are in terms of our 
 .. math::
     
     \begin{equation}
-        \Delta\mathcal{A}=\frac{|h_{2}|-|h_{1}|}{|h_{1}|},
+        \Delta\mathcal{A}=\frac{|\tilde{h}_{2}|-|\tilde{h}_{1}|}{|\tilde{h}_{1}|},
     \end{equation} 
 
 .. math::
 
     \begin{equation}
-        \Delta\Phi=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{2}\right]}{\mathrm{Re}\left[h_{2}\right]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[h_{1}\right]}{\mathrm{Re}\left[h_{1}\right]}\right)-(2\pi{t_{c}}f+\phi_{c}).
+        \Delta\Phi=\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[\tilde{h}_{2}\right]}{\mathrm{Re}\left[\tilde{h}_{2}\right]}\right)-\mathrm{tan}^{-1}\left(\frac{\mathrm{Im}\left[\tilde{h}_{1}\right]}{\mathrm{Re}\left[\tilde{h}_{1}\right]}\right)-(2\pi{t_{c}}f+\phi_{c}).
     \end{equation}
 
 We see that our phase difference, :math:`\Delta\Phi`, is itself a phase, and can therefore be directly added to our model's phase. In other words: :math:`d\phi=\Delta\Phi`:
