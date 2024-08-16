@@ -9,17 +9,17 @@ Compact Binary Inspiral Gravitional Waves, as the name suggests, are gravitation
 .. math::
 
     \begin{equation}
-        h(t)=A(t)\mathrm{exp}\left({i\psi(t)}\right),
+        h(t)=\mathcal{A}(t)\mathrm{exp}\left({i\psi(t)}\right),
     \end{equation}
 
-where :math:`A(t)` is the time domain amplitude and :math:`\psi(t)` is the time domain phase. 
+where :math:`\mathcal{A}(t)` is the time domain amplitude and :math:`\psi(t)` is the time domain phase. 
 
-Typically, we work with waveforms in the frequency domain, which is the Fourier transform of the time domain waveform. In the frequency domain, we represent the waveform in terms of its amplitude, :math:`\mathcal{A}`, and phase, :math:`\phi`:
+Typically, we work with waveforms in the frequency domain, which is the Fourier transform of the time domain waveform. In the frequency domain, we represent the waveform in terms of its amplitude, :math:`{A}`, and phase, :math:`\phi`:
 
 .. math::
 
     \begin{equation}
-        \tilde{h}(f)=\mathcal{A}(f)\mathrm{exp}\left({i\phi(f)}\right).
+        \tilde{h}(f)={A}(f)\mathrm{exp}\left({i\phi(f)}\right).
     \end{equation}
 
 From the waveform itself, we can find the amplitude and phase with
@@ -27,7 +27,7 @@ From the waveform itself, we can find the amplitude and phase with
 .. math::
 
     \begin{equation}
-        \mathcal{A}(f)=\sqrt{\tilde{h}^{*}(f)\tilde{h}(f)}=|\tilde{h}(f)|,
+        {A}(f)=\sqrt{\tilde{h}^{*}(f)\tilde{h}(f)}=|\tilde{h}(f)|,
     \end{equation}
 
 and
@@ -49,7 +49,7 @@ Amplitude difference, :math:`\Delta\mathcal{A}`, is defined generally as
 .. math::
     
     \begin{equation}
-        \Delta\mathcal{A}(f)=\frac{|\tilde{h}_{2}(f)|-|\tilde{h}_{1}(f)|}{|\tilde{h}_{1}(f)|},
+        \Delta{A}(f)=\frac{|\tilde{h}_{2}(f)|-|\tilde{h}_{1}(f)|}{|\tilde{h}_{1}(f)|},
     \end{equation} 
 
 where :math:`h_{1}` and :math:`h_{2}` are sets of frequency domain gravitational wave strain, which are complex. Amplitude difference is a relative error between the two waveforms relative to :math:`h_{1}`.
@@ -70,7 +70,7 @@ Raw phase difference contains overall phase and time shifts which need to be rem
         \Delta\Phi(f)=\Delta\phi(f)-(2\pi{t_{c}}f+\phi_{c}),
     \end{equation}
 
-where :math:`t_{c}` is coalescence time and :math:`\phi_{c}` is coalescence phase. We can find these values by fitting a line to :math:`\Delta\phi` weighted by :math:`\frac{S_{n}(f)}{\mathcal{A}(f)^{2}}`, where :math:`S_{n}(f)` is power spectral density (PSD) data and :math:`\mathcal{A}(f)` is the amplitude of the waveform. The PSD data tells us the variance of the signal at each frequency point. We then subtract this line from raw phase difference to get residual phase difference.
+where :math:`t_{c}` is coalescence time and :math:`\phi_{c}` is coalescence phase. We can find these values by fitting a line to :math:`\Delta\phi` weighted by :math:`\frac{S_{n}(f)}{{A}(f)^{2}}`, where :math:`S_{n}(f)` is power spectral density (PSD) data and :math:`{A}(f)` is the amplitude of the waveform. The PSD data tells us the variance of the signal at each frequency point. We then subtract this line from raw phase difference to get residual phase difference.
 
 Waveform Model Differences
 --------------------------
@@ -82,7 +82,7 @@ When finding the waveform differences between two waveform models, :math:`\mu`, 
         \lim_{|\tilde{h}_{1}(f)|\to{0}}\left(\frac{|\tilde{h}_{2}(f)|-|\tilde{h}_{1}(f)|}{|\tilde{h}_{1}(f)|}\right)=\infty.
     \end{equation}
 
-This results in the :math:`\Delta\mathcal{A}` values abruptly increasing to infinity. When using waveform approximants, especially those that handle tidal deformabilities, this discontinuity is extremely common. If :math:`|\tilde{h}_{2}(f)|` instead goes to zero faster than :math:`|\tilde{h}_{1}(f)|`, we observe the following:
+This results in the :math:`\Delta{A}` values abruptly increasing to infinity. When using waveform approximants, especially those that handle tidal deformabilities, this discontinuity is extremely common. If :math:`|\tilde{h}_{2}(f)|` instead goes to zero faster than :math:`|\tilde{h}_{1}(f)|`, we observe the following:
 
 .. math::
 
@@ -101,9 +101,9 @@ To deal with these discontinuities, we cut off the waveform differences at the d
 .. math::
 
     \begin{equation}
-        \Delta\mathcal{A}_{\mu}(f;\theta)= \begin{cases} 
+        \Delta{A}_{\mu}(f;\theta)= \begin{cases} 
           \frac{|\mu_{2}(f;\theta)|-|\mu_{1}(f;\theta)|}{|\mu_{1}(f;\theta)|} & f \leq f_{COR} \\
-          \Delta\mathcal{A}_{\mu}(f_{COR};\theta) & f > f_{COR}
+          \Delta{A}_{\mu}(f_{COR};\theta) & f > f_{COR}
        \end{cases}\hspace{0.2cm},
     \end{equation}
 
@@ -134,7 +134,7 @@ Waveform uncertainties are the variabilities of the waveform's amplitude and pha
 .. math::
 
     \begin{equation}
-        \delta\mathcal{A}_{\mu}(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta\mathcal{A}_{\mu}(f;\theta_{i})-\overline{\Delta\mathcal{A}_{\mu}}(f)\right)^{2}}{N}},
+        \delta{A}_{\mu}(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta{A}_{\mu}(f;\theta_{i})-\overline{\Delta{A}_{\mu}}(f)\right)^{2}}{N}},
     \end{equation}
 
 .. math::
@@ -143,18 +143,18 @@ Waveform uncertainties are the variabilities of the waveform's amplitude and pha
         \delta\Phi_{\mu}(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta\Phi_{\mu}(f;\theta_{i})-\overline{\Delta\Phi_{\mu}}(f)\right)^{2}}{N}},
     \end{equation}
 
-where :math:`\theta_{i}` is a set of source parameters, :math:`N` is the number of draws of waveform difference, and :math:`\overline{\Delta\mathcal{A}_{\mu}}` and :math:`\overline{\Delta\Phi_{\mu}}` are the mean waveform differences.
+where :math:`\theta_{i}` is a set of source parameters, :math:`N` is the number of draws of waveform difference, and :math:`\overline{\Delta{A}_{\mu}}` and :math:`\overline{\Delta\Phi_{\mu}}` are the mean waveform differences.
 
 .. note::
 
     We will be using residual phase uncertainty, :math:`\Delta\Phi`, as our phase uncertainty from now on.
 
-The mean waveform difference are defined in amplitude and phase, :math:`\overline{\Delta\mathcal{A}_{\mu}}` and :math:`\overline{\Delta\Phi_{\mu}}` respectively, and are defined as:
+The mean waveform difference are defined in amplitude and phase, :math:`\overline{\Delta{A}_{\mu}}` and :math:`\overline{\Delta\Phi_{\mu}}` respectively, and are defined as:
 
 .. math::
 
     \begin{equation}
-        \overline{\Delta\mathcal{A}_{\mu}}(f)=\frac{\sum_{i=1}^{N}(\Delta\mathcal{A}_{\mu}(f;\theta_{i}))}{N},
+        \overline{\Delta{A}_{\mu}}(f)=\frac{\sum_{i=1}^{N}(\Delta{A}_{\mu}(f;\theta_{i}))}{N},
     \end{equation}
 
 and
@@ -167,7 +167,7 @@ and
 
 .. note::
 
-    For both the waveform uncertainties (:math:`\delta\mathcal{A}_{\mu}` and :math:`\delta\Phi_{\mu}`) and the mean waveform differences (:math:`\overline{\Delta\mathcal{A}_{\mu}}` and :math:`\overline{\Delta\Phi_{\mu}}`), each draw has different source parameters, denoted by :math:`\theta_{i}`.
+    For both the waveform uncertainties (:math:`\delta{A}_{\mu}` and :math:`\delta\Phi_{\mu}`) and the mean waveform differences (:math:`\overline{\Delta{A}_{\mu}}` and :math:`\overline{\Delta\Phi_{\mu}}`), each draw has different source parameters, denoted by :math:`\theta_{i}`.
 
 Likelihood and Sampling
 -----------------------
@@ -186,15 +186,15 @@ where :math:`h` is frequency domain gravitational wave strain, :math:`\theta` is
 .. math::
 
     \begin{equation}
-        \nu(f;\alpha,\varphi)=(1+\Delta\mathcal{A}_{\delta}(f;\{f_{k},\alpha_{k}\})\mathrm{exp}[i\Delta\Phi_{\delta}(f;\{f_{k},\varphi_{k}\})],
+        \nu(f;\alpha,\varphi)=(1+\Delta{A}_{\delta}(f;\{f_{k},\alpha_{k}\})\mathrm{exp}[i\Delta\Phi_{\delta}(f;\{f_{k},\varphi_{k}\})],
     \end{equation}
 
-where :math:`\Delta\mathcal{A}_{\delta}` is an amplitude difference function defined by waveform uncertainty, :math:`f_{k}` is a set of frequency nodes, :math:`\alpha` is a set of amplitude difference spline nodes, :math:`\Delta\Phi_{\delta}` is a phase difference function, and :math:`\varphi` is a set of phase difference spline nodes. Each :math:`\alpha` and :math:`\varphi` parameter is a draw from a Gaussian distribution. Their priors are defined as
+where :math:`\Delta{A}_{\delta}` is an amplitude difference function defined by waveform uncertainty, :math:`f_{k}` is a set of frequency nodes, :math:`\alpha` is a set of amplitude difference spline nodes, :math:`\Delta\Phi_{\delta}` is a phase difference function, and :math:`\varphi` is a set of phase difference spline nodes. Each :math:`\alpha` and :math:`\varphi` parameter is a draw from a Gaussian distribution. Their priors are defined as
 
 .. math::
 
     \begin{equation}
-        P(\alpha_{k})=\frac{(2\pi)^{-\frac{1}{2}}}{\delta\mathcal{A}_{\mu}(f_{k})}\mathrm{exp}\left[-\frac{1}{2}\left(\frac{\Delta\mathcal{A}-\overline{\Delta\mathcal{A}_{\mu}}(f_{k})}{\delta\mathcal{A}_{\mu}(f_{k})}\right)^{2}\right]
+        P(\alpha_{k})=\frac{(2\pi)^{-\frac{1}{2}}}{\delta{A}_{\mu}(f_{k})}\mathrm{exp}\left[-\frac{1}{2}\left(\frac{\Delta{A}-\overline{\Delta{A}_{\mu}}(f_{k})}{\delta{A}_{\mu}(f_{k})}\right)^{2}\right]
     \end{equation},
 
 and
@@ -205,7 +205,7 @@ and
         P(\varphi_{k})=\frac{(2\pi)^{-\frac{1}{2}}}{\delta\Phi_{\mu}(f_{k})}\mathrm{exp}\left[-\frac{1}{2}\left(\frac{\Delta\Phi-\overline{\Delta\Phi_{\mu}}(f_{k})}{\delta\Phi_{\mu}(f_{k})}\right)^{2}\right]
     \end{equation},
 
-where :math:`\delta\mathcal{A}_{\mu}(f)` and :math:`\delta\Phi_{\mu}(f)` are amplitude and phase uncertainty respectively, :math:`\overline{\Delta\mathcal{A}_{\mu}}(f)` and :math:`\overline{\Delta\Phi_{\mu}}(f)` are mean amplitude and phase differences respectively, and :math:`\Delta\mathcal{A}_{\mu}(f;\theta)` and :math:`\Delta\Phi_{\mu}(f;\theta)` are model amplitude and phase difference respectively.
+where :math:`\delta{A}_{\mu}(f)` and :math:`\delta\Phi_{\mu}(f)` are amplitude and phase uncertainty respectively, :math:`\overline{\Delta{A}_{\mu}}(f)` and :math:`\overline{\Delta\Phi_{\mu}}(f)` are mean amplitude and phase differences respectively, and :math:`\Delta{A}_{\mu}(f;\theta)` and :math:`\Delta\Phi_{\mu}(f;\theta)` are model amplitude and phase difference respectively.
 
 Parameterizing Waveform Differences
 -----------------------------------
@@ -214,9 +214,9 @@ Computationally, generating individual waveform differences is a simple and quic
 .. math:: 
 
     \begin{equation}
-        \Delta\mathcal{A}_{\mu}(f;\theta)\approx\Delta\mathcal{A}_{T}(f;a,f_{COR},\Delta\mathcal{A}_{\mu}(f_{COR};\theta))= \begin{cases} 
+        \Delta{A}_{\mu}(f;\theta)\approx\Delta{A}_{T}(f;a,f_{COR},\Delta{A}_{\mu}(f_{COR};\theta))= \begin{cases} 
           \sum_{i=0}^{N-1}a_{i}T_{i}(f) & f \leq f_{COR} \\
-          \Delta\mathcal{A}_{\mu}(f_{COR};\theta) & f > f_{COR}
+          \Delta{A}_{\mu}(f_{COR};\theta) & f > f_{COR}
        \end{cases}\hspace{0.2cm},
     \end{equation}
 
@@ -229,8 +229,8 @@ Computationally, generating individual waveform differences is a simple and quic
        \end{cases}\hspace{0.2cm},
     \end{equation}
 
-where :math:`T_{n}` are Chebyshev polynomials of the first kind. In a file, we store the Chebyshev coefficients, :math:`a` and :math:`b`; the discontinuity correction frequency, :math:`f_{COR}`; the values of the waveform differences at :math:`f_{COR}`, :math:`\Delta\mathcal{A}_{\mu}(f_{COR};\theta)` and :math:`\Delta\Phi_{\mu}(f_{COR};\theta)`; and other parameters needed to store the data. With these parameters, we can reconstruct the original waveform differences within 2% in :math:`\Delta\mathcal{A}` and :math:`2^{\circ}` in :math:`\Delta\Phi`. 
+where :math:`T_{n}` are Chebyshev polynomials of the first kind. In a file, we store the Chebyshev coefficients, :math:`a` and :math:`b`; the discontinuity correction frequency, :math:`f_{COR}`; the values of the waveform differences at :math:`f_{COR}`, :math:`\Delta{A}_{\mu}(f_{COR};\theta)` and :math:`\Delta\Phi_{\mu}(f_{COR};\theta)`; and other parameters needed to store the data. With these parameters, we can reconstruct the original waveform differences within 2% in :math:`\Delta{A}` and :math:`2^{\circ}` in :math:`\Delta\Phi`. 
 
 .. note::
 
-    The error margins on :math:`\Delta\mathcal{A}_{T}` and :math:`\Delta\Phi_{T}` can be adjusted in this package's functions. See ``max_ampltitude_error`` and ``max_phase_error`` in `WaveformUncertainty.parameterization <https://waveformuncertainty.readthedocs.io/en/latest/parameterization.html>`_.
+    The error margins on :math:`\Delta{A}_{T}` and :math:`\Delta\Phi_{T}` can be adjusted in this package's functions. See ``max_ampltitude_error`` and ``max_phase_error`` in `WaveformUncertainty.parameterization <https://waveformuncertainty.readthedocs.io/en/latest/parameterization.html>`_.
