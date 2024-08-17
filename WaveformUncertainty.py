@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.5.0"
+__version__ = "0.5.1"
 
 import numpy as np
 import bilby
@@ -38,7 +38,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
         default: None
     correction_parameter_A: float, optional
         value at which to cut the second derivative of amplitude difference; if None, correction will not occur
-        default: 1e-5
+        default: 5e-5
     correction_parameter_B: int, optional
         index at which to start the search for any discontinuity
         default: 0
@@ -68,7 +68,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
-    correction_parameter_A = kwargs.get('correction_parameter_A',1e-5)
+    correction_parameter_A = kwargs.get('correction_parameter_A',5e-5)
     correction_parameter_B = kwargs.get('correction_parameter_B',0)
     correction_parameter_C = kwargs.get('correction_parameter_C',2)
     ref_amplitude = kwargs.get('ref_amplitude',None)
@@ -309,7 +309,7 @@ def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
         default: None
     correction_parameter_A: float, optional
         value at which to cut the second derivative of amplitude difference; if None, correction will not occur
-        default: 1e-5
+        default: 5e-5
     correction_parameter_B: int, optional
         index at which to start the search for any discontinuity
         default: 0
@@ -353,7 +353,7 @@ def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
-    correction_parameter_A = kwargs.get('correction_parameter_A',1e-5)
+    correction_parameter_A = kwargs.get('correction_parameter_A',5e-5)
     correction_parameter_B = kwargs.get('correction_parameter_B',0)
     correction_parameter_C = kwargs.get('correction_parameter_C',2)
     ref_amplitude = kwargs.get('ref_amplitude',None)
