@@ -7,7 +7,7 @@ WaveformUncertainty.WFU_prior
                                  mean_phase_difference,phase_uncertainty,frequency_grid,
                                  nnodes,prior=None,spacing='linear')
 
-Automatically generates a bilby prior object containing Gaussian waveform uncertainty parameter priors (alphas and betas). If given a pre-existing prior object, the waveform uncertainty parameters will be added to it (See `Equations and Notation <https://waveformuncertainty.readthedocs.io/en/latest/WFU_Equations.html#likelihood>`_)
+Automatically generates a bilby prior object containing Gaussian waveform uncertainty parameter priors (alphas and phis). If given a pre-existing prior object, the waveform uncertainty parameters will be added to it (See `Equations and Notation <https://waveformuncertainty.readthedocs.io/en/latest/WFU_Equations.html#likelihood>`_)
 
 Parameters:
 -----------
@@ -31,6 +31,6 @@ spacing: string, optional, ('linear')
 Returns:
 --------
 prior: bilby.core.prior.PriorDict
-    prior containing the waveform uncertainty parameters (alphas and betas)
+    prior containing the waveform uncertainty parameters (alphas and phis)
 frequency_nodes: numpy.ndarray
     frequency nodes used by __WaveformGeneratorWFU() to generate waveform difference splines
