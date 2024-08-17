@@ -13,12 +13,12 @@ WaveformUncertainty.WaveformGeneratorWFU
 Bases: ``object``
 
 Modified WaveformGenerator object from bilby.gw to include waveform uncertainty corrections in the strain calculation;
-To sample waveform uncertainty, include all relevant "alpha" and "beta" parameters in the prior.
+To sample waveform uncertainty, include all relevant "alpha" and "phi" parameters in the prior.
 (See bilby's documentation for `bilby.gw.WaveformGenerator <https://lscsoft.docs.ligo.org/bilby/api/bilby.gw.waveform_generator.WaveformGenerator.html#bilby.gw.waveform_generator.WaveformGenerator>`_ and `Likelihood Derivation <https://waveformuncertainty.readthedocs.io/en/latest/Likelihood_Equation.html>`_) 
 
 .. note::
 
-  Make sure the number of alphas, betas, and waveform_uncertainty_nodes are the same!
+  Make sure the number of alphas, phis, and waveform_uncertainty_nodes are the same!
 
 .. code-block:: python
 
@@ -35,4 +35,4 @@ waveform_uncertainty_nodes: numpy.ndarray, optional, (None)
 dA_sampling: bool, optional, (None)
     if True, the waveform generator will attempt to pull alpha parameters from the parameter dictionary (either an injection or the prior)
 dphi_sampling: bool, optional, (None)
-    if True, the waveform generator will attempt to pull beta parameters from the parameter dictionary (either an injection or the prior)
+    if True, the waveform generator will attempt to pull phi parameters from the parameter dictionary (either an injection or the prior)
