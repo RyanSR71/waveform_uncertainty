@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.4.8"
+__version__ = "0.5.0"
 
 import numpy as np
 import bilby
@@ -604,13 +604,63 @@ def WFU_prior(mean_amplitude_difference,amplitude_uncertainty,mean_phase_differe
     
     return prior,frequency_nodes
 
+def maxL(result):
+    '''
+    Calculates the set of parameters in a posterior that together yield the highest likelihood
+
+    Parameters
+    ==================
+    result: bilby.core.result.Result
+        bilby result object from a parameter estimation run
+
+    Returns
+    ==================
+    maxL_dict: dictionary
+        dictionary of all parameters in the posterior with their most likely value
+    '''
+    maxL_index = np.argmax(result.log_likelihood_evaluations)
+    
+    maxL_dict = dict()
+    for parameter in result.posterior.keys():
+        maxL_dict[parameter] = result.posterior[parameter][maxL_index]
+        
+    return maxL_dict
+
+def Q_factor(WFU_result,NHP_result,injection):
+    '''
+    Calculates the quality factor of a correction by comparing the posteriors of the corrected PE run and the uncorrected (null-hypothesis) PE run.
+
+    Parameters
+    ==================
+    WFU_result: bilby.core.result.Result
+        bilby result object of the waveform uncertainty corrected parameter estimation run
+    NHP_result: bilby.core.result.Result
+        bilby result object of the parameter estimation run that did not have the waveform uncertainty corrected
+    injection: dictionary
+        dictionary of the parameters injected into the PE run; the true values of the parameters
+
+    Returns
+    ==================
+    Q_factor: float
+        quality factor of the correction; 1 = perfect correction, 0 = no differece, <0 = worse
+    '''   
+    corrected_sum = 0
+    null_hypothesis_sum = 0
+    
+    for parameter in injection.keys():
+        corrected_sum += (maxL(WFU_result)[parameter]-injection[parameter])**2
+        null_hypothesis_sum += (maxL(NHP_result)[parameter]-injection[parameter])**2
+        
+    Q_factor = 1-np.sqrt(corrected_sum/null_hypothesis_sum)
+    
+    return Q_factor
 
 
 class WaveformGeneratorWFU(object):
     '''
     Modified WaveformGenerator object from bilby.gw to include waveform uncertainty corrections in the strain calculation
-    To sample waveform uncertainty, include all relevant "alpha" and "beta" parameters in the prior.
-    Note: make sure the number of alphas, betas, and waveform_uncertainty_nodes are the same
+    To sample waveform uncertainty, include all relevant "alpha" and "phi" parameters in the prior.
+    Note: make sure the number of alphas, phis, and waveform_uncertainty_nodes are the same
     
     New Parameters
     ==================
@@ -621,7 +671,7 @@ class WaveformGeneratorWFU(object):
         if True, the waveform generator will attempt to pull alpha parameters from the parameter dictionary (either an injection or the prior)
         default: None
     dphi_sampling: bool, optional
-        if True, the waveform generator will attempt to pull beta parameters from the parameter dictionary (either an injection or the prior)
+        if True, the waveform generator will attempt to pull phi parameters from the parameter dictionary (either an injection or the prior)
         default: None
     '''
     duration = PropertyAccessor('_times_and_frequencies', 'duration')
