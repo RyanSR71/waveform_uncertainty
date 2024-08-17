@@ -40,4 +40,5 @@ Check out the :doc:`installation` section for instructions. General information 
    recovery_from_parameterization
    uncertainties_from_parameterization
    WFU_prior
+   maxL
    WaveformGeneratorWFU
