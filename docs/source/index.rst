@@ -41,4 +41,5 @@ Check out the :doc:`installation` section for instructions. General information 
    uncertainties_from_parameterization
    WFU_prior
    maxL
+   Q_factor
    WaveformGeneratorWFU
