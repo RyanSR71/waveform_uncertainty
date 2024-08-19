@@ -19,7 +19,7 @@ Typically, we work with waveforms in the frequency domain, which is the Fourier 
 .. math::
 
     \begin{equation}
-        \tilde{h}(f)=\int_{-\infty}^{\infty}h(t)\mathrm{e}^{-i2\pi{ft}}dt.
+        \tilde{h}(f)=\int_{t_{0}}^{t_{c}}h(t)\mathrm{e}^{-i2\pi{ft}}dt.
     \end{equation}
 
 In the frequency domain, we represent the waveform in terms of its amplitude, :math:`{A}`, and phase, :math:`\phi`:
