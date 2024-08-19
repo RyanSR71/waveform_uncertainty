@@ -9,19 +9,12 @@ Compact Binary Inspiral Gravitional Waves, as the name suggests, are gravitation
 .. math::
 
     \begin{equation}
-        h(t)=\mathcal{A}(t)\mathrm{exp}\left({i\psi(t)}\right),
+        h(t)=A(t)\mathrm{exp}\left({i\psi(t)}\right),
     \end{equation}
 
 where :math:`A(t)` is the time domain amplitude and :math:`\psi(t)` is the time domain phase. 
 
-Typically, we work with waveforms in the frequency domain, which is the Fourier transform of the time domain waveform:
-
-.. math::
-
-    \begin{equation}
-        \tilde{h}(f)=\int_{t_{0}}^{t_{c}}h(t)\mathrm{e}^{-i2\pi{ft}}dt.
-    \end{equation}
-
+Typically, we work with waveforms in the frequency domain, which is the Fourier transform of the time domain waveform.
 In the frequency domain, we represent the waveform in terms of its amplitude, :math:`\mathcal{A}(f)`, and phase, :math:`\phi(f)`:
 
 .. math::
