@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.5.1"
+__version__ = "0.5.2"
 
 import numpy as np
 import bilby
@@ -300,10 +300,10 @@ def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
         default: 1000
     max_dA_error: float [%], optional
         maximum allowed error between the amplitude uncertainty and its parameterization
-        default: 2 
+        default: 1 
     max_dphi_error: float [degrees], optional
         maximum allowed error between the phase uncertainty and its parameterization
-        default: 2
+        default: 5
     psd_data: numpy.ndarray, optional
         array containing the psd data and their corresponding frequencies
         default: None
@@ -360,8 +360,8 @@ def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
     precession = kwargs.get('precession',False)
     tides = kwargs.get('tides',True)
     fit_parameters = kwargs.get('fit_parameters',15)
-    max_amplitude_error = kwargs.get('max_amplitude_error',2)
-    max_phase_error = kwargs.get('max_phase_error',2)
+    max_amplitude_error = kwargs.get('max_amplitude_error',1)
+    max_phase_error = kwargs.get('max_phase_error',5)
     fit_threshold = kwargs.get('fit_threshold',75)
     
     np.seterr(all='ignore')
