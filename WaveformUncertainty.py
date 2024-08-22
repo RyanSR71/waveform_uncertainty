@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.5.2"
+__version__ = "0.5.3"
 
 import numpy as np
 import bilby
@@ -616,12 +616,14 @@ def maxL(result):
     Returns
     ==================
     maxL_dict: dictionary
-        dictionary of all parameters in the posterior with their most likely value
+        dictionary of the maximum likelihood values of each of the injected parameters
     '''
     maxL_index = np.argmax(result.log_likelihood_evaluations)
     
     maxL_dict = dict()
-    for parameter in result.posterior.keys():
+    ifo = list(result.meta_data['likelihood']['interferometers'].keys())[0]
+    injection_parameters = result.meta_data['likelihood']['interferometers'][ifo]['parameters'].keys()
+    for parameter in injection_parameters:
         maxL_dict[parameter] = result.posterior[parameter][maxL_index]
         
     return maxL_dict
