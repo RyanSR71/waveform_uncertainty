@@ -624,7 +624,8 @@ def maxL(result):
     ifo = list(result.meta_data['likelihood']['interferometers'].keys())[0]
     injection_parameters = result.meta_data['likelihood']['interferometers'][ifo]['parameters'].keys()
     for parameter in injection_parameters:
-        maxL_dict[parameter] = result.posterior[parameter][maxL_index]
+        if parameter in result.posterior.keys():
+            maxL_dict[parameter] = result.posterior[parameter][maxL_index]
         
     return maxL_dict
 
