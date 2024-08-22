@@ -208,6 +208,32 @@ and
 
 where :math:`\delta\mathcal{A}_{\mu}(f)` and :math:`\delta\Phi_{\mu}(f)` are amplitude and phase uncertainty respectively, :math:`\overline{\Delta\mathcal{A}_{\mu}}(f)` and :math:`\overline{\Delta\Phi_{\mu}}(f)` are mean amplitude and phase differences respectively, and :math:`\Delta\mathcal{A}_{\mu}(f;\theta)` and :math:`\Delta\Phi_{\mu}(f;\theta)` are model amplitude and phase difference respectively.
 
+When starting a parameter estimation run, it is important to choose the injected :math:`\alpha` and :math:`\varphi` parameters to match the source parameters, :math:`\theta`, and the prior. This ensures a physically significant model for the injected waveform differences. To do this, we choose the injected waveform uncertainty parameters, :math:`\alpha^{inj}` and :math:`\varphi^{inj}`, according to
+
+.. math::
+
+    \begin{equation}
+        \alpha_{k}^{inj}=\Delta\mathcal{A}_{\mu}(f_{k},\theta),
+    \end{equation}
+
+and
+
+.. math::
+
+    \begin{equation}
+        \varphi_{k}^{inj}=\Delta\Phi_{\mu}(f_{k},\theta).
+    \end{equation}
+
+We can quantify the overall success of a waveform uncertainty correction by calculating its :math:`Q` factor, which is defined as
+
+.. math::
+
+    \begin{equation}
+        Q=1-\sqrt{\frac{\sum_{p}\left(\mathrm{max}\{\mathcal{L}(h|\theta,\alpha,\varphi)\}(p)-\Theta(p)\right)^{2}}{\sum_{p^{\prime}}\left(\mathrm{max}\{\mathcal{L}_{\varnothing}(h|\theta)\}(p^{\prime})-\Theta(p^{\prime})\right)^{2}}},
+    \end{equation}
+
+where :math:`\mathrm{max}\{\mathcal{L}(h|\theta,\alpha,\varphi)\}` is the set of maximum likelihood parameter values from the posterior of the corrected parameter estimation run, :math:`\mathcal{L}_{\varnothing}(h|\theta)\}` is the set of maximum likelihood parameter values from the posterior of the uncorrected parameter estimation run, :math:`\Theta` is the set of true parameter values (injected parameters), and :math:`p` is a source parameter; :math:`p\in\theta'. :math:`Q=1` is the ideal case where the correction perfectly matched the posterior to the true values. :math:`Q>0` signifies that the correction was able to improve the posterior from the uncorrected case. :math:`Q<0` indicates that the correction failed and made the posterior worse than the uncorrected posterior. 
+
 Parameterizing Waveform Differences
 -----------------------------------
 Computationally, generating individual waveform differences is a simple and quick task. However, to generate waveform uncertainty, we need many sets of waveform differences; at least 1000 for a decent model. Generating this number of waveform differences can take a lot of time and is generally tedious to do every time we want waveform uncertainty. To solve this issue, we can parameterize each waveform difference curve and save the parameters in a file. That way, we can generate all of our draws of waveform differences once and can simply load in the data in seconds next time we need them. This is achieved using Chebyshev polynomial series up to the discontinuity, as shown here:
