@@ -5,7 +5,7 @@ WaveformUncertainty.parameterization
 
    WaveformUncertainty.parameterization(hf1,hf2,parameter_data,nsamples,
                                         precession=False,tides=True,fit_parameters=15,
-                                        npoints=1000,max_amplitude_error=2,max_phase_error=2,
+                                        npoints=1000,max_amplitude_error=1,max_phase_error=5,
                                         psd_data=None,correction_parameter_A=5e-5,
                                         correction_parameter_B=0,correction_parameter_C=2,
                                         ref_amplitude=None,polarization='plus',
@@ -33,9 +33,9 @@ fit_parameters: int, optional, (15)
     number of terms to use in the parameterization
 npoints: int, optional, (1000)
     length of the desired frequency grid
-max_dA_error: float [%], optional, (2)
+max_amplitude_error: float [%], optional, (1)
     maximum allowed error between the amplitude uncertainty and its parameterization
-max_dphi_error: float [degrees], optional, (2)
+max_phase_error: float [degrees], optional, (5)
     maximum allowed error between the phase uncertainty and its parameterization
 psd_data: numpy.ndarray, optional, (None)
     array containing the psd data and their corresponding frequencies
