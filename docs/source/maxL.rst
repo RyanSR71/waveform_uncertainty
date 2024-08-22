@@ -15,4 +15,4 @@ result: bilby.core.result.Result
 Returns:
 --------
 maxL_dict: dictionary
-  dictionary containing all of the parameters in the posterior and their most likely values
+  dictionary of the maximum likelihood values of each of the injected parameters
