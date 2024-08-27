@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.5.3"
+__version__ = "0.5.4"
 
 import numpy as np
 import bilby
@@ -787,9 +787,9 @@ class WaveformGeneratorWFU(object):
             phis = np.zeros(len(self.waveform_uncertainty_nodes))
             for i in range(len(self.waveform_uncertainty_nodes)):
                 if self.dA_sampling == True:
-                    alphas[i]=parameters['alpha_' + f'{i+1}']
+                    alphas[i]=parameters[f'alpha_{i+1}']
                 if self.dphi_sampling == True:
-                    phis[i]=parameters['phi_' + f'{i+1}']
+                    phis[i]=parameters[f'phi_{i+1}']
             dA = scipy.interpolate.CubicSpline(self.waveform_uncertainty_nodes,alphas)(self.frequency_array)
             dphi = scipy.interpolate.CubicSpline(self.waveform_uncertainty_nodes,phis)(self.frequency_array)
             model_strain['plus'] *= (1+dA)*(2+dphi*1j)/(2-dphi*1j)
@@ -823,6 +823,10 @@ class WaveformGeneratorWFU(object):
             raise TypeError('"parameters" must be a dictionary.')
         new_parameters = parameters.copy()
         new_parameters, _ = self.parameter_conversion(new_parameters)
+        for key in self.source_parameter_keys.symmetric_difference(new_parameters):
+            # preventing waveform uncertainty parameters from being removed
+            if key not in [f'alpha_{i+1}' for i in range(len(self.waveform_uncertainty_nodes))]+[f'phi_{i+1}' for i in range(len(self.waveform_uncertainty_nodes))]:  
+                new_parameters.pop(key)
         self.__parameters = new_parameters
         self.__parameters.update(self.waveform_arguments)
         
