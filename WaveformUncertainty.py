@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.5.4"
+__version__ = "0.5.5"
 
 import numpy as np
 import bilby
@@ -783,15 +783,17 @@ class WaveformGeneratorWFU(object):
         '''
         
         if self.waveform_uncertainty_nodes is not None:
-            alphas = np.zeros(len(self.waveform_uncertainty_nodes))
-            phis = np.zeros(len(self.waveform_uncertainty_nodes))
-            for i in range(len(self.waveform_uncertainty_nodes)):
-                if self.dA_sampling == True:
-                    alphas[i]=parameters[f'alpha_{i+1}']
-                if self.dphi_sampling == True:
-                    phis[i]=parameters[f'phi_{i+1}']
-            dA = scipy.interpolate.CubicSpline(self.waveform_uncertainty_nodes,alphas)(self.frequency_array)
-            dphi = scipy.interpolate.CubicSpline(self.waveform_uncertainty_nodes,phis)(self.frequency_array)
+            if self.dA_sampling is True:
+                alphas = [parameters[f'alpha_{i+1}'] for i in range(len(self.waveform_uncertainty_nodes))]
+                dA = scipy.interpolate.CubicSpline(self.waveform_uncertainty_nodes,alphas)(self.frequency_array)
+            else:
+                dA = 0
+            if self.dphi_sampling is True:
+                phis = [parameters[f'phi_{i+1}'] for i in range(len(self.waveform_uncertainty_nodes))]
+                dphi = scipy.interpolate.CubicSpline(self.waveform_uncertainty_nodes,phis)(self.frequency_array)
+            else:
+                dphi = 0
+                
             model_strain['plus'] *= (1+dA)*(2+dphi*1j)/(2-dphi*1j)
             model_strain['cross'] *= (1+dA)*(2+dphi*1j)/(2-dphi*1j)
             
