@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.5.7"
+__version__ = "0.5.8"
 
 import numpy as np
 import bilby
@@ -828,7 +828,10 @@ class WaveformGeneratorWFU(object):
         new_parameters, _ = self.parameter_conversion(new_parameters)
         for key in self.source_parameter_keys.symmetric_difference(new_parameters):
             # preventing waveform uncertainty parameters from being removed
-            if key not in [f'alpha_{i+1}' for i in range(len(self.waveform_uncertainty_nodes))]+[f'phi_{i+1}' for i in range(len(self.waveform_uncertainty_nodes))]:  
+            if self.waveform_uncertainty_nodes is not None:
+                if key not in [f'alpha_{i+1}' for i in range(len(self.waveform_uncertainty_nodes))]+[f'phi_{i+1}' for i in range(len(self.waveform_uncertainty_nodes))]:  
+                    new_parameters.pop(key)
+            else:
                 new_parameters.pop(key)
         self.__parameters = new_parameters
         self.__parameters.update(self.waveform_arguments)
