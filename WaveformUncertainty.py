@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.5.8.2"
+__version__ = "0.5.8.3"
 
 import numpy as np
 import bilby
@@ -750,7 +750,8 @@ class WaveformGeneratorWFU(object):
                                       transformed_model=self.time_domain_source_model,
                                       transformed_model_data_points=self.time_array,
                                       waveform_uncertainty_nodes=self.waveform_uncertainty_nodes)
-    
+
+    '''
     def time_domain_strain(self, parameters=None):
         return self._calculate_strain(model=self.time_domain_source_model,
                                       model_data_points=self.time_array,
@@ -759,7 +760,28 @@ class WaveformGeneratorWFU(object):
                                       transformed_model=self.frequency_domain_source_model,
                                       transformed_model_data_points=self.frequency_array,
                                       waveform_uncertainty_nodes=self.waveform_uncertainty_nodes)
+    '''
+    def time_domain_strain(self,parameters=None):
+        fd_model_strain = self._calculate_strain(model=self.frequency_domain_source_model,
+                                      model_data_points=self.frequency_array,
+                                      parameters=parameters,
+                                      transformation_function=utils.nfft,
+                                      transformed_model=self.time_domain_source_model,
+                                      transformed_model_data_points=self.time_array,
+                                      waveform_uncertainty_nodes=self.waveform_uncertainty_nodes)
+        
+        plus_td_waveform = self.sampling_frequency*np.fft.ifft(fd_model_strain['plus'])
+        plus_td_model_strain = np.interp(time_array,np.linspace(time_array[0],time_array[-1],len(plus_td_waveform)),plus_td_waveform)
 
+        cross_td_waveform = self.sampling_frequency*np.fft.ifft(fd_model_strain['cross'])
+        cross_td_model_strain = np.interp(time_array,np.linspace(time_array[0],time_array[-1],len(cross_td_waveform)),cross_td_waveform)
+
+        model_strain = dict()
+        model_strain['plus'] = plus_td_model_strain
+        model_strain['cross'] = cross_td_model_strain
+
+        return model_strain
+    
     def _calculate_strain(self, model, model_data_points, transformation_function, transformed_model,
                           transformed_model_data_points, parameters, waveform_uncertainty_nodes):
         if parameters is not None:
