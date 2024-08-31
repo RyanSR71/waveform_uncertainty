@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.5.8.3"
+__version__ = "0.5.8.4"
 
 import numpy as np
 import bilby
@@ -771,10 +771,10 @@ class WaveformGeneratorWFU(object):
                                       waveform_uncertainty_nodes=self.waveform_uncertainty_nodes)
         
         plus_td_waveform = self.sampling_frequency*np.fft.ifft(fd_model_strain['plus'])
-        plus_td_model_strain = np.interp(time_array,np.linspace(time_array[0],time_array[-1],len(plus_td_waveform)),plus_td_waveform)
+        plus_td_model_strain = np.interp(self.time_array,np.linspace(self.time_array[0],self.time_array[-1],len(plus_td_waveform)),plus_td_waveform)
 
         cross_td_waveform = self.sampling_frequency*np.fft.ifft(fd_model_strain['cross'])
-        cross_td_model_strain = np.interp(time_array,np.linspace(time_array[0],time_array[-1],len(cross_td_waveform)),cross_td_waveform)
+        cross_td_model_strain = np.interp(self.time_array,np.linspace(self.time_array[0],self.time_array[-1],len(cross_td_waveform)),cross_td_waveform)
 
         model_strain = dict()
         model_strain['plus'] = plus_td_model_strain
