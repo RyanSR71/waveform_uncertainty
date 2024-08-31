@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.5.8"
+__version__ = "0.5.8.1"
 
 import numpy as np
 import bilby
@@ -740,7 +740,7 @@ class WaveformGeneratorWFU(object):
                                          'dphi_sampling={}, ' \
                                          'waveform_arguments={})'\
             .format(self.duration, self.sampling_frequency, self.start_time, fdsm_name, tdsm_name,
-                    param_conv_name,self.waveform_uncertainty_nodes, self.waveform_arguments)
+                    param_conv_name, self.waveform_uncertainty_nodes, self.dA_sampling, self.dphi_sampling, self.waveform_arguments)
     
     def frequency_domain_strain(self, parameters=None):
         return self._calculate_strain(model=self.frequency_domain_source_model,
