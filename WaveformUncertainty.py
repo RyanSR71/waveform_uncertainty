@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.5.8.1"
+__version__ = "0.5.8.2"
 
 import numpy as np
 import bilby
@@ -795,8 +795,8 @@ class WaveformGeneratorWFU(object):
             else:
                 dphi = 0
                 
-            model_strain['plus'] *= (1+dA)*np.exp(dphi*1j)
-            model_strain['cross'] *= (1+dA)*np.exp(dphi*1j)
+            model_strain['plus'] = model_strain['plus']*(1+dA)*np.exp(dphi*1j)
+            model_strain['cross'] = model_strain['cross']*(1+dA)*np.exp(dphi*1j)
             
         return model_strain
     
