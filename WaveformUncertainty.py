@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.5.8.4"
+__version__ = "0.5.9.0"
 
 import numpy as np
 import bilby
@@ -604,6 +604,37 @@ def WFU_prior(mean_amplitude_difference,amplitude_uncertainty,mean_phase_differe
     
     return prior,frequency_nodes
 
+
+
+def WFU_phase_prior(phase_uncertainty,frequency_grid,nnodes,**kwargs):
+    f_M = kwargs.get('f_M',100)
+    prior = kwargs.get('prior',None)
+    zero_resolution = kwargs.get('zero_resolution',10)
+    
+    if prior is None:
+        prior = bilby.core.prior.PriorDict()
+    
+    low_frequency_nodes = np.arange(frequency_grid[0],f_M,(f_M-frequency_grid[0])/zero_resolution)
+    frequency_nodes = np.geomspace(f_M,frequency_grid[-1],nnodes).astype(int)
+    
+    total_frequency_nodes = np.concatenate((low_frequency_nodes,frequency_nodes))
+    
+    position = []
+    for node in frequency_nodes:
+        position.append(list(np.round(frequency_grid,1)).index(float(node)))
+    
+    for i in range(nnodes):
+        prior[f'phi_{i+1}'] = bilby.core.prior.Gaussian(name=f'phi_{i+1}',latex_label=r'$\phi_{val}$'.replace('val',str(i+1)),mu=0,sigma=phase_uncertainty[position[i]])
+        
+    prior[f'phi_{nnodes}'] = bilby.core.prior.DeltaFunction(name=f'phi_{nnodes}',peak=0)
+    
+    for i in range(zero_resolution):
+        prior[f'phi_{-i}'] = bilby.core.prior.DeltaFunction(name=f'phi_{-i}',peak=0)
+    
+    return prior,total_frequency_nodes
+
+
+
 def maxL(result):
     '''
     Calculates the set of parameters in a posterior that together yield the highest likelihood
@@ -673,6 +704,9 @@ class WaveformGeneratorWFU(object):
     dphi_sampling: bool, optional
         if True, the waveform generator will attempt to pull phi parameters from the parameter dictionary (either an injection or the prior)
         default: None
+    phi_indexes: numpy.array, optional
+        the numbers of phase correction parameters; e.g. phi_1 = 1, phi_-8 = -8, etc.
+        default: None
     '''
     duration = PropertyAccessor('_times_and_frequencies', 'duration')
     sampling_frequency = PropertyAccessor('_times_and_frequencies', 'sampling_frequency')
@@ -692,6 +726,7 @@ class WaveformGeneratorWFU(object):
         self.source_parameter_keys = self.__parameters_from_source_model()
         self.dA_sampling = dA_sampling
         self.dphi_sampling=dphi_sampling
+        self.phi_indexes=phi_indexes
         
         if parameter_conversion is None:
             self.parameter_conversion = convert_to_lal_binary_black_hole_parameters
@@ -738,9 +773,10 @@ class WaveformGeneratorWFU(object):
                                          'waveform_uncertainty_nodes={}, ' \
                                          'dA_sampling={}, ' \
                                          'dphi_sampling={}, ' \
+                                         'phi_indexes={}, ' \
                                          'waveform_arguments={})'\
             .format(self.duration, self.sampling_frequency, self.start_time, fdsm_name, tdsm_name,
-                    param_conv_name, self.waveform_uncertainty_nodes, self.dA_sampling, self.dphi_sampling, self.waveform_arguments)
+                    param_conv_name, self.waveform_uncertainty_nodes, self.dA_sampling, self.dphi_sampling, self.phi_indexes, self.waveform_arguments)
     
     def frequency_domain_strain(self, parameters=None):
         return self._calculate_strain(model=self.frequency_domain_source_model,
@@ -749,7 +785,9 @@ class WaveformGeneratorWFU(object):
                                       transformation_function=utils.nfft,
                                       transformed_model=self.time_domain_source_model,
                                       transformed_model_data_points=self.time_array,
-                                      waveform_uncertainty_nodes=self.waveform_uncertainty_nodes)
+                                      waveform_uncertainty_nodes=self.waveform_uncertainty_nodes,
+                                      phi_indexes=self.phi_indexes
+                                      )
 
     '''
     def time_domain_strain(self, parameters=None):
@@ -768,7 +806,9 @@ class WaveformGeneratorWFU(object):
                                       transformation_function=utils.nfft,
                                       transformed_model=self.time_domain_source_model,
                                       transformed_model_data_points=self.time_array,
-                                      waveform_uncertainty_nodes=self.waveform_uncertainty_nodes)
+                                      waveform_uncertainty_nodes=self.waveform_uncertainty_nodes,
+                                      phi_indexes=self.phi_indexes
+                                      )
         
         plus_td_waveform = self.sampling_frequency*np.fft.ifft(fd_model_strain['plus'])
         plus_td_model_strain = np.interp(self.time_array,np.linspace(self.time_array[0],self.time_array[-1],len(plus_td_waveform)),plus_td_waveform)
@@ -806,13 +846,17 @@ class WaveformGeneratorWFU(object):
         '''
         
         if self.waveform_uncertainty_nodes is not None:
+            if phi_indexes is not None:
+                indexes = self.phi_indexes
+            else:
+                indexes = list(range(1,len(self.waveform_uncertainty_nodes)+1))
             if self.dA_sampling is True:
-                alphas = [parameters[f'alpha_{i+1}'] for i in range(len(self.waveform_uncertainty_nodes))]
+                alphas = [parameters[f'alpha_{i}'] for i in indexes]
                 dA = scipy.interpolate.CubicSpline(self.waveform_uncertainty_nodes,alphas)(self.frequency_array)
             else:
                 dA = 0
             if self.dphi_sampling is True:
-                phis = [parameters[f'phi_{i+1}'] for i in range(len(self.waveform_uncertainty_nodes))]
+                phis = [parameters[f'phi_{i}'] for i in indexes]
                 dphi = scipy.interpolate.CubicSpline(self.waveform_uncertainty_nodes,phis)(self.frequency_array)
             else:
                 dphi = 0
@@ -851,7 +895,11 @@ class WaveformGeneratorWFU(object):
         for key in self.source_parameter_keys.symmetric_difference(new_parameters):
             # preventing waveform uncertainty parameters from being removed
             if self.waveform_uncertainty_nodes is not None:
-                if key not in [f'alpha_{i+1}' for i in range(len(self.waveform_uncertainty_nodes))]+[f'phi_{i+1}' for i in range(len(self.waveform_uncertainty_nodes))]:  
+                if phi_indexes is not None:
+                    indexes = self.phi_indexes
+                else:
+                    indexes = list(range(1,len(self.waveform_uncertainty_nodes)+1))
+                if key not in [f'alpha_{i}' for i in indexes]+[f'phi_{i}' for i in indexes]:  
                     new_parameters.pop(key)
             else:
                 new_parameters.pop(key)
