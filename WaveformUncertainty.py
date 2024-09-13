@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.5.9.0"
+__version__ = "0.5.9.1"
 
 import numpy as np
 import bilby
@@ -715,7 +715,7 @@ class WaveformGeneratorWFU(object):
     time_array = PropertyAccessor('_times_and_frequencies', 'time_array')
     def __init__(self, duration=None, sampling_frequency=None, start_time=0, frequency_domain_source_model=None,
                  time_domain_source_model=None, parameters=None,
-                 waveform_uncertainty_nodes=None,dA_sampling=False,dphi_sampling=False,
+                 waveform_uncertainty_nodes=None,dA_sampling=False,dphi_sampling=False,phi_indexes=None,
                  parameter_conversion=None,
                  waveform_arguments=None):
         self._times_and_frequencies = CoupledTimeAndFrequencySeries(duration=duration,
