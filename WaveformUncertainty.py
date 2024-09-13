@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.5.9.1"
+__version__ = "0.5.9.2"
 
 import numpy as np
 import bilby
@@ -823,7 +823,7 @@ class WaveformGeneratorWFU(object):
         return model_strain
     
     def _calculate_strain(self, model, model_data_points, transformation_function, transformed_model,
-                          transformed_model_data_points, parameters, waveform_uncertainty_nodes):
+                          transformed_model_data_points, parameters, waveform_uncertainty_nodes,phi_indexes):
         if parameters is not None:
             self.parameters = parameters
         if self.parameters == self._cache['parameters'] and self._cache['model'] == model and \
