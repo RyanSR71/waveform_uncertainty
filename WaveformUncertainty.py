@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.6.0.0"
+__version__ = "0.6.0.1"
 
 import numpy as np
 import bilby
@@ -624,12 +624,12 @@ def WFU_phase_prior(phase_uncertainty,frequency_grid,nnodes,**kwargs):
         position.append(list(np.round(frequency_grid,1)).index(float(node)))
     
     for i in range(nnodes):
-        prior[f'phi_{i+1}'] = bilby.core.prior.Gaussian(name=f'phi_{i+1}',latex_label=r'$\phi_{val}$'.replace('val',str(i+1)),mu=0,sigma=phase_uncertainty[position[i]])
+        prior[f'dphi_{i+1}'] = bilby.core.prior.Gaussian(name=f'dphi_{i+1}',latex_label=r'$\varphi_{val}$'.replace('val',str(i+1)),mu=0,sigma=phase_uncertainty[position[i]])
         
-    prior[f'phi_{nnodes}'] = bilby.core.prior.DeltaFunction(name=f'phi_{nnodes}',peak=0)
+    prior[f'dphi_{nnodes}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{nnodes}',peak=0)
     
     for i in range(zero_resolution):
-        prior[f'phi_{-i}'] = bilby.core.prior.DeltaFunction(name=f'phi_{-i}',peak=0)
+        prior[f'dphi_{-i}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{-i}',peak=0)
     
     return prior,total_frequency_nodes
 
@@ -856,7 +856,7 @@ class WaveformGeneratorWFU(object):
             else:
                 dA = 0
             if self.dphi_sampling is True:
-                phis = [parameters[f'phi_{i}'] for i in indexes]
+                phis = [parameters[f'dphi_{i}'] for i in indexes]
                 dphi = scipy.interpolate.CubicSpline(self.waveform_uncertainty_nodes,phis)(self.frequency_array)
             else:
                 dphi = 0
@@ -899,7 +899,7 @@ class WaveformGeneratorWFU(object):
                     indexes = self.phi_indexes
                 else:
                     indexes = list(range(1,len(self.waveform_uncertainty_nodes)+1))
-                if key not in [f'alpha_{i}' for i in indexes]+[f'phi_{i}' for i in indexes]:  
+                if key not in [f'alpha_{i}' for i in indexes]+[f'dphi_{i}' for i in indexes]:  
                     new_parameters.pop(key)
             else:
                 new_parameters.pop(key)
