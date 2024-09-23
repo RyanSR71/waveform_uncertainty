@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.6.1.1"
+__version__ = "0.6.1.2"
 
 import numpy as np
 import bilby
@@ -763,7 +763,7 @@ class WaveformGeneratorWFU(object):
             self.waveform_arguments = waveform_arguments
         else:
             self.waveform_arguments = dict()
-        if waveform_uncertainty_nodes is not None:
+        if frequency_nodes is not None:
             self.frequency_nodes = frequency_nodes
         else:
             self.frequency_nodes = None
