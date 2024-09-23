@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.6.0.1"
+__version__ = "0.6.1.0"
 
 import numpy as np
 import bilby
@@ -635,6 +635,35 @@ def WFU_phase_prior(phase_uncertainty,frequency_grid,nnodes,**kwargs):
 
 
 
+def WFU_amplitude_prior(amplitude_uncertainty,frequency_grid,nnodes,**kwargs):
+    f_M = kwargs.get('f_M',100)
+    prior = kwargs.get('prior',None)
+    zero_resolution = kwargs.get('zero_resolution',10)
+    
+    if prior is None:
+        prior = bilby.core.prior.PriorDict()
+    
+    low_frequency_nodes = np.arange(frequency_grid[0],f_M,(f_M-frequency_grid[0])/zero_resolution)
+    frequency_nodes = np.geomspace(f_M,frequency_grid[-1],nnodes).astype(int)
+    
+    total_frequency_nodes = np.concatenate((low_frequency_nodes,frequency_nodes))
+    
+    position = []
+    for node in frequency_nodes:
+        position.append(list(np.round(frequency_grid,1)).index(float(node)))
+    
+    for i in range(nnodes):
+        prior[f'dA_{i+1}'] = bilby.core.prior.Gaussian(name=f'dA_{i+1}',latex_label=r'$\alpha_{val}$'.replace('val',str(i+1)),mu=0,sigma=amplitude_uncertainty[position[i]])
+        
+    prior[f'dA_{nnodes}'] = bilby.core.prior.DeltaFunction(name=f'dA_{nnodes}',peak=0)
+    
+    for i in range(zero_resolution):
+        prior[f'dA_{-i}'] = bilby.core.prior.DeltaFunction(name=f'dA_{-i}',peak=0)
+    
+    return prior,total_frequency_nodes
+
+
+
 def maxL(result):
     '''
     Calculates the set of parameters in a posterior that together yield the highest likelihood
@@ -704,8 +733,8 @@ class WaveformGeneratorWFU(object):
     dphi_sampling: bool, optional
         if True, the waveform generator will attempt to pull phi parameters from the parameter dictionary (either an injection or the prior)
         default: None
-    phi_indexes: numpy.array, optional
-        the numbers of phase correction parameters; e.g. phi_1 = 1, phi_-8 = -8, etc.
+    indexes: numpy.array, optional
+        the numbers of waveform correction parameters; e.g. phi_1 = 1, alpha_-8 = -8, etc.
         default: None
     '''
     duration = PropertyAccessor('_times_and_frequencies', 'duration')
@@ -715,7 +744,7 @@ class WaveformGeneratorWFU(object):
     time_array = PropertyAccessor('_times_and_frequencies', 'time_array')
     def __init__(self, duration=None, sampling_frequency=None, start_time=0, frequency_domain_source_model=None,
                  time_domain_source_model=None, parameters=None,
-                 waveform_uncertainty_nodes=None,dA_sampling=False,dphi_sampling=False,phi_indexes=None,
+                 frequency_nodes=None,indexes=None,
                  parameter_conversion=None,
                  waveform_arguments=None):
         self._times_and_frequencies = CoupledTimeAndFrequencySeries(duration=duration,
@@ -724,9 +753,7 @@ class WaveformGeneratorWFU(object):
         self.frequency_domain_source_model = frequency_domain_source_model
         self.time_domain_source_model = time_domain_source_model
         self.source_parameter_keys = self.__parameters_from_source_model()
-        self.dA_sampling = dA_sampling
-        self.dphi_sampling=dphi_sampling
-        self.phi_indexes=phi_indexes
+        self.indexes=indexes
         
         if parameter_conversion is None:
             self.parameter_conversion = convert_to_lal_binary_black_hole_parameters
@@ -737,7 +764,7 @@ class WaveformGeneratorWFU(object):
         else:
             self.waveform_arguments = dict()
         if waveform_uncertainty_nodes is not None:
-            self.waveform_uncertainty_nodes = waveform_uncertainty_nodes
+            self.frequency_nodes = frequency_nodes
         else:
             self.waveform_uncertainty_nodes = None
         if isinstance(parameters, dict):
@@ -770,13 +797,11 @@ class WaveformGeneratorWFU(object):
         return self.__class__.__name__ + '(duration={}, sampling_frequency={}, start_time={}, ' \
                                          'frequency_domain_source_model={}, time_domain_source_model={}, ' \
                                          'parameter_conversion={}, ' \
-                                         'waveform_uncertainty_nodes={}, ' \
-                                         'dA_sampling={}, ' \
-                                         'dphi_sampling={}, ' \
-                                         'phi_indexes={}, ' \
+                                         'frequency_nodes={}, ' \
+                                         'indexes={}, ' \
                                          'waveform_arguments={})'\
             .format(self.duration, self.sampling_frequency, self.start_time, fdsm_name, tdsm_name,
-                    param_conv_name, self.waveform_uncertainty_nodes, self.dA_sampling, self.dphi_sampling, self.phi_indexes, self.waveform_arguments)
+                    param_conv_name, self.frequency_nodes, self.indexes, self.waveform_arguments)
     
     def frequency_domain_strain(self, parameters=None):
         return self._calculate_strain(model=self.frequency_domain_source_model,
@@ -785,20 +810,10 @@ class WaveformGeneratorWFU(object):
                                       transformation_function=utils.nfft,
                                       transformed_model=self.time_domain_source_model,
                                       transformed_model_data_points=self.time_array,
-                                      waveform_uncertainty_nodes=self.waveform_uncertainty_nodes,
-                                      phi_indexes=self.phi_indexes
+                                      frequency_nodes=self.frequency_nodes,
+                                      indexes=self.indexes
                                       )
 
-    '''
-    def time_domain_strain(self, parameters=None):
-        return self._calculate_strain(model=self.time_domain_source_model,
-                                      model_data_points=self.time_array,
-                                      parameters=parameters,
-                                      transformation_function=utils.infft,
-                                      transformed_model=self.frequency_domain_source_model,
-                                      transformed_model_data_points=self.frequency_array,
-                                      waveform_uncertainty_nodes=self.waveform_uncertainty_nodes)
-    '''
     def time_domain_strain(self,parameters=None):
         fd_model_strain = self._calculate_strain(model=self.frequency_domain_source_model,
                                       model_data_points=self.frequency_array,
@@ -806,8 +821,8 @@ class WaveformGeneratorWFU(object):
                                       transformation_function=utils.nfft,
                                       transformed_model=self.time_domain_source_model,
                                       transformed_model_data_points=self.time_array,
-                                      waveform_uncertainty_nodes=self.waveform_uncertainty_nodes,
-                                      phi_indexes=self.phi_indexes
+                                      frequency_nodes=self.frequency_nodes,
+                                      indexes=self.indexes
                                       )
         
         plus_td_waveform = self.sampling_frequency*np.fft.ifft(fd_model_strain['plus'])
@@ -823,7 +838,7 @@ class WaveformGeneratorWFU(object):
         return model_strain
     
     def _calculate_strain(self, model, model_data_points, transformation_function, transformed_model,
-                          transformed_model_data_points, parameters, waveform_uncertainty_nodes,phi_indexes):
+                          transformed_model_data_points, parameters, frequency_nodes,indexes):
         if parameters is not None:
             self.parameters = parameters
         if self.parameters == self._cache['parameters'] and self._cache['model'] == model and \
@@ -845,20 +860,22 @@ class WaveformGeneratorWFU(object):
         The following block performs the waveform uncertainty correction:
         '''
         
-        if self.waveform_uncertainty_nodes is not None:
-            if self.phi_indexes is not None:
-                indexes = self.phi_indexes
+        if self.frequency_nodes is not None:
+            if self.indexes is not None:
+                indexes = self.indexes
             else:
-                indexes = list(range(1,len(self.waveform_uncertainty_nodes)+1))
-            if self.dA_sampling is True:
-                alphas = [parameters[f'alpha_{i}'] for i in indexes]
-                dA = scipy.interpolate.CubicSpline(self.waveform_uncertainty_nodes,alphas)(self.frequency_array)
-            else:
+                indexes = list(range(1,len(self.frequency_nodes)+1))
+            
+            try:
+                alphas = [parameters[f'dA_{i}'] for i in indexes]
+                dA = scipy.interpolate.CubicSpline(self.frequency_nodes,alphas)(self.frequency_array)
+            except:
                 dA = 0
-            if self.dphi_sampling is True:
+           
+            try:
                 phis = [parameters[f'dphi_{i}'] for i in indexes]
-                dphi = scipy.interpolate.CubicSpline(self.waveform_uncertainty_nodes,phis)(self.frequency_array)
-            else:
+                dphi = scipy.interpolate.CubicSpline(self.frequency_nodes,phis)(self.frequency_array)
+            except:
                 dphi = 0
                 
             model_strain['plus'] = model_strain['plus']*(1+dA)*np.exp(dphi*1j)
@@ -894,12 +911,12 @@ class WaveformGeneratorWFU(object):
         new_parameters, _ = self.parameter_conversion(new_parameters)
         for key in self.source_parameter_keys.symmetric_difference(new_parameters):
             # preventing waveform uncertainty parameters from being removed
-            if self.waveform_uncertainty_nodes is not None:
-                if self.phi_indexes is not None:
-                    indexes = self.phi_indexes
+            if self.frequency_nodes is not None:
+                if self.indexes is not None:
+                    indexes = self.indexes
                 else:
-                    indexes = list(range(1,len(self.waveform_uncertainty_nodes)+1))
-                if key not in [f'alpha_{i}' for i in indexes]+[f'dphi_{i}' for i in indexes]:  
+                    indexes = list(range(1,len(self.frequency_nodes)+1))
+                if key not in [f'dA_{i}' for i in indexes]+[f'dphi_{i}' for i in indexes]:  
                     new_parameters.pop(key)
             else:
                 new_parameters.pop(key)
