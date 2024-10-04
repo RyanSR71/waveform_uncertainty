@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.6.3.1"
+__version__ = "0.6.3.2"
 
 import numpy as np
 import bilby
@@ -565,14 +565,15 @@ def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection,hf,PSDs,match_boun
     frequency_nodes = np.geomspace(f_M,frequency_grid[-1],nnodes+1).astype(int)
     
     total_frequency_nodes = np.concatenate((low_frequency_nodes,frequency_nodes))
-
+    indexes = list(range(-zero_resolution+1,nnodes+2))
     hf.frequency_nodes = total_frequency_nodes
+    hf.indexes = indexes
     
     position = []
     for node in total_frequency_nodes:
         position.append(list(np.round(frequency_grid,1)).index(float(node)))
 
-    for i in range(-zero_resolution+1,nnodes+2):
+    for i in indexes:
         injection[f'dphi_{i}'] = 0
     reference_waveform = hf.frequency_domain_strain(parameters=injection)[polarization]
     
