@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.6.3.0"
+__version__ = "0.6.3.1"
 
 import numpy as np
 import bilby
@@ -565,6 +565,8 @@ def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection,hf,PSDs,match_boun
     frequency_nodes = np.geomspace(f_M,frequency_grid[-1],nnodes+1).astype(int)
     
     total_frequency_nodes = np.concatenate((low_frequency_nodes,frequency_nodes))
+
+    hf.frequency_nodes = total_frequency_nodes
     
     position = []
     for node in total_frequency_nodes:
