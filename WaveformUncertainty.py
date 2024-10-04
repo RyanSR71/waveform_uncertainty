@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.6.1.2"
+__version__ = "0.6.2.0"
 
 import numpy as np
 import bilby
@@ -538,72 +538,7 @@ def uncertainties_from_parameterization(data,**kwargs):
         phase_uncertainty = np.std(phase_difference_data,axis=0)
         
     return mean_amplitude_difference,amplitude_uncertainty,mean_phase_difference,phase_uncertainty,linear_frequency_grid
-        
-
-
-def WFU_prior(mean_amplitude_difference,amplitude_uncertainty,mean_phase_difference,phase_uncertainty,frequency_grid,nnodes,**kwargs):
-    '''
-    Automatically generates a bilby prior object containing Gaussian waveform uncertainty parameter priors (alphas and betas)
-    If given a pre-existing prior object, the waveform uncertainty parameters will be added to it
-
-    Parameters
-    =================
-    mean_amplitude_difference: numpy.ndarray
-        array of mean amplitude difference values
-    amplitude_uncertainty: numpy.ndarray
-        array of the amplitude uncertainty; defined as the standard deviation of amplitude differences
-    mean_phase_difference: numpy.ndarray
-        array of mean phase difference values
-    phase_uncertainty: numpy.ndarray
-        array of the phase uncertainty; defined as the standard deviation of phase differences
-    frequency_grid: numpy.ndarray
-        frequency grid corresponding to the waveform uncertainties
-    nnodes: int
-        number of frequency nodes desired
-    prior: bilby.core.prior.PriorDict, optional
-        if given, the output prior will simply be added to this
-        default: None
-    spacing: string, optional
-        dictates the type of progression the frequency nodes will have; 'linear' or 'geometric'
-        default: 'linear'
-
-    Returns
-    ==================
-    prior: bilby.core.prior.PriorDict
-        prior containing the waveform uncertainty parameters (alphas and phis)
-    frequency_nodes: numpy.ndarray
-        frequency nodes used by __WaveformGeneratorWFU() to generate waveform difference splines
-    '''
-    prior = kwargs.get('prior',None)
-    spacing = kwargs.get('spacing','linear')
     
-    if prior is None:
-        prior = bilby.core.prior.PriorDict()
-
-    # finding the positions of the frequency nodes
-    if spacing == 'linear':
-        frequency_scale = np.linspace(0,len(frequency_grid)-1,nnodes).astype(int)
-    elif spacing == 'geometric':
-        # starting geometric progression away from 0 then manually adding zero (for good spacing)
-        start_index = int(len(frequency_grid)/16)
-        frequency_scale = [0]
-        for i in range(nnodes-1):
-            frequency_scale.append(np.geomspace(start_index,len(frequency_grid)-1,nnodes-1).astype(int)[i])
-    
-    frequency_nodes = frequency_grid[frequency_scale]
-
-    # constructing prior distributions
-    for i in range(len(frequency_scale)):
-        prior[f'alpha_{i+1}'] = bilby.core.prior.Gaussian(name=f'alpha_{i+1}',latex_label=r'$\alpha_{n}$'.replace('n',str(i+1)),
-                                                        mu=mean_amplitude_difference[frequency_scale[i]],
-                                                          sigma=amplitude_uncertainty[frequency_scale[i]])
-    for i in range(len(frequency_scale)):
-        prior[f'phi_{i+1}'] = bilby.core.prior.Gaussian(name=f'phi_{i+1}',latex_label=r'$\varphi_{n}$'.replace('n',str(i+1)),
-                                                        mu=mean_phase_difference[frequency_scale[i]],
-                                                         sigma=phase_uncertainty[frequency_scale[i]])
-    
-    return prior,frequency_nodes
-
 
 
 def WFU_phase_prior(phase_uncertainty,frequency_grid,nnodes,**kwargs):
@@ -686,34 +621,36 @@ def maxL(result):
         
     return maxL_dict
 
+
+
 def Q_factor(WFU_result,NHP_result,injection):
-    '''
-    Calculates the quality factor of a correction by comparing the posteriors of the corrected PE run and the uncorrected (null-hypothesis) PE run.
+    WFU_maxL = wfu.maxL(WFU_result)
+    NHP_maxL = wfu.maxL(NHP_result)
 
-    Parameters
-    ==================
-    WFU_result: bilby.core.result.Result
-        bilby result object of the waveform uncertainty corrected parameter estimation run
-    NHP_result: bilby.core.result.Result
-        bilby result object of the parameter estimation run that did not have the waveform uncertainty corrected
-    injection: dictionary
-        dictionary of the parameters injected into the PE run; the true values of the parameters
-
-    Returns
-    ==================
-    Q_factor: float
-        quality factor of the correction; 1 = perfect correction, 0 = no differece, <0 = worse
-    '''   
-    corrected_sum = 0
-    null_hypothesis_sum = 0
+    NHP_sum = 0
+    WFU_sum = 0
     
-    for parameter in injection.keys():
-        corrected_sum += (maxL(WFU_result)[parameter]-injection[parameter])**2
-        null_hypothesis_sum += (maxL(NHP_result)[parameter]-injection[parameter])**2
-        
-    Q_factor = 1-np.sqrt(corrected_sum/null_hypothesis_sum)
+    for p in injection.keys():
+        NHP_sum += ((NHP_maxL[p]-injection[p])/injection[p])**2
+        WFU_sum += ((WFU_maxL[p]-injection[p])/injection[p])**2
+    
+    epsilon_NHP = np.sqrt(NHP_sum)
+    epsilon_WFU = np.sqrt(WFU_sum)
+    
+    Q_factor = ((epsilon_NHP-epsilon_WFU)/epsilon_NHP)*100
     
     return Q_factor
+
+
+
+def match(signal,data,PSDs,duration):
+    
+    signal_match = np.sqrt(bilby.gw.utils.matched_filter_snr(signal,signal,PSDs,4))
+    data_match = np.sqrt(bilby.gw.utils.matched_filter_snr(data,data,PSDs,4))
+    normalized_match = np.abs(bilby.gw.utils.matched_filter_snr(signal,data,PSDs,4)/(signal_match*data_match))
+    
+    return normalized_match
+
 
 
 class WaveformGeneratorWFU(object):
