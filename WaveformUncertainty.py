@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.6.3.3"
+__version__ = "0.6.3.4"
 
 import numpy as np
 import bilby
@@ -657,6 +657,12 @@ def Q_factor(WFU_result,NHP_result,injection):
     WFU_maxL = maxL(WFU_result)
     NHP_maxL = maxL(NHP_result)
 
+    try:
+        if WFU_maxL['phase'] > np.pi:
+            WFU_maxL['phase'] -= np.pi
+    except:
+        pass
+    
     NHP_sum = 0
     WFU_sum = 0
     
