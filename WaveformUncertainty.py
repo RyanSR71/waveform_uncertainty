@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.6.2.0"
+__version__ = "0.6.3.0"
 
 import numpy as np
 import bilby
@@ -538,30 +538,57 @@ def uncertainties_from_parameterization(data,**kwargs):
         phase_uncertainty = np.std(phase_difference_data,axis=0)
         
     return mean_amplitude_difference,amplitude_uncertainty,mean_phase_difference,phase_uncertainty,linear_frequency_grid
+
+
+
+def match(signal,data,PSDs,duration):
     
+    signal_match = np.sqrt(bilby.gw.utils.matched_filter_snr(signal,signal,PSDs,4))
+    data_match = np.sqrt(bilby.gw.utils.matched_filter_snr(data,data,PSDs,4))
+    normalized_match = np.abs(bilby.gw.utils.matched_filter_snr(signal,data,PSDs,4)/(signal_match*data_match))
+    
+    return normalized_match
 
 
-def WFU_phase_prior(phase_uncertainty,frequency_grid,nnodes,**kwargs):
+
+def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection,hf,PSDs,match_boundary,duration,nnodes,**kwargs):
     f_M = kwargs.get('f_M',100)
     prior = kwargs.get('prior',None)
     zero_resolution = kwargs.get('zero_resolution',10)
+    polarization = kwargs.get('polarization','plus')
+    match_resolution = kwargs.get('match_resolution',100)
     
     if prior is None:
         prior = bilby.core.prior.PriorDict()
     
     low_frequency_nodes = np.arange(frequency_grid[0],f_M,(f_M-frequency_grid[0])/zero_resolution)
-    frequency_nodes = np.geomspace(f_M,frequency_grid[-1],nnodes).astype(int)
+    frequency_nodes = np.geomspace(f_M,frequency_grid[-1],nnodes+1).astype(int)
     
     total_frequency_nodes = np.concatenate((low_frequency_nodes,frequency_nodes))
     
     position = []
-    for node in frequency_nodes:
+    for node in total_frequency_nodes:
         position.append(list(np.round(frequency_grid,1)).index(float(node)))
+
+    for i in range(-zero_resolution+1,nnodes+2):
+        injection[f'dphi_{i}'] = 0
+    reference_waveform = hf.frequency_domain_strain(parameters=injection)[polarization]
     
     for i in range(nnodes):
-        prior[f'dphi_{i+1}'] = bilby.core.prior.Gaussian(name=f'dphi_{i+1}',latex_label=r'$\varphi_{val}$'.replace('val',str(i+1)),mu=0,sigma=phase_uncertainty[position[i]])
-        
-    prior[f'dphi_{nnodes}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{nnodes}',peak=0)
+        good_dphis = []
+        for j in np.linspace(0,5*phase_uncertainty[position[zero_resolution+i]],match_resolution):
+            new_injection = injection.copy()
+            new_injection[f'dphi_{i+1}'] = j
+            waveform = hf.frequency_domain_strain(parameters=new_injection)[polarization]
+            match_percent = match(reference_waveform,waveform,PSDs,duration)*100
+            if match_percent >= match_boundary:
+                good_dphis.append(j)
+        prior[f'dphi_{i+1}'] = bilby.core.prior.TruncatedGaussian(name=f'dphi_{i+1}',latex_label=r'$\varphi_{num}$'.replace('num',str(i+1)),
+                                                                mu=0,sigma=phase_uncertainty[position[zero_resolution+i]],
+                                                                minimum=-good_dphis[-1],maximum=good_dphis[-1])
+        print(f'dphi_{i+1} Prior Complete')
+    
+    prior[f'dphi_{nnodes+1}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{nnodes+1}',peak=0)
     
     for i in range(zero_resolution):
         prior[f'dphi_{-i}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{-i}',peak=0)
@@ -640,16 +667,6 @@ def Q_factor(WFU_result,NHP_result,injection):
     Q_factor = ((epsilon_NHP-epsilon_WFU)/epsilon_NHP)*100
     
     return Q_factor
-
-
-
-def match(signal,data,PSDs,duration):
-    
-    signal_match = np.sqrt(bilby.gw.utils.matched_filter_snr(signal,signal,PSDs,4))
-    data_match = np.sqrt(bilby.gw.utils.matched_filter_snr(data,data,PSDs,4))
-    normalized_match = np.abs(bilby.gw.utils.matched_filter_snr(signal,data,PSDs,4)/(signal_match*data_match))
-    
-    return normalized_match
 
 
 
