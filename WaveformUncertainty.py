@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.6.3.2"
+__version__ = "0.6.3.3"
 
 import numpy as np
 import bilby
@@ -654,8 +654,8 @@ def maxL(result):
 
 
 def Q_factor(WFU_result,NHP_result,injection):
-    WFU_maxL = wfu.maxL(WFU_result)
-    NHP_maxL = wfu.maxL(NHP_result)
+    WFU_maxL = maxL(WFU_result)
+    NHP_maxL = maxL(NHP_result)
 
     NHP_sum = 0
     WFU_sum = 0
