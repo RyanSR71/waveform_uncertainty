@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.6.3.5"
+__version__ = "0.7.0.0"
 
 import numpy as np
 import bilby
@@ -552,17 +552,19 @@ def match(signal,data,PSDs,duration):
 
 
 def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection,hf,PSDs,match_boundary,duration,nnodes,**kwargs):
-    f_M = kwargs.get('f_M',100)
     prior = kwargs.get('prior',None)
     zero_resolution = kwargs.get('zero_resolution',10)
     polarization = kwargs.get('polarization','plus')
     match_resolution = kwargs.get('match_resolution',100)
-    
+
     if prior is None:
         prior = bilby.core.prior.PriorDict()
+
+    M = bilby.gw.conversion.generate_mass_parameters(injection)['total_mass']*lal.MSUN_SI
+    f_IM = (0.018*lal.C_SI**3)/(lal.G_SI*M)
     
-    low_frequency_nodes = np.arange(frequency_grid[0],f_M,(f_M-frequency_grid[0])/zero_resolution)
-    frequency_nodes = np.geomspace(f_M,frequency_grid[-1],nnodes+1).astype(int)
+    low_frequency_nodes = np.arange(frequency_grid[0],f_IM,(f_IM-frequency_grid[0])/zero_resolution)
+    frequency_nodes = np.geomspace(f_IM,frequency_grid[-1],nnodes+1).astype(int)
     
     total_frequency_nodes = np.concatenate((low_frequency_nodes,frequency_nodes))
     indexes = list(range(-zero_resolution+1,nnodes+2))
