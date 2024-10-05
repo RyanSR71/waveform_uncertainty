@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.7.0.0"
+__version__ = "0.7.0.1"
 
 import numpy as np
 import bilby
@@ -7,6 +7,7 @@ import random
 import time as tm
 import sys
 import scipy
+import lal
 from bilby.core import utils
 from bilby.core.series import CoupledTimeAndFrequencySeries
 from bilby.core.utils import PropertyAccessor
