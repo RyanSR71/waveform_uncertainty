@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.7.1.0"
+__version__ = "0.7.1.1"
 
 import numpy as np
 import bilby
@@ -567,7 +567,7 @@ def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection,hf,PSDs,match_boun
         f_IM = frequency_grid[0]
         
     zero_resolution = int((f_IM-frequency_grid[0])//10)
-    print(zero_resolution)
+    
     if zero_resolution != 0:
         low_frequency_nodes = np.arange(frequency_grid[0],f_IM+(f_IM-frequency_grid[0])/zero_resolution,(f_IM-frequency_grid[0])/zero_resolution).astype(int)
         
