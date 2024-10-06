@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.7.1.1"
+__version__ = "0.7.1.2"
 
 import numpy as np
 import bilby
@@ -585,9 +585,15 @@ def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection,hf,PSDs,match_boun
         total_frequency_nodes = np.copy(np.array(frequency_nodes))
         
     if int(f_light)>int(frequency_grid[-1]):
-        indexes = list(range(-zero_resolution-1,nnodes+2))
+        if zero_resolution != 0:
+            indexes = list(range(-zero_resolution,nnodes+2))
+        else:
+            indexes = list(range(1,nnodes+2))
     else:
-        indexes = list(range(-zero_resolution-1,nnodes+3))
+        if zero_resolution != 0:
+            indexes = list(range(-zero_resolution-1,nnodes+3))
+        else:
+            indexes = list(range(1,nnodes+3))
     hf.frequency_nodes = total_frequency_nodes
     hf.indexes = indexes
     
@@ -617,8 +623,13 @@ def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection,hf,PSDs,match_boun
     if int(f_light) < int(frequency_grid[-1]):
         prior[f'dphi_{nnodes+2}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{nnodes+2}',peak=0)
     
-    for i in range(zero_resolution+2):
-        prior[f'dphi_{-i}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{-i}',peak=0)
+    if zero_resolution != 0:
+        if int(f_light) < int(frequency_grid[-1]):
+            for i in range(zero_resolution+2):
+                prior[f'dphi_{-i}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{-i}',peak=0)
+        else:
+            for i in range(zero_resolution+1):
+                prior[f'dphi_{-i}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{-i}',peak=0)
     
     return prior,total_frequency_nodes,indexes
 
