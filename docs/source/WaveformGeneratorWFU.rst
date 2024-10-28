@@ -19,7 +19,9 @@ Modified WaveformGenerator object from bilby.gw to include waveform uncertainty 
 
 To sample waveform uncertainty, include all necessary "dA" and "dphi" parameters in the prior.
 .. note::
-   See bilby's documentation for :ref:`bilby.gw.WaveformGenerator <https://lscsoft.docs.ligo.org/bilby/api/bilby.gw.waveform_generator.WaveformGenerator.html#bilby.gw.waveform_generator.WaveformGenerator>`_
+
+   See bilby's documentation for `bilby.gw.WaveformGenerator <https://lscsoft.docs.ligo.org/bilby/api/bilby.gw.waveform_generator.WaveformGenerator.html#bilby.gw.waveform_generator.WaveformGenerator>`
+
 .. code-block:: python
 
    __init__(duration=None,sampling_frequency=None,start_time=0,frequency_domain_source_model=None,
