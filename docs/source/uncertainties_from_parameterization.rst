@@ -5,7 +5,21 @@ WaveformUncertainty.uncertainties_from_parameterization
 
    WaveformUncertainty.uncertainties_from_parameterization(data,linear=False,resolution=None)
 
-Takes all of the sets in a parameterized waveform difference matrix and takes the mean and standard deviation of amplitude and phase difference (See `WaveformUncertainty.parameterization <https://waveformuncertainty.readthedocs.io/en/latest/parameterization.html>`_)
+Takes all of the sets in a parameterized waveform difference matrix and takes the mean and standard deviation of amplitude and phase difference.
+
+.. math::
+   \overline{\Delta\mathcal{A}_{\mu}}(f)=\frac{\sum_{i=1}^{N}(\Delta\mathcal{A}_{\mu}(f;\theta_{i}))}{N}
+
+.. math::
+   \overline{\Delta\phi_{\mu}}(f)=\frac{\sum_{i=1}^{N}(\Delta\phi_{\mu}(f;\theta_{i}))}{N}
+
+.. math::
+
+   \delta\mathcal{A}_{\mu}(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta\mathcal{A}_{\mu}(f;\theta_{i})-\overline{\Delta\mathcal{A}_{\mu}}(f)\right)^2}{N}}
+
+.. math::
+
+   \delta\phi_{\mu}(f)=\sqrt{\frac{\sum_{i=1}^{N}\left(\Delta\phi_{\mu}(f;\theta_{i})-\overline{\Delta\phi_{\mu}}(f)\right)^2}{N}}
 
 Parameters:
 -----------
