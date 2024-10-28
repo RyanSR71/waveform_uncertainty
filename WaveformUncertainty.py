@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.7.2.0"
+__version__ = "0.7.2.1"
 
 import numpy as np
 import bilby
@@ -306,7 +306,7 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
     progress = 1
     bilby.core.utils.log.setup_logger(log_level=30)
 
-    data = prior.sample(int((nsamples/fit_threshold)+1))
+    data = prior.sample(int((100*nsamples/fit_threshold)+1))
 
     # generating random order of samples
     index_samples=list(range(len(data[list(data.keys())[0]])))
