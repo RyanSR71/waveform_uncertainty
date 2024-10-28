@@ -19,8 +19,6 @@ Check out the :doc:`installation` section for instructions. General information 
    :caption: Contents:
 
    installation
-   WFU_Equations
-   Likelihood_Equation
 
 .. toctree::
    :maxdepth: 1
