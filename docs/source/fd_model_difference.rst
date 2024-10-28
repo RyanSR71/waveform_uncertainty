@@ -19,8 +19,12 @@ Generates frequency domain waveform differences between two models hf1 and hf2.
 
 .. math::
 
+   \Delta\tilde{\phi}(f;\theta)=\arctan\left(\frac{\mathrm{Im}[\mu_2(f;\theta)]}{\mathrm{Re}[\mu_2(f;\theta)]}\right)-\arctan\left(\frac{\mathrm{Im}[\mu_1(f;\theta)]}{\mathrm{Re}[\mu_1(f;\theta)]}\right)
+
+.. math::
+
    \Delta\phi_{\mu}(f;\theta)= \begin{cases} 
-      \arctan\left(\frac{\mathrm{Im}[\mu_2(f)]}{\mathrm{Re}[\mu_2(f)]}\right)-\arctan\left(\frac{\mathrm{Im}[\mu_1(f)]}{\mathrm{Re}[\mu_1(f)]}\right)-2\pi ft_c-\phi_c & f \leq f_{\mathrm{disc}} \\
+      \Delta\tilde{\phi}(f;\theta)-2\pi ft_c-\phi_c & f \leq f_{\mathrm{disc}} \\
       \Delta\phi_\mu(f_{\mathrm{disc}};\theta) & f > f_{\mathrm{disc}} 
    \end{cases}
 
