@@ -11,19 +11,13 @@ WaveformUncertainty.WaveformGeneratorWFU
 
 Bases: ``object``
 
-Modified WaveformGenerator object from bilby.gw to include waveform uncertainty corrections in the strain calculation.
+Modified WaveformGenerator object from `bilby.gw.WaveformGenerator <https://lscsoft.docs.ligo.org/bilby/api/bilby.gw.waveform_generator.WaveformGenerator.html#bilby.gw.waveform_generator.WaveformGenerator>`_ to include waveform uncertainty corrections in the strain calculation.
 
 .. math::
 
    \mu_\mathcal{C}(f;\theta,\alpha,\varphi)=\mu(f;\theta)(1+\Delta\mathcal{A}_s(f;\{f_k,\alpha_k\}))\exp[i\Delta\phi_s(f;\{f_k,\varphi_k\})]
 
 To sample waveform uncertainty, include all necessary "dA" and "dphi" parameters in the prior.
-
-.. note::
-
-   See bilby's documentation for `bilby.gw.WaveformGenerator <https://lscsoft.docs.ligo.org/bilby/api/bilby.gw.waveform_generator.WaveformGenerator.html#bilby.gw.waveform_generator.WaveformGenerator>`
-
-.. code-block:: python
 
    __init__(duration=None,sampling_frequency=None,start_time=0,frequency_domain_source_model=None,
                                             time_domain_source_model=None,parameters=None,
