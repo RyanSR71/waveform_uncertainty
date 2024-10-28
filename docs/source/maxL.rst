@@ -7,6 +7,9 @@ WaveformUncertainty.maxL
 
 Finds the set of parameters in a parameter estimation posterior that together yield the highest likelihood.
 
+.. math::
+  \mathcal{L}(h|\lambda^\mathrm{ml})=\mathrm{max}[\mathcal{L}(h|\lambda)]
+
 Parameters:
 -----------
 result: bilby.core.result.Result
