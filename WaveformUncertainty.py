@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.7.1.2"
+__version__ = "0.7.2.0"
 
 import numpy as np
 import bilby
@@ -147,33 +147,6 @@ def fd_model_difference(hf1,hf2,**kwargs):
 
     return frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index
 
-    
-    
-def parameter_dict_from_prior(prior,nsamples):
-    '''
-    Takes a bilby prior object and constructs a dictionary of random samples
-    
-    Parameters
-    ==================
-    prior: bilby.core.prior.dict.PriorDict
-        prior object
-    nsamples: int
-        number of samples desired
-        
-    Returns
-    ==================
-    parameter_dict: dictionary
-        dictionary of nsamples random samples
-    '''
-    parameter_dict = dict()
-    for key in prior.keys():
-        parameter = np.zeros(nsamples)
-        for i in range(nsamples):
-            parameter[i] = prior[f'{key}'].sample()
-        parameter_dict[f'{key}'] = parameter
-    
-    return parameter_dict
-
 
 
 def injection(data,**kwargs):
@@ -183,18 +156,10 @@ def injection(data,**kwargs):
     Parameters
     ==================
     data: dictionary
-        Dictionary of parameter samples (from paramater_dict_from_prior())
+        dictionary of parameter samples
     index: int, optional
         position within the dict to pull the sample
         default: random integer between zero and the length of the data
-    precession: bool, optional
-        only True if waveform approximant supports precessing spins 
-        if False, precessing spin parameters will be removed/replaced with non-precessing parameters
-        default: False
-    tides: bool, optional
-        only True if waveform approximant supports tidal deformabilities
-        if False, tidal parameters will be removed
-        default: True
         
     Returns
     ==================
@@ -202,30 +167,10 @@ def injection(data,**kwargs):
         dictionary of injection parameters
     ''' 
     index = kwargs.get('index',random.randint(0,len(data)))
-    precession = kwargs.get('precession',False)
-    tides = kwargs.get('tides',True)
     
     injection = dict()
     for key in data.keys():
         injection[f'{key}']=data[f'{key}'][index]
-    
-    if tides==False:
-        parameters = ['lambda_1','lambda_2','lambda_tilde','delta_lambda_tilde']
-        for parameter in parameters:
-            if parameter in data.keys():
-                del injection[f'{parameter}']
-                
-    if 'a_1' in data.keys() and precession==False:
-        parameters = ['chi_1','chi_2','chi_1_in_plane','chi_2_in_plane','cos_tilt_1','cos_tilt_2']
-        for parameter in parameters:
-            if parameter in data.keys():
-                del injection[f'{parameter}']
-        injection['chi_1'] = injection['a_1']*np.cos(injection['tilt_1'])
-        injection['chi_2'] = injection['a_2']*np.cos(injection['tilt_2'])
-        del injection['a_1']
-        del injection['a_2']
-        del injection['tilt_1']
-        del injection['tilt_2']
         
     return injection
 
@@ -271,7 +216,7 @@ def recovery_from_parameterization(identity,data):
 
 
 
-def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
+def parameterization(hf1,hf2,prior,nsamples,**kwargs):
     '''
     Generates samples of waveform uncertainty between two approximants and parameterizes the data with Chebyshev polynomial functions.
 
@@ -281,18 +226,10 @@ def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
         frequency domain waveform generator object
     hf2: bilby.gw.waveform_generator.WaveformGenerator
         frequency domain waveform generator object
-    parameter_data: dictionary or bilby.core.prior.dict.PriorDict
-        dictionary containing neutron star parameter samples or a bilby prior object that will be converted into a dictionary
+    prior: bilby.core.prior.dict.PriorDict
+        bilby prior object
     nsamples: int
         number of draws of waveform uncertainty desired
-    precession: bool, optional
-        True if both waveform approximants support precessing spins 
-        if False, precessing spin parameters will be removed/replaced with non-precessing parameters
-        default: False
-    tides: bool, optional
-        only True if both waveform approximants support tidal deformabilities
-        if False, tidal parameters will be removed
-        default: True
     fit_parameters: int, optional
         number of terms to use in the parameterization
         default: 15
@@ -368,12 +305,8 @@ def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
     np.seterr(all='ignore')
     progress = 1
     bilby.core.utils.log.setup_logger(log_level=30)
-    
-    if type(parameter_data)==bilby.core.prior.dict.PriorDict:
-        # converting a prior object to a dictionary
-        data = parameter_dict_from_prior(parameter_data,int((nsamples/fit_threshold)+1))
-    else:
-        data = parameter_data
+
+    data = prior.sample(int((nsamples/fit_threshold)+1))
 
     # generating random order of samples
     index_samples=list(range(len(data[list(data.keys())[0]])))
@@ -403,14 +336,14 @@ def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
 
     # setting the reference amplitude
     if ref_amplitude is None:
-        ref_amplitude = np.abs(hf1.frequency_domain_strain(parameters=injection(parameter_data,precession=precession,tides=tides))[f'{polarization}'])
+        ref_amplitude = np.abs(hf1.frequency_domain_strain(parameters=injection(data))[f'{polarization}'])
     
     for index in indexes:
     
         progressBar(progress,(nsamples))
 
         # calculating waveform model differences
-        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,injection=injection(parameter_data,index=index,precession=precession,tides=tides),npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter_A=correction_parameter_A,correction_parameter_B=correction_parameter_B,correction_parameter_C=correction_parameter_C,ref_amplitude=ref_amplitude)
+        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,injection=injection(data,index=index),npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter_A=correction_parameter_A,correction_parameter_B=correction_parameter_B,correction_parameter_C=correction_parameter_C,ref_amplitude=ref_amplitude)
 
         # chebyshev polynomial fits and saving coefficients
         amplitude_difference_fit = np.polynomial.chebyshev.Chebyshev.fit((frequency_grid[0:final_index]),amplitude_difference[0:final_index],fit_parameters-1)
@@ -427,7 +360,7 @@ def parameterization(hf1,hf2,parameter_data,nsamples,**kwargs):
         output_matrix[index][4] = final_index
         output_matrix[index][5] = amplitude_difference_final_point
         output_matrix[index][6] = phase_difference_final_point
-        output_matrix[index][7] = injection(data,index=index,precession=precession,tides=tides)
+        output_matrix[index][7] = injection(data,index=index)
 
         final_indexes.append(index)
 
