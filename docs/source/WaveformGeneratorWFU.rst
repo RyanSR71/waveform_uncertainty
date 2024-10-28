@@ -19,6 +19,8 @@ Modified WaveformGenerator object from `bilby.gw.WaveformGenerator <https://lscs
 
 To sample waveform uncertainty, include all necessary "dA" and "dphi" parameters in the prior.
 
+.. code-block:: python
+
    __init__(duration=None,sampling_frequency=None,start_time=0,frequency_domain_source_model=None,
                                             time_domain_source_model=None,parameters=None,
                                             parameter_conversion=None,waveform_arguments=None,
