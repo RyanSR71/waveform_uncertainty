@@ -7,7 +7,7 @@ copyright = '2024, Ryan Johnson, No Rights Reserved'
 author = 'Ryan Johnson'
 
 release = 'beta'
-version = '0.7.1.2'
+version = '0.7.3.1'
 
 # -- General configuration
 
