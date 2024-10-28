@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.7.3.0"
+__version__ = "0.7.3.1"
 
 import numpy as np
 import bilby
@@ -40,10 +40,10 @@ def fd_model_difference(hf1,hf2,**kwargs):
         default: None
     correction_parameter_A: float, optional
         value at which to cut the second derivative of amplitude difference; if None, correction will not occur
-        default: 5e-5
+        default: 0.01
     correction_parameter_B: int, optional
         index at which to start the search for any discontinuity
-        default: 0
+        default: 256
     correction_parameter_C: int, optional
         number of dA derivatives to take for discontinuity correction
         default: 2
@@ -70,8 +70,8 @@ def fd_model_difference(hf1,hf2,**kwargs):
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
-    correction_parameter_A = kwargs.get('correction_parameter_A',5e-5)
-    correction_parameter_B = kwargs.get('correction_parameter_B',0)
+    correction_parameter_A = kwargs.get('correction_parameter_A',0.01)
+    correction_parameter_B = kwargs.get('correction_parameter_B',256)
     correction_parameter_C = kwargs.get('correction_parameter_C',2)
     ref_amplitude = kwargs.get('ref_amplitude',None)
 
@@ -221,10 +221,10 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
         default: None
     correction_parameter_A: float, optional
         value at which to cut the second derivative of amplitude difference; if None, correction will not occur
-        default: 5e-5
+        default: 0.01
     correction_parameter_B: int, optional
         index at which to start the search for any discontinuity
-        default: 0
+        default: 256
     correction_parameter_C: int, optional
         number of amplitude difference derivatives to take for the discontinuity correction
         default: 2
@@ -265,8 +265,8 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
-    correction_parameter_A = kwargs.get('correction_parameter_A',5e-5)
-    correction_parameter_B = kwargs.get('correction_parameter_B',0)
+    correction_parameter_A = kwargs.get('correction_parameter_A',0.01)
+    correction_parameter_B = kwargs.get('correction_parameter_B',256)
     correction_parameter_C = kwargs.get('correction_parameter_C',2)
     ref_amplitude = kwargs.get('ref_amplitude',None)
     precession = kwargs.get('precession',False)
