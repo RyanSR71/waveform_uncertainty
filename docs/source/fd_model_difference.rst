@@ -5,10 +5,24 @@ WaveformUncertainty.fd_model_difference
 
    WaveformUncertainty.fd_model_difference(hf1,hf2,injection=None,npoints=1000,
                                            polarization='plus',psd_data=None,
-                                           correction_parameter_A=5e-5,correction_parameter_B=0,
+                                           correction_parameter_A=0.01,correction_parameter_B=256,
                                            correction_parameter_C=2,ref_amplitude=None)
 
-Generates frequency domain waveform differences between two models hf1 and hf2 (See `Equations and Notation <https://waveformuncertainty.readthedocs.io/en/latest/WFU_Equations.html#waveform-model-differences>`_)
+Generates frequency domain waveform differences between two models hf1 and hf2.
+
+.. math::
+
+   \Delta\mathcal{A}_{\mu}(f;\theta)= \begin{cases} 
+      \frac{|\mu_2(f;\theta)|-|\mu_1(f;\theta)|}{|\mu_1(f)|} & f \leq f_{\mathrm{disc}} \\
+      \Delta\mathcal{A}_\mu(f_{\mathrm{disc}};\theta) & f > f_{\mathrm{disc}} 
+   \end{cases}
+
+.. math::
+
+   \Delta\phi_{\mu}(f;\theta)= \begin{cases} 
+      \arctan\left(\frac{\mathrm{Im}[\mu_2(f)]}{\mathrm{Re}[\mu_2(f)]}\right)-\arctan\left(\frac{\mathrm{Im}[\mu_1(f)]}{\mathrm{Re}[\mu_1(f)]}\right)-2\pi ft_c-\phi_c & f \leq f_{\mathrm{disc}} \\
+      \Delta\phi_\mu(f_{\mathrm{disc}};\theta) & f > f_{\mathrm{disc}} 
+   \end{cases}
 
 Parameters:
 -----------
@@ -24,9 +38,9 @@ polarization: string, optional, ('plus')
    polarization of the strain data {'plus','cross'}
 psd_data: numpy.ndarray, optional, (None)
    array containing the psd data and their corresponding frequencies
-correction_parameter_A: float, optional, (5e-5)
+correction_parameter_A: float, optional, (0.01)
    value at which to cut the second derivative of amplitude difference; if None, correction will not occur
-correction_parameter_B: int, optional, (0)
+correction_parameter_B: int, optional, (256)
    index at which to start the search for any discontinuity
 correction_parameter_C: int, optional, (2)
    number of amplitude difference derivatives to take for the discontinuity correction
