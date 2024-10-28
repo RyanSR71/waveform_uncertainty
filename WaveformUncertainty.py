@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.7.2.1"
+__version__ = "0.7.3.0"
 
 import numpy as np
 import bilby
@@ -12,6 +12,7 @@ from bilby.core import utils
 from bilby.core.series import CoupledTimeAndFrequencySeries
 from bilby.core.utils import PropertyAccessor
 from bilby.gw.conversion import convert_to_lal_binary_neutron_star_parameters
+import utils
 
 
 
@@ -146,33 +147,6 @@ def fd_model_difference(hf1,hf2,**kwargs):
         phase_difference_final_point = raw_phase_difference[final_index-1]
 
     return frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index
-
-
-
-def injection(data,**kwargs):
-    '''
-    Pulls a sample out of a parameter dictionary
-    
-    Parameters
-    ==================
-    data: dictionary
-        dictionary of parameter samples
-    index: int, optional
-        position within the dict to pull the sample
-        default: random integer between zero and the length of the data
-        
-    Returns
-    ==================
-    injection: dictionary
-        dictionary of injection parameters
-    ''' 
-    index = kwargs.get('index',random.randint(0,len(data)))
-    
-    injection = dict()
-    for key in data.keys():
-        injection[f'{key}']=data[f'{key}'][index]
-        
-    return injection
 
 
 
@@ -316,14 +290,6 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
         indexes.append(index)
         index_samples.remove(index)
     
-    def progressBar(count_value, total, suffix=''): #To Do
-        bar_length = 100
-        filled_up_Length = int(round(bar_length* count_value / float(total)))
-        percentage = round(100.00 * count_value/float(total),1)
-        bar = '=' * filled_up_Length + '-' * (bar_length - filled_up_Length)
-        sys.stdout.write('[%s] %s%s %s\r' %(bar, percentage, '%', suffix))
-        sys.stdout.flush()
-
     # setting initial conditions
     trial = 0
     final_indexes = []
@@ -336,14 +302,14 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
 
     # setting the reference amplitude
     if ref_amplitude is None:
-        ref_amplitude = np.abs(hf1.frequency_domain_strain(parameters=injection(data))[f'{polarization}'])
+        ref_amplitude = np.abs(hf1.frequency_domain_strain(parameters=utils.injection(data))[f'{polarization}'])
     
     for index in indexes:
     
-        progressBar(progress,(nsamples))
+        utils.progressBar(progress,(nsamples))
 
         # calculating waveform model differences
-        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,injection=injection(data,index=index),npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter_A=correction_parameter_A,correction_parameter_B=correction_parameter_B,correction_parameter_C=correction_parameter_C,ref_amplitude=ref_amplitude)
+        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,injection=utils.injection(data,index=index),npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter_A=correction_parameter_A,correction_parameter_B=correction_parameter_B,correction_parameter_C=correction_parameter_C,ref_amplitude=ref_amplitude)
 
         # chebyshev polynomial fits and saving coefficients
         amplitude_difference_fit = np.polynomial.chebyshev.Chebyshev.fit((frequency_grid[0:final_index]),amplitude_difference[0:final_index],fit_parameters-1)
@@ -360,7 +326,7 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
         output_matrix[index][4] = final_index
         output_matrix[index][5] = amplitude_difference_final_point
         output_matrix[index][6] = phase_difference_final_point
-        output_matrix[index][7] = injection(data,index=index)
+        output_matrix[index][7] = utils.injection(data,index=index)
 
         final_indexes.append(index)
 
