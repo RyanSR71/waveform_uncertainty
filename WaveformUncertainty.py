@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.7.3.1"
+__version__ = "0.7.3.2"
 
 import numpy as np
 import bilby
@@ -534,7 +534,7 @@ def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection,hf,PSDs,match_boun
 
 
 
-def WFU_amplitude_prior(amplitude_uncertainty,frequency_grid,nnodes,**kwargs):
+def WFU_dA_prior(amplitude_uncertainty,frequency_grid,nnodes,**kwargs):
     f_M = kwargs.get('f_M',100)
     prior = kwargs.get('prior',None)
     zero_resolution = kwargs.get('zero_resolution',10)
