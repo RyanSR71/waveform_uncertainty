@@ -301,14 +301,14 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
 
     # setting the reference amplitude
     if ref_amplitude is None:
-        ref_amplitude = np.abs(hf1.frequency_domain_strain(parameters=utils.injection(data))[f'{polarization}'])
+        ref_amplitude = np.abs(hf1.frequency_domain_strain(parameters=injection(data))[f'{polarization}'])
     
     for index in indexes:
     
-        utils.progressBar(progress,(nsamples))
+        progressBar(progress,(nsamples))
 
         # calculating waveform model differences
-        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,injection=utils.injection(data,index=index),npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter_A=correction_parameter_A,correction_parameter_B=correction_parameter_B,correction_parameter_C=correction_parameter_C,ref_amplitude=ref_amplitude)
+        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,injection=injection(data,index=index),npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter_A=correction_parameter_A,correction_parameter_B=correction_parameter_B,correction_parameter_C=correction_parameter_C,ref_amplitude=ref_amplitude)
 
         # chebyshev polynomial fits and saving coefficients
         amplitude_difference_fit = np.polynomial.chebyshev.Chebyshev.fit((frequency_grid[0:final_index]),amplitude_difference[0:final_index],fit_parameters-1)
@@ -325,7 +325,7 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
         output_matrix[index][4] = final_index
         output_matrix[index][5] = amplitude_difference_final_point
         output_matrix[index][6] = phase_difference_final_point
-        output_matrix[index][7] = utils.injection(data,index=index)
+        output_matrix[index][7] = injection(data,index=index)
 
         final_indexes.append(index)
 
@@ -499,7 +499,7 @@ def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection,hf,PSDs,match_boun
             new_injection = injection.copy()
             new_injection[f'dphi_{i+1}'] = j
             waveform = hf.frequency_domain_strain(parameters=new_injection)[polarization]
-            match_percent = utils.match(reference_waveform,waveform,PSDs,duration)*100
+            match_percent = match(reference_waveform,waveform,PSDs,duration)*100
             if match_percent >= match_boundary:
                 good_dphis.append(j)
         prior[f'dphi_{i+1}'] = bilby.core.prior.TruncatedGaussian(name=f'dphi_{i+1}',latex_label=r'$\varphi_{num}$'.replace('num',str(i+1)),
