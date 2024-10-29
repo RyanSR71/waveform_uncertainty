@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.7.3.2"
+__version__ = "0.7.4.0"
 
 import numpy as np
 import bilby
@@ -441,16 +441,6 @@ def uncertainties_from_parameterization(data,**kwargs):
 
 
 
-def match(signal,data,PSDs,duration):
-    
-    signal_match = np.sqrt(bilby.gw.utils.matched_filter_snr(signal,signal,PSDs,4))
-    data_match = np.sqrt(bilby.gw.utils.matched_filter_snr(data,data,PSDs,4))
-    normalized_match = np.abs(bilby.gw.utils.matched_filter_snr(signal,data,PSDs,4)/(signal_match*data_match))
-    
-    return normalized_match
-
-
-
 def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection,hf,PSDs,match_boundary,duration,nnodes,**kwargs):
     prior = kwargs.get('prior',None)
     polarization = kwargs.get('polarization','plus')
@@ -510,7 +500,7 @@ def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection,hf,PSDs,match_boun
             new_injection = injection.copy()
             new_injection[f'dphi_{i+1}'] = j
             waveform = hf.frequency_domain_strain(parameters=new_injection)[polarization]
-            match_percent = match(reference_waveform,waveform,PSDs,duration)*100
+            match_percent = utils.match(reference_waveform,waveform,PSDs,duration)*100
             if match_percent >= match_boundary:
                 good_dphis.append(j)
         prior[f'dphi_{i+1}'] = bilby.core.prior.TruncatedGaussian(name=f'dphi_{i+1}',latex_label=r'$\varphi_{num}$'.replace('num',str(i+1)),
