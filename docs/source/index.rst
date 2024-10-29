@@ -36,7 +36,8 @@ Check out the :doc:`installation` section for instructions. General information 
    parameterization
    recovery_from_parameterization
    uncertainties_from_parameterization
-   WFU_prior
+   WFU_dA_prior
+   WFU_dphi_prior
    maxL
    Q_factor
    WaveformGeneratorWFU
