@@ -46,3 +46,13 @@ def progressBar(count_value, total, suffix=''): #To Do
         bar = '=' * filled_up_Length + '-' * (bar_length - filled_up_Length)
         sys.stdout.write('[%s] %s%s %s\r' %(bar, percentage, '%', suffix))
         sys.stdout.flush()
+
+
+
+def match(signal,data,PSDs,duration):
+    
+    signal_match = np.sqrt(bilby.gw.utils.matched_filter_snr(signal,signal,PSDs,4))
+    data_match = np.sqrt(bilby.gw.utils.matched_filter_snr(data,data,PSDs,4))
+    normalized_match = np.abs(bilby.gw.utils.matched_filter_snr(signal,data,PSDs,4)/(signal_match*data_match))
+    
+    return normalized_match
