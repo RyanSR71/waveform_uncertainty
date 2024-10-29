@@ -10,7 +10,15 @@ Automatically generates a bilby prior object containing truncated Gaussian prior
 
 .. math::
 
-   \mathcal{TN}(0,\delta\mathcal{A}_\mu(f),\mp\alpha^{\gamma\%})=\frac{2(2\pi)^{-\frac{1}{2}}}{\delta\mathcal{A}_{\mu}(f_k)}\left[\frac{\mathrm{exp}\left[-\frac{1}{2}\left(\frac{\Delta\mathcal{A}}{\delta\mathcal{A}_{\mu}(f_k)}\right)^2\right]}{\mathrm{erf}\left(\frac{\alpha_k^{\gamma\%}}{\sqrt{2}\delta\mathcal{A}_{\mu}(f_k)}\right)+\mathrm{erf}\left(\frac{\alpha_k^{\gamma\%}}{\sqrt{2}\delta\mathcal{A}_{\mu}(f_k)}\right)}\right]
+   \mathfrak{M}(h_1,h_2)=\underset{t_c,\phi_c}{\max}\hspace{0.1cm}\left|\frac{\int df\hat{h}_1^*(f)\hat{h}_2(f)\mathrm{e}^{-2\pi ift_c+i\phi_c}}{\sqrt{\int df\hat{h}_1^*(f)\hat{h}_1(f)}\sqrt{\int df\hat{h}_2^*(f)\hat{h}_2(f)}}\right|\times 100\%
+
+.. math::
+
+   \mathfrak{M}(\mu(f;\theta),\mu_{\mathcal{C}}(f;\theta,\alpha_k^{\gamma\%}))=\gamma\%
+
+.. math::
+
+   \mathcal{TN}(0,\delta\mathcal{A}_\mu(f),\mp\alpha^{\gamma\%})=\frac{(2\pi)^{-\frac{1}{2}}}{\delta\mathcal{A}_{\mu}(f_k)}\left[\frac{\mathrm{exp}\left[-\frac{1}{2}\left(\frac{\Delta\mathcal{A}}{\delta\mathcal{A}_{\mu}(f_k)}\right)^2\right]}{\mathrm{erf}\left(\frac{\alpha_k^{\gamma\%}}{\sqrt{2}\delta\mathcal{A}_{\mu}(f_k)}\right)}\right]
 
 .. math::
 
