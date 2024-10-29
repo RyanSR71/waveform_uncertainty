@@ -52,7 +52,7 @@ match_resolution: int, optional, (100)
 Returns:
 --------
 prior: bilby.core.prior.PriorDict
-   prior containing the waveform uncertainty parameters (alphas and phis)
+   prior containing the dphi parameters
 frequency_nodes: numpy.ndarray
    frequency nodes used by __WaveformGeneratorWFU() to generate waveform difference splines
 indexes: numpy.ndarray
