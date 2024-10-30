@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.7.5.0"
+__version__ = "0.7.5.1"
 
 import numpy as np
 import bilby
@@ -518,6 +518,8 @@ def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection,hf,PSDs,match_boun
         else:
             for i in range(zero_resolution+1):
                 prior[f'dphi_{-i}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{-i}',peak=0)
+
+    print("Phase Correction Prior Complete")
     
     return prior,total_frequency_nodes,indexes
 
@@ -584,7 +586,7 @@ def WFU_dA_prior(amplitude_uncertainty,frequency_grid,injection,hf,PSDs,match_bo
             waveform = hf.frequency_domain_strain(parameters=new_injection)[polarization]
             match_percent = match(reference_waveform,waveform,PSDs,duration)*100
             if match_percent >= match_boundary:
-                good_dphis.append(j)
+                good_dAs.append(j)
         prior[f'dA_{i+1}'] = bilby.core.prior.TruncatedGaussian(name=f'dA_{i+1}',latex_label=r'$\alpha_{num}$'.replace('num',str(i+1)),
                                                                 mu=0,sigma=amplitude_uncertainty[position[zero_resolution+1+i]],
                                                                 minimum=-good_dAs[-1],maximum=good_dAs[-1])
@@ -601,6 +603,8 @@ def WFU_dA_prior(amplitude_uncertainty,frequency_grid,injection,hf,PSDs,match_bo
         else:
             for i in range(zero_resolution+1):
                 prior[f'dA_{-i}'] = bilby.core.prior.DeltaFunction(name=f'dA_{-i}',peak=0)
+
+    print("Amplitude Correction Prior Complete")
     
     return prior,total_frequency_nodes,indexes
 
