@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.7.5.1"
+__version__ = "0.7.5.2"
 
 import numpy as np
 import bilby
@@ -440,11 +440,13 @@ def uncertainties_from_parameterization(data,**kwargs):
 
 
 
-def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection,hf,PSDs,match_boundary,duration,nnodes,**kwargs):
+def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection_parameters,hf,PSDs,match_boundary,duration,nnodes,**kwargs):
     prior = kwargs.get('prior',None)
     polarization = kwargs.get('polarization','plus')
     match_resolution = kwargs.get('match_resolution',100)
 
+    injection = injection_parameters.copy()
+    
     if prior is None:
         prior = bilby.core.prior.PriorDict()
 
@@ -525,11 +527,13 @@ def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection,hf,PSDs,match_boun
 
 
 
-def WFU_dA_prior(amplitude_uncertainty,frequency_grid,injection,hf,PSDs,match_boundary,duration,nnodes,**kwargs):
+def WFU_dA_prior(amplitude_uncertainty,frequency_grid,injection_parameters,hf,PSDs,match_boundary,duration,nnodes,**kwargs):
     prior = kwargs.get('prior',None)
     polarization = kwargs.get('polarization','plus')
     match_resolution = kwargs.get('match_resolution',100)
 
+    injection = injection_parameters.copy()
+    
     if prior is None:
         prior = bilby.core.prior.PriorDict()
 
