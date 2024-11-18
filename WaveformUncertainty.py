@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.8.0.1"
+__version__ = "0.8.0.2"
 
 import numpy as np
 import bilby
@@ -79,9 +79,9 @@ def fd_model_difference(hf1,hf2,**kwargs):
         hf2.frequency_domain_strain(parameters=injection)
     
     # setting up frequency grid and frequency indexes
-    start_index = np.argmin(np.abs(hf1.frequency_array - f_low))+1
+    start_index = np.argmin(np.abs(hf1.frequency_array - f_ref))+1
+    frequency_grid = np.geomspace(f_low,f_high,npoints)
     wf_freqs = np.geomspace(start_index,len(hf1.frequency_array)-1,npoints).astype(int)
-    frequency_grid = hf1.frequency_array[wf_freqs]
 
     # waveform amplitudes
     amplitude_1 = np.abs(hf1.frequency_domain_strain()[f'{polarization}'][wf_freqs])
@@ -102,11 +102,11 @@ def fd_model_difference(hf1,hf2,**kwargs):
     if psd_data is not None:
         if ref_amplitude is None:
             ref_amplitude = np.abs(hf1.frequency_domain_strain()[f'{polarization}'][wf_freqs])
-        ref_amplitude = np.interp(frequency_grid,f_high*np.linspace(0,1,len(ref_amplitude)),ref_amplitude)
-        ref_sigma = np.interp(frequency_grid, psd_data[:,0],psd_data[:,1])
+        ref_amplitude = np.interp(hf1.frequency_array[wf_freqs],f_high*np.linspace(0,1,len(ref_amplitude)),ref_amplitude)
+        ref_sigma = np.interp(hf1.frequency_array[wf_freqs], psd_data[:,0],psd_data[:,1])
         align_weights = ref_amplitude*ref_amplitude / ref_sigma * hf1.frequency_array[wf_freqs]
-        fit = np.polyfit(frequency_grid,raw_phase_difference,1,w=align_weights)
-        residual_phase_difference = raw_phase_difference - np.poly1d(fit)(frequency_grid)
+        fit = np.polyfit(hf1.frequency_array[wf_freqs],raw_phase_difference,1,w=align_weights)
+        residual_phase_difference = raw_phase_difference - np.poly1d(fit)(hf1.frequency_array[wf_freqs])
 
     # calculating the discontinuity correction frequency and its position in the frequency grid
     total_mass = bilby.gw.conversion.generate_mass_parameters(hf1.parameters)['total_mass']*lal.MSUN_SI
@@ -116,7 +116,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
     f_RD = 0.071*(c**3)/(G*total_mass)
     if f_RD > f_high:
         f_RD = f_high
-    final_index = list(frequency_grid).index(min(frequency_grid,key=lambda x:abs(x-correction_parameter*f_RD)))
+    final_index = list(hf1.frequency_array[wf_freqs]).index(min(hf1.frequency_array[wf_freqs],key=lambda x:abs(x-correction_parameter*f_RD)))
 
     # making the discontinuity correction to amplitude_difference
     amplitude_difference[final_index:] = amplitude_difference[final_index-1]
