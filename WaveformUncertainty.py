@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.7.5.2"
+__version__ = "0.8.0.0"
 
 import numpy as np
 import bilby
@@ -37,15 +37,9 @@ def fd_model_difference(hf1,hf2,**kwargs):
     psd_data: numpy.ndarray, optional
         array containing the psd data and their corresponding frequencies
         default: None
-    correction_parameter_A: float, optional
-        value at which to cut the second derivative of amplitude difference; if None, correction will not occur
-        default: 0.01
-    correction_parameter_B: int, optional
-        index at which to start the search for any discontinuity
-        default: 256
-    correction_parameter_C: int, optional
-        number of dA derivatives to take for discontinuity correction
-        default: 2
+    correction_parameter: float, optional
+        multiple of the IMR ringdown frequency to cut off the amplitude difference at
+        default: 2.0
     ref_amplitude: numpy.ndarray, optional
         array of gravitational waveform amplitude
         default None
@@ -69,9 +63,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
-    correction_parameter_A = kwargs.get('correction_parameter_A',0.01)
-    correction_parameter_B = kwargs.get('correction_parameter_B',256)
-    correction_parameter_C = kwargs.get('correction_parameter_C',2)
+    correction_parameter = kwargs.get('correction_parameter',2.0)
     ref_amplitude = kwargs.get('ref_amplitude',None)
 
     f_low = hf1.waveform_arguments['f_low']
@@ -116,20 +108,15 @@ def fd_model_difference(hf1,hf2,**kwargs):
         fit = np.polyfit(hf1.frequency_array[wf_freqs],raw_phase_difference,1,w=align_weights)
         residual_phase_difference = raw_phase_difference - np.poly1d(fit)(hf1.frequency_array[wf_freqs])
 
-    # taking two frequency derivatives of amplitude_difference and comparing it to the correction parameter for f_COR calculation
-    amplitude_difference_derivative = np.copy(amplitude_difference)
-    for i in range(correction_parameter_C):
-        amplitude_difference_derivative = np.gradient(amplitude_difference_derivative)/np.gradient(frequency_grid)
-
-    for i in range(correction_parameter_B,len(amplitude_difference_derivative)):
-        if correction_parameter_A is None:
-            final_index = len(hf1.frequency_array[wf_freqs])-1
-            break
-        elif np.abs(amplitude_difference_derivative[i]) > correction_parameter_A:
-            final_index = i
-            break
-        else: 
-            final_index = len(hf1.frequency_array[wf_freqs])-1
+    # calculating the discontinuity correction frequency and its position in the frequency grid
+    total_mass = bilby.gw.conversion.generate_mass_parameters(hf1.parameters)['total_mass']*lal.MSUN_SI
+    G = lal.G_SI
+    c = 299792458
+    
+    f_RD = 0.071*(c**3)/(G*total_mass)
+    if f_RD > f_high:
+        f_RD = f_high
+    final_index = list(frequency_grid).index(min(frequency_grid,key=lambda x:abs(x-correction_parameter*f_RD)))
 
     # making the discontinuity correction to amplitude_difference
     amplitude_difference[final_index:] = amplitude_difference[final_index-1]
@@ -218,15 +205,9 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
     psd_data: numpy.ndarray, optional
         array containing the psd data and their corresponding frequencies
         default: None
-    correction_parameter_A: float, optional
-        value at which to cut the second derivative of amplitude difference; if None, correction will not occur
-        default: 0.01
-    correction_parameter_B: int, optional
-        index at which to start the search for any discontinuity
-        default: 256
-    correction_parameter_C: int, optional
-        number of amplitude difference derivatives to take for the discontinuity correction
-        default: 2
+    correction_parameter: float, optional
+        multiple of the IMR ringdown frequency to cut off the amplitude difference at
+        default: 2.0
     ref_amplitude: numpy.ndarray, optional
         reference amplitude for residual phase calculation
         default: None
@@ -308,7 +289,7 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
         progressBar(progress,(nsamples))
 
         # calculating waveform model differences
-        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,injection=injection(data,index=index),npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter_A=correction_parameter_A,correction_parameter_B=correction_parameter_B,correction_parameter_C=correction_parameter_C,ref_amplitude=ref_amplitude)
+        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,injection=injection(data,index=index),npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter_A=correction_parameter,ref_amplitude=ref_amplitude)
 
         # chebyshev polynomial fits and saving coefficients
         amplitude_difference_fit = np.polynomial.chebyshev.Chebyshev.fit((frequency_grid[0:final_index]),amplitude_difference[0:final_index],fit_parameters-1)
