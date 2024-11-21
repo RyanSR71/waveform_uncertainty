@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.8.0.2"
+__version__ = "0.8.1.0"
 
 import numpy as np
 import bilby
@@ -421,56 +421,66 @@ def uncertainties_from_parameterization(data,**kwargs):
 
 
 
-def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection_parameters,hf,PSDs,match_boundary,duration,nnodes,**kwargs):
+def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection_parameters,hf,PSDs,mismatch_boundary,duration,nnodes,**kwargs):
     prior = kwargs.get('prior',None)
     polarization = kwargs.get('polarization','plus')
     match_resolution = kwargs.get('match_resolution',100)
-
+    
+    match_boundary = 1-mismatch_boundary
+    
     injection = injection_parameters.copy()
     
     if prior is None:
         prior = bilby.core.prior.PriorDict()
-
+    
+    f_low = frequency_grid[0]
+    I_low = 0
+    f_high = frequency_grid[len(frequency_grid)-1]
+    I_high = len(frequency_grid)-1
+    
     M = bilby.gw.conversion.generate_mass_parameters(injection)['total_mass']*lal.MSUN_SI
     f_light = (lal.C_SI**3)/(np.pi*lal.G_SI*M)
     f_IM = 0.018*np.pi*f_light
-    if int(f_IM) < int(frequency_grid[0]):
-        f_IM = frequency_grid[0]
+    if f_IM < f_low:
+        f_IM = f_low
+    if f_light > f_high:
+        f_light = f_high
         
-    zero_resolution = int((f_IM-frequency_grid[0])//10)
+    I_IM = list(frequency_grid).index(min(frequency_grid, key=lambda x:np.abs(x-f_IM)))
+    I_light = list(frequency_grid).index(min(frequency_grid, key=lambda x:np.abs(x-f_light)))
     
-    if zero_resolution != 0:
-        low_frequency_nodes = np.arange(frequency_grid[0],f_IM+(f_IM-frequency_grid[0])/zero_resolution,(f_IM-frequency_grid[0])/zero_resolution).astype(int)
-        
-    if int(f_light) < int(frequency_grid[-1]):
-        frequency_nodes = list(np.geomspace(f_IM,f_light,nnodes+2).astype(int))
-        frequency_nodes.remove(frequency_nodes[0])
-        frequency_nodes.append(int(frequency_grid[-1]))
+    if f_IM > f_low:
+        lower_zero_resolution_raw = np.linspace(I_low,I_IM,10).astype(int)
+        lower_zero_resolution = []
+        for i in lower_zero_resolution_raw:
+            if i not in lower_zero_resolution:
+                lower_zero_resolution.append(i)
     else:
-        frequency_nodes = list(np.geomspace(f_IM,frequency_grid[-1],nnodes+2).astype(int))
-        frequency_nodes.remove(frequency_nodes[0])
+        lower_zero_resolution=I_low
         
-    if zero_resolution != 0:
-        total_frequency_nodes = np.concatenate((low_frequency_nodes,frequency_nodes))
-    else:
-        total_frequency_nodes = np.copy(np.array(frequency_nodes))
-        
-    if int(f_light)>int(frequency_grid[-1]):
-        if zero_resolution != 0:
-            indexes = list(range(-zero_resolution,nnodes+2))
-        else:
-            indexes = list(range(1,nnodes+2))
-    else:
-        if zero_resolution != 0:
-            indexes = list(range(-zero_resolution-1,nnodes+3))
-        else:
-            indexes = list(range(1,nnodes+3))
-    hf.frequency_nodes = total_frequency_nodes
+    middle_resolution = list(np.geomspace(I_IM,I_light,nnodes+2).astype(int))
+    middle_resolution.pop(0)
+    
+    if f_light < f_high:
+        upper_zero_resolution_raw = list(np.linspace(I_light,I_high,10).astype(int))
+        upper_zero_resolution_raw.pop(0)
+        upper_zero_resolution = []
+        for i in upper_zero_resolution_raw:
+            if i not in upper_zero_resolution:
+                upper_zero_resolution.append(i)
+    
+    total_resolution = np.concatenate((np.array(lower_zero_resolution),np.array(middle_resolution),np.array(upper_zero_resolution)))
+    frequency_nodes = frequency_grid[total_resolution]
+    
+    
+    lower_indexes = np.arange(-(len(lower_zero_resolution))+1,1,1)
+    middle_indexes = np.arange(1,nnodes+1,1)
+    upper_indexes = np.arange(nnodes+1,nnodes+len(upper_zero_resolution)+2,1)
+    
+    indexes = np.concatenate((lower_indexes,middle_indexes,upper_indexes))
+    
+    hf.frequency_nodes = frequency_nodes
     hf.indexes = indexes
-    
-    position = []
-    for node in total_frequency_nodes:
-        position.append(list(np.round(frequency_grid,1)).index(float(node)))
     
     for i in indexes:
         injection[f'dphi_{i}'] = 0
@@ -478,7 +488,7 @@ def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection_parameters,hf,PSDs
     
     for i in range(nnodes):
         good_dphis = []
-        for j in np.linspace(0,5*phase_uncertainty[position[zero_resolution+1+i]],match_resolution):
+        for j in np.linspace(0,5*phase_uncertainty[middle_resolution[i]],match_resolution):
             new_injection = injection.copy()
             new_injection[f'dphi_{i+1}'] = j
             waveform = hf.frequency_domain_strain(parameters=new_injection)[polarization]
@@ -486,25 +496,19 @@ def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection_parameters,hf,PSDs
             if match_percent >= match_boundary:
                 good_dphis.append(j)
         prior[f'dphi_{i+1}'] = bilby.core.prior.TruncatedGaussian(name=f'dphi_{i+1}',latex_label=r'$\varphi_{num}$'.replace('num',str(i+1)),
-                                                                mu=0,sigma=phase_uncertainty[position[zero_resolution+1+i]],
+                                                                mu=0,sigma=phase_uncertainty[middle_resolution[i]],
                                                                 minimum=-good_dphis[-1],maximum=good_dphis[-1])
         print(f'dphi_{i+1} Prior Complete')
     
-    prior[f'dphi_{nnodes+1}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{nnodes+1}',peak=0)
-    if int(f_light) < int(frequency_grid[-1]):
-        prior[f'dphi_{nnodes+2}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{nnodes+2}',peak=0)
+    for i in lower_indexes:
+        prior[f'dphi_{i}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{nnodes+1}',peak=0)
     
-    if zero_resolution != 0:
-        if int(f_light) < int(frequency_grid[-1]):
-            for i in range(zero_resolution+2):
-                prior[f'dphi_{-i}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{-i}',peak=0)
-        else:
-            for i in range(zero_resolution+1):
-                prior[f'dphi_{-i}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{-i}',peak=0)
+    for i in upper_indexes:
+        prior[f'dphi_{i}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{nnodes+1}',peak=0)
 
     print("Phase Correction Prior Complete")
     
-    return prior,total_frequency_nodes,indexes
+    return prior,frequency_nodes,indexes
 
 
 
