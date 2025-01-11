@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.8.1.0"
+__version__ = "0.8.1.1"
 
 import numpy as np
 import bilby
@@ -245,9 +245,7 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
-    correction_parameter_A = kwargs.get('correction_parameter_A',0.01)
-    correction_parameter_B = kwargs.get('correction_parameter_B',256)
-    correction_parameter_C = kwargs.get('correction_parameter_C',2)
+    correction_parameter = kwargs.get('correction_parameter',2.0)
     ref_amplitude = kwargs.get('ref_amplitude',None)
     precession = kwargs.get('precession',False)
     tides = kwargs.get('tides',True)
@@ -289,7 +287,7 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
         progressBar(progress,(nsamples))
 
         # calculating waveform model differences
-        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,injection=injection(data,index=index),npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter_A=correction_parameter,ref_amplitude=ref_amplitude)
+        frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index = fd_model_difference(hf1,hf2,injection=injection(data,index=index),npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter=correction_parameter,ref_amplitude=ref_amplitude)
 
         # chebyshev polynomial fits and saving coefficients
         amplitude_difference_fit = np.polynomial.chebyshev.Chebyshev.fit((frequency_grid[0:final_index]),amplitude_difference[0:final_index],fit_parameters-1)
