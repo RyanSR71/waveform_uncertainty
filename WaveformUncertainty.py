@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.8.1.1"
+__version__ = "0.8.2.0"
 
 import numpy as np
 import bilby
@@ -98,16 +98,6 @@ def fd_model_difference(hf1,hf2,**kwargs):
     while any(value > 6 for value in [np.abs(raw_phase_difference[i+1]-raw_phase_difference[i]) for i in range(len(raw_phase_difference)-2)]):
         raw_phase_difference = np.unwrap(raw_phase_difference)
 
-    # fitting a line to raw_phase_difference weighted by PSDs and subtracting off that line
-    if psd_data is not None:
-        if ref_amplitude is None:
-            ref_amplitude = np.abs(hf1.frequency_domain_strain()[f'{polarization}'][wf_freqs])
-        ref_amplitude = np.interp(hf1.frequency_array[wf_freqs],f_high*np.linspace(0,1,len(ref_amplitude)),ref_amplitude)
-        ref_sigma = np.interp(hf1.frequency_array[wf_freqs], psd_data[:,0],psd_data[:,1])
-        align_weights = ref_amplitude*ref_amplitude / ref_sigma * hf1.frequency_array[wf_freqs]
-        fit = np.polyfit(hf1.frequency_array[wf_freqs],raw_phase_difference,1,w=align_weights)
-        residual_phase_difference = raw_phase_difference - np.poly1d(fit)(hf1.frequency_array[wf_freqs])
-
     # calculating the discontinuity correction frequency and its position in the frequency grid
     total_mass = bilby.gw.conversion.generate_mass_parameters(hf1.parameters)['total_mass']*lal.MSUN_SI
     G = lal.G_SI
@@ -116,8 +106,20 @@ def fd_model_difference(hf1,hf2,**kwargs):
     f_RD = 0.071*(c**3)/(G*total_mass)
     if f_RD > f_high:
         f_RD = f_high
-    final_index = list(hf1.frequency_array[wf_freqs]).index(min(hf1.frequency_array[wf_freqs],key=lambda x:abs(x-correction_parameter*f_RD)))
-
+    final_index = list(hf1.frequency_array[wf_freqs]).index(min(hf1.frequency_array[wf_freqs],key=lambda x:abs(x-correction_parameter*f_RD)))    
+    
+    # fitting a line to raw_phase_difference weighted by PSDs and subtracting off that line
+    if psd_data is not None:
+        if ref_amplitude is None:
+            ref_amplitude = np.abs(hf1.frequency_domain_strain()[f'{polarization}'][wf_freqs][0:final_index])
+        ref_amplitude = np.interp(hf1.frequency_array[wf_freqs][0:final_index],f_high*np.linspace(0,1,len(ref_amplitude)),ref_amplitude)
+        ref_sigma = np.interp(hf1.frequency_array[wf_freqs][0:final_index], psd_data[:,0],psd_data[:,1])
+        align_weights = (ref_amplitude**2)/(ref_sigma*hf1.frequency_array[wf_freqs][0:final_index])
+        fit = np.polyfit(hf1.frequency_array[wf_freqs][0:final_index],raw_phase_difference[0:final_index],1,w=align_weights)
+        raw_phase_difference_no_shifts = raw_phase_difference[0:final_index]-np.poly1d(fit)(hf1.frequency_array[wf_freqs][0:final_index])
+        residual_phase_difference = np.copy(raw_phase_difference)
+        residual_phase_difference[0:final_index] = raw_phase_difference_no_shifts
+        
     # making the discontinuity correction to amplitude_difference
     amplitude_difference[final_index:] = amplitude_difference[final_index-1]
     amplitude_difference_final_point = amplitude_difference[final_index-1]
@@ -131,8 +133,9 @@ def fd_model_difference(hf1,hf2,**kwargs):
         phase_difference = np.copy(raw_phase_difference)
         phase_difference[final_index:] = raw_phase_difference[final_index-1]
         phase_difference_final_point = raw_phase_difference[final_index-1]
-
+    
     return frequency_grid,amplitude_difference,phase_difference,amplitude_difference_final_point,phase_difference_final_point,final_index
+
 
 
 
