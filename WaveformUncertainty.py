@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.8.2.0"
+__version__ = "0.8.3.0"
 
 import numpy as np
 import bilby
@@ -422,10 +422,8 @@ def uncertainties_from_parameterization(data,**kwargs):
 
 
 
-def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection_parameters,hf,PSDs,mismatch_boundary,duration,nnodes,**kwargs):
+def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection_parameters,nnodes,**kwargs):
     prior = kwargs.get('prior',None)
-    polarization = kwargs.get('polarization','plus')
-    match_resolution = kwargs.get('match_resolution',100)
     
     match_boundary = 1-mismatch_boundary
     
@@ -459,7 +457,7 @@ def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection_parameters,hf,PSDs
     else:
         lower_zero_resolution=I_low
         
-    middle_resolution = list(np.geomspace(I_IM,I_light,nnodes+2).astype(int))
+    middle_resolution = list(np.geomspace(I_IM,I_light,nnodes+1).astype(int))
     middle_resolution.pop(0)
     
     if f_light < f_high:
@@ -476,38 +474,19 @@ def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection_parameters,hf,PSDs
     
     lower_indexes = np.arange(-(len(lower_zero_resolution))+1,1,1)
     middle_indexes = np.arange(1,nnodes+1,1)
-    upper_indexes = np.arange(nnodes+1,nnodes+len(upper_zero_resolution)+2,1)
+    upper_indexes = np.arange(nnodes+1,nnodes+len(upper_zero_resolution)+1,1)
     
     indexes = np.concatenate((lower_indexes,middle_indexes,upper_indexes))
     
-    hf.frequency_nodes = frequency_nodes
-    hf.indexes = indexes
-    
-    for i in indexes:
-        injection[f'dphi_{i}'] = 0
-    reference_waveform = hf.frequency_domain_strain(parameters=injection)[polarization]
-    
     for i in range(nnodes):
-        good_dphis = []
-        for j in np.linspace(0,5*phase_uncertainty[middle_resolution[i]],match_resolution):
-            new_injection = injection.copy()
-            new_injection[f'dphi_{i+1}'] = j
-            waveform = hf.frequency_domain_strain(parameters=new_injection)[polarization]
-            match_percent = match(reference_waveform,waveform,PSDs,duration)*100
-            if match_percent >= match_boundary:
-                good_dphis.append(j)
-        prior[f'dphi_{i+1}'] = bilby.core.prior.TruncatedGaussian(name=f'dphi_{i+1}',latex_label=r'$\varphi_{num}$'.replace('num',str(i+1)),
-                                                                mu=0,sigma=phase_uncertainty[middle_resolution[i]],
-                                                                minimum=-good_dphis[-1],maximum=good_dphis[-1])
-        print(f'dphi_{i+1} Prior Complete')
+        prior[f'dphi_{i+1}'] = bilby.core.prior.Gaussian(name=f'dphi_{i+1}',latex_label=r'$\varphi_{num}$'.replace('num',str(i+1)),
+                                                                mu=0,sigma=phase_uncertainty[middle_resolution[i]])
     
     for i in lower_indexes:
         prior[f'dphi_{i}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{nnodes+1}',peak=0)
     
     for i in upper_indexes:
         prior[f'dphi_{i}'] = bilby.core.prior.DeltaFunction(name=f'dphi_{nnodes+1}',peak=0)
-
-    print("Phase Correction Prior Complete")
     
     return prior,frequency_nodes,indexes
 
