@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.8.3.0"
+__version__ = "0.8.3.1"
 
 import numpy as np
 import bilby
@@ -424,9 +424,6 @@ def uncertainties_from_parameterization(data,**kwargs):
 
 def WFU_dphi_prior(phase_uncertainty,frequency_grid,injection_parameters,nnodes,**kwargs):
     prior = kwargs.get('prior',None)
-    
-    match_boundary = 1-mismatch_boundary
-    
     injection = injection_parameters.copy()
     
     if prior is None:
