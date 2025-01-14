@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.9.0.0"
+__version__ = "0.9.0.1"
 
 import numpy as np
 import bilby
@@ -663,6 +663,9 @@ class WaveformGeneratorWFU(object):
         self.time_domain_source_model = time_domain_source_model
         self.source_parameter_keys = self.__parameters_from_source_model()
         self.indexes=indexes
+        self.geometrized=geometrized
+        self.correct_amplitude=correct_amplitude
+        self.correct_phase=correct_phase
         
         if parameter_conversion is None:
             self.parameter_conversion = convert_to_lal_binary_black_hole_parameters
@@ -708,9 +711,12 @@ class WaveformGeneratorWFU(object):
                                          'parameter_conversion={}, ' \
                                          'frequency_nodes={}, ' \
                                          'indexes={}, ' \
+                                         'geometrized={}, ' \
+                                         'correct_amplitude={}, ' \
+                                         'correct_phase={}, ' \
                                          'waveform_arguments={})'\
             .format(self.duration, self.sampling_frequency, self.start_time, fdsm_name, tdsm_name,
-                    param_conv_name, self.frequency_nodes, self.indexes, self.waveform_arguments)
+                    param_conv_name, self.frequency_nodes, self.indexes, self.geometrized, self.correct_amplitude, self.correct_phase, self.waveform_arguments)
     
     def frequency_domain_strain(self, parameters=None):
         return self._calculate_strain(model=self.frequency_domain_source_model,
@@ -720,7 +726,10 @@ class WaveformGeneratorWFU(object):
                                       transformed_model=self.time_domain_source_model,
                                       transformed_model_data_points=self.time_array,
                                       frequency_nodes=self.frequency_nodes,
-                                      indexes=self.indexes
+                                      indexes=self.indexes,
+                                      geometrized=self.geometrized,
+                                      correct_amplitude=self.correct_amplitude,
+                                      correct_phase=self.correct_phase,
                                       )
 
     def time_domain_strain(self,parameters=None):
@@ -731,7 +740,10 @@ class WaveformGeneratorWFU(object):
                                       transformed_model=self.time_domain_source_model,
                                       transformed_model_data_points=self.time_array,
                                       frequency_nodes=self.frequency_nodes,
-                                      indexes=self.indexes
+                                      indexes=self.indexes,
+                                      geometrized=self.geometrized,
+                                      correct_amplitude=self.correct_amplitude,
+                                      correct_phase=self.correct_phase,
                                       )
         
         plus_td_waveform = self.sampling_frequency*np.fft.ifft(fd_model_strain['plus'])
@@ -747,7 +759,7 @@ class WaveformGeneratorWFU(object):
         return model_strain
     
     def _calculate_strain(self, model, model_data_points, transformation_function, transformed_model,
-                          transformed_model_data_points, parameters, frequency_nodes,indexes):
+                          transformed_model_data_points, parameters, frequency_nodes,indexes,geometrized,correct_amplitude,correct_phase):
         if parameters is not None:
             self.parameters = parameters
         if self.parameters == self._cache['parameters'] and self._cache['model'] == model and \
