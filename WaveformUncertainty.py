@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.9.0.1"
+__version__ = "0.9.0.2"
 
 import numpy as np
 import bilby
@@ -792,7 +792,7 @@ class WaveformGeneratorWFU(object):
                 M = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']*lal.MSUN_SI
                 
                 temp_Mf_grid = np.linspace(self.frequency_nodes[0],self.frequency_nodes[-1],1000)
-                temp_frequency_grid = (temp_Mf_grid*c**3)/(lal.G_SI*M)
+                temp_frequency_grid = np.array((temp_Mf_grid*c**3)/(lal.G_SI*M),type='float64')
                 
                 try:
                     alphas = [parameters[f'dA_{i}'] for i in self.indexes]
