@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.9.0.4"
+__version__ = "0.9.0.6"
 
 import numpy as np
 import bilby
@@ -8,6 +8,7 @@ import time as tm
 import sys
 import scipy
 import lal
+import matplotlib.pyplot as plt
 from bilby.core import utils
 from bilby.core.series import CoupledTimeAndFrequencySeries
 from bilby.core.utils import PropertyAccessor
@@ -787,7 +788,6 @@ class WaveformGeneratorWFU(object):
                 raise Exception("Frequency Nodes Do Not Match Provided Indexes")
             
             if self.geometrized is True:
-                print('True')
                 c = 299792458
                 M = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']*lal.MSUN_SI
                 
@@ -807,13 +807,14 @@ class WaveformGeneratorWFU(object):
                     phis = [parameters[f'dphi_{i}'] for i in self.indexes]
                     temp_dphi = scipy.interpolate.CubicSpline(self.frequency_nodes,phis)(temp_Mf_grid)
                     dphi = np.interp(self.frequency_array,temp_frequency_grid,temp_dphi)
+                    plt.plot(self.frequency_array,dphi)
+                    plt.savefig('/home/ryanmatthew.johnson/dphi_test.png')
                 except:
                     dphi = 0
                     if self.correct_phase is True:
                         raise Exception('Phase Correction Failed!')
 
             else:
-                print('False')
                 try:
                     alphas = [parameters[f'dA_{i}'] for i in indexes]
                     dA = scipy.interpolate.CubicSpline(self.frequency_nodes,alphas)(self.frequency_array)
