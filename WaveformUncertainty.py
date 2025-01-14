@@ -809,6 +809,7 @@ class WaveformGeneratorWFU(object):
                     dphi = np.interp(self.frequency_array,temp_frequency_grid,temp_dphi)
                     plt.plot(self.frequency_array,dphi)
                     plt.savefig('/home/ryanmatthew.johnson/dphi_test.png')
+                    raise Exception('done')
                 except:
                     dphi = 0
                     if self.correct_phase is True:
