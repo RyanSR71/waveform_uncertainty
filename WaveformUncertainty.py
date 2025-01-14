@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.8.3.2"
+__version__ = "0.8.4.0"
 
 import numpy as np
 import bilby
@@ -364,12 +364,12 @@ def uncertainties_from_parameterization(data,**kwargs):
     ==================
     data: numpy.ndarray
         WaveformUncertainty.parameterization() output matrix
-    linear: bool, optional
-        if True, default geometric frequency grid will be replaced with a linear one; useful for waveform uncertainty sampling
-        default: False
-    resolution: float, optional
-        distance between points in the linear frequency grid
+    geometrized_frequency_grid: numpy.ndarray, optional
+        if given, data will be returned in geometrized units with points corresponding to this array
         default: None
+    resolution: float, optional
+        size of output frequency grid if no geometrized_frequency_grid is given
+        default: 5000
         
     Returns
     ==================
@@ -381,44 +381,41 @@ def uncertainties_from_parameterization(data,**kwargs):
         array of the mean value of the phase difference corresponding to the frequency grid
     phase_uncertainty: numpy.ndarray
         standard deviations of the phase difference
-    linear_frequency_grid: numpy.ndarray
-        only if linear=True, new linear frequency grid
+    new_frequency_grid: numpy.ndarray
+        output frequency grid
     '''
-    linear = kwargs.get('linear',False)
-    resolution = kwargs.get('resolution',None)
+    geometrized_frequency_grid = kwargs.get('geometrized_frequency_grid',None)
+    resolution = kwargs.get('resolution',5000)
 
     # grabbing all of the waveform difference data
-    amplitude_difference_data = [recovery_from_parameterization('amplitude_difference',data[index]) for index in range(len(data))]
-    phase_difference_data = [recovery_from_parameterization('phase_difference',data[index]) for index in range(len(data))]
+    amplitude_difference_data = [recovery_from_parameterization('amplitude_difference',data[i]) for i in range(len(data))]
+    phase_difference_data = [recovery_from_parameterization('phase_difference',data[i]) for i in range(len(data))]
 
-    if linear==True and resolution is not None:
+    # constructing linear frequency grid
+    new_frequency_grid = np.linspace(data[0][1][0],data[0][1][-1],resolution)
 
-        # constructing linear frequency grid
-        linear_frequency_grid = np.arange(data[0][1][0],data[0][1][-1]+resolution,resolution)
+    # interpolating waveform differences to the new frequency grid
+    amplitude_difference_array = [np.interp(new_frequency_grid,data[0][1],amplitude_difference_data[i]) for i in range(len(amplitude_difference_data))]
+    phase_difference_array = [np.interp(new_frequency_grid,data[0][1],phase_difference_data[i]) for i in range(len(phase_difference_data))]
 
-        # interpolating waveform differences to the new linear frequency grid
-        amplitude_difference = [np.interp(linear_frequency_grid,data[0][1],amplitude_difference_data[i]) for i in range(len(amplitude_difference_data))]
-        phase_difference = [np.interp(linear_frequency_grid,data[0][1],phase_difference_data[i]) for i in range(len(phase_difference_data))]
-
-        # mean and standard devitation along the vertical axis
-        mean_amplitude_difference = np.mean(amplitude_difference,axis=0)
-        amplitude_uncertainty = np.std(amplitude_difference,axis=0)
-
-        mean_phase_difference = np.mean(phase_difference,axis=0)
-        phase_uncertainty = np.std(phase_difference,axis=0)
-    
-    else:
-
-        linear_frequency_grid = None
-
-        # mean and standard devitation along the vertical axis
-        mean_amplitude_difference = np.mean(amplitude_difference_data,axis=0)
-        amplitude_uncertainty = np.std(amplitude_difference_data,axis=0)
-
-        mean_phase_difference = np.mean(phase_difference_data,axis=0)
-        phase_uncertainty = np.std(phase_difference_data,axis=0)
+    if geometrized_frequency_grid is not None:
+        total_mass_array = np.array([bilby.gw.conversion.generate_mass_parameters(data[i][7])['total_mass']*lal.MSUN_SI for i in range(len(data))])
+        geometrized_frequency_array = np.array([new_frequency_grid*total_mass_array[i]*lal.G_SI*(299792458**(-3)) for i in range(len(data))])
+        geometrized_amplitude_difference_array = np.array([np.interp(geometrized_frequency_grid,geometrized_frequency_array[i],amplitude_difference_array[i]) for i in range(len(data))])
+        geometrized_phase_difference_array = np.array([np.interp(geometrized_frequency_grid,geometrized_frequency_array[i],phase_difference_array[i]) for i in range(len(data))])
         
-    return mean_amplitude_difference,amplitude_uncertainty,mean_phase_difference,phase_uncertainty,linear_frequency_grid
+        amplitude_difference_array = np.copy(geometrized_amplitude_difference_array)
+        phase_difference_array = np.copy(geometrized_phase_difference_array)
+        new_frequency_grid = np.copy(geometrized_frequency_grid)
+    
+    # mean and standard devitation along the vertical axis
+    mean_amplitude_difference = np.mean(amplitude_difference_array,axis=0)
+    amplitude_uncertainty = np.std(amplitude_difference_array,axis=0)
+
+    mean_phase_difference = np.mean(phase_difference_array,axis=0)
+    phase_uncertainty = np.std(phase_difference_array,axis=0)
+       
+    return mean_amplitude_difference,amplitude_uncertainty,mean_phase_difference,phase_uncertainty,new_frequency_grid
 
 
 
