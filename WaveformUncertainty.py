@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.9.0.6"
+__version__ = "0.9.0.7"
 
 import numpy as np
 import bilby
@@ -807,8 +807,7 @@ class WaveformGeneratorWFU(object):
                     phis = [parameters[f'dphi_{i}'] for i in self.indexes]
                     temp_dphi = scipy.interpolate.CubicSpline(self.frequency_nodes,phis)(temp_Mf_grid)
                     dphi = np.interp(self.frequency_array,temp_frequency_grid,temp_dphi)
-                    plt.plot(self.frequency_array,dphi)
-                    plt.savefig('/home/ryanmatthew.johnson/dphi_test.png')
+                    np.save('/home/ryanmatthew.johnson/dphi_test.npy',dphi)
                     raise Exception('done')
                 except:
                     dphi = 0
