@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.9.0.3"
+__version__ = "0.9.0.4"
 
 import numpy as np
 import bilby
@@ -787,7 +787,7 @@ class WaveformGeneratorWFU(object):
                 raise Exception("Frequency Nodes Do Not Match Provided Indexes")
             
             if self.geometrized is True:
-                
+                print('True')
                 c = 299792458
                 M = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']*lal.MSUN_SI
                 
@@ -813,7 +813,7 @@ class WaveformGeneratorWFU(object):
                         raise Exception('Phase Correction Failed!')
 
             else:
-                
+                print('False')
                 try:
                     alphas = [parameters[f'dA_{i}'] for i in indexes]
                     dA = scipy.interpolate.CubicSpline(self.frequency_nodes,alphas)(self.frequency_array)
