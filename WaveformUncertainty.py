@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.9.0.9"
+__version__ = "0.9.0.10"
 
 import numpy as np
 import bilby
@@ -772,10 +772,6 @@ class WaveformGeneratorWFU(object):
                                                                transformation_function)
         else:
             raise RuntimeError("No source model given")
-        self._cache['waveform'] = model_strain
-        self._cache['parameters'] = self.parameters.copy()
-        self._cache['model'] = model
-        self._cache['transformed_model'] = transformed_model
         
         '''
         The following block performs the waveform uncertainty correction:
@@ -827,11 +823,20 @@ class WaveformGeneratorWFU(object):
                     dphi = 0
                     if self.correct_phase is True:
                         raise Exception('Phase Correction Failed!')
-                
-                
-            model_strain['plus'] = model_strain['plus']*(1+dA)*np.exp(dphi*1j)
-            model_strain['cross'] = model_strain['cross']*(1+dA)*np.exp(dphi*1j)
+        else:
+            dA = 0
+            dphi = 0
             
+        model_strain['plus'] = model_strain['plus']*(1+dA)*np.exp(dphi*1j)
+        model_strain['cross'] = model_strain['cross']*(1+dA)*np.exp(dphi*1j)
+        
+        self._cache['waveform'] = model_strain
+        self._cache['parameters'] = self.parameters.copy()
+        self._cache['model'] = model
+        self._cache['transformed_model'] = transformed_model
+        self._cache['amplitude_difference'] = dA
+        self._cache['phase_difference'] = dphi
+                              
         return model_strain
     
     def _strain_from_model(self, model_data_points, model):
