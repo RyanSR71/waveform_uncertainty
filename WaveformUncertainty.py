@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.9.0.12"
+__version__ = "0.9.0.13"
 
 import numpy as np
 import bilby
@@ -790,7 +790,7 @@ class WaveformGeneratorWFU(object):
             else:
                 frequency_nodes = self.frequency_nodes
 
-            temp_frequency_grid = np.linspace(frequency_nodes[0],frequency_nodes[-1],5000)
+            temp_frequency_grid = np.linspace(frequency_nodes[0],frequency_nodes[-1],100)
 
             if self.correct_amplitude is True:
                 try:
