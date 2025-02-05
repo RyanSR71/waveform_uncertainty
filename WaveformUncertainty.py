@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.9.0.10"
+__version__ = "0.9.0.11"
 
 import numpy as np
 import bilby
@@ -785,44 +785,29 @@ class WaveformGeneratorWFU(object):
             if self.geometrized is True:
                 c = 299792458
                 M = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']*lal.MSUN_SI
-                
-                temp_Mf_grid = np.linspace(self.frequency_nodes[0],self.frequency_nodes[-1],1000)
-                temp_frequency_grid = np.array((temp_Mf_grid*c**3)/(lal.G_SI*M),dtype='float64')
-                
-                try:
-                    alphas = [parameters[f'dA_{i}'] for i in self.indexes]
-                    temp_dA = scipy.interpolate.CubicSpline(self.frequency_nodes,alphas)(temp_Mf_grid)
-                    dA = np.interp(self.frequency_array,temp_frequency_grid,temp_dA)
-                except:
-                    dA = 0
-                    if self.correct_amplitude is True:
-                        raise Exception('Amplitude Correction Failed!')
-               
-                try:
-                    phis = [parameters[f'dphi_{i}'] for i in self.indexes]
-                    temp_dphi = scipy.interpolate.CubicSpline(self.frequency_nodes,phis)(temp_Mf_grid)
-                    dphi = np.interp(self.frequency_array,temp_frequency_grid,temp_dphi)
-                except:
-                    dphi = 0
-                    if self.correct_phase is True:
-                        raise Exception('Phase Correction Failed!')
-
+                frequency_nodes = np.array((self.frequency_nodes*c**3)/(lal.G_SI*M),dtype='float64')
             else:
-                try:
-                    alphas = [parameters[f'dA_{i}'] for i in indexes]
-                    dA = scipy.interpolate.CubicSpline(self.frequency_nodes,alphas)(self.frequency_array)
-                except:
-                    dA = 0
-                    if self.correct_amplitude is True:
-                        raise Exception('Amplitude Correction Failed!')
-               
-                try:
-                    phis = [parameters[f'dphi_{i}'] for i in indexes]
-                    dphi = scipy.interpolate.CubicSpline(self.frequency_nodes,phis)(self.frequency_array)
-                except:
-                    dphi = 0
-                    if self.correct_phase is True:
-                        raise Exception('Phase Correction Failed!')
+                frequency_nodes = self.frequency_nodes
+
+            temp_frequency_grid = np.linspace(frequency_nodes[0],frequency_nodes[-1],5000)
+            
+            try:
+                alphas = [parameters[f'dA_{i}'] for i in indexes]
+                dA_spline = scipy.interpolate.CubicSpline(frequency_nodes,alphas)(temp_frequency_grid)
+                dA = np.interp(self.frequency_array,temp_frequency_grid,dA_spline)
+            except:
+                dA = 0
+                if self.correct_amplitude is True:
+                    raise Exception('Amplitude Correction Failed!')
+           
+            try:
+                phis = [parameters[f'dphi_{i}'] for i in indexes]
+                dphi_spline = scipy.interpolate.CubicSpline(self.frequency_nodes,phis)(temp_frequency_grid)
+                dphi = np.interp(self.frequency_array,temp_frequency_grid,dphi_spline)
+            except:
+                dphi = 0
+                if self.correct_phase is True:
+                    raise Exception('Phase Correction Failed!')
         else:
             dA = 0
             dphi = 0
