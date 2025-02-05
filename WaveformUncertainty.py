@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.9.0.13"
+__version__ = "0.9.0.14"
 
 import numpy as np
 import bilby
@@ -784,9 +784,8 @@ class WaveformGeneratorWFU(object):
                 raise Exception("Frequency Nodes Do Not Match Provided Indexes")
             
             if self.geometrized is True:
-                c = 299792458
-                M = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']*lal.MSUN_SI
-                frequency_nodes = np.array((self.frequency_nodes*c**3)/(lal.G_SI*M),dtype='float64')
+                M = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
+                frequency_nodes = np.array(self.frequency_nodes)*(203025.4467280836/M)
             else:
                 frequency_nodes = self.frequency_nodes
 
