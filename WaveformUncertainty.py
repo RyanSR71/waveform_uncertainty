@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.9.0.11"
+__version__ = "0.9.0.12"
 
 import numpy as np
 import bilby
@@ -746,15 +746,16 @@ class WaveformGeneratorWFU(object):
                                       correct_amplitude=self.correct_amplitude,
                                       correct_phase=self.correct_phase,
                                       )
-        
-        fd_waveform = fd_model_strain['plus']-fd_model_strain['cross']*1j
 
-        td_waveform_ifft = self.sampling_frequency*np.fft.ifft(fd_waveform)
-        td_waveform = np.interp(self.time_array,np.linspace(self.time_array[0],self.time_array[-1],len(td_waveform_ifft)),td_waveform_ifft)
+        td_waveform_plus_ifft = np.real(self.sampling_frequency*np.fft.ifft(fd_model_strain['plus']))
+        td_waveform_plus = np.interp(self.time_array,np.linspace(self.time_array[0],self.time_array[-1],len(td_waveform_plus_ifft)),td_waveform_plus_ifft)
+
+        td_waveform_cross_ifft = np.real(self.sampling_frequency*np.fft.ifft(fd_model_strain['cross']))
+        td_waveform_cross = np.interp(self.time_array,np.linspace(self.time_array[0],self.time_array[-1],len(td_waveform_cross_ifft)),td_waveform_cross_ifft)
 
         model_strain = dict()
-        model_strain['plus'] = np.real(td_waveform)
-        model_strain['cross'] = -np.imag(td_waveform)
+        model_strain['plus'] = td_waveform_plus
+        model_strain['cross'] = td_waveform_cross
 
         return model_strain
     
@@ -790,24 +791,27 @@ class WaveformGeneratorWFU(object):
                 frequency_nodes = self.frequency_nodes
 
             temp_frequency_grid = np.linspace(frequency_nodes[0],frequency_nodes[-1],5000)
-            
-            try:
-                alphas = [parameters[f'dA_{i}'] for i in indexes]
-                dA_spline = scipy.interpolate.CubicSpline(frequency_nodes,alphas)(temp_frequency_grid)
-                dA = np.interp(self.frequency_array,temp_frequency_grid,dA_spline)
-            except:
-                dA = 0
-                if self.correct_amplitude is True:
+
+            if self.correct_amplitude is True:
+                try:
+                    alphas = [parameters[f'dA_{i}'] for i in indexes]
+                    dA_spline = scipy.interpolate.CubicSpline(frequency_nodes,alphas)(temp_frequency_grid)
+                    dA = np.interp(self.frequency_array,temp_frequency_grid,dA_spline)
+                except:
                     raise Exception('Amplitude Correction Failed!')
-           
-            try:
-                phis = [parameters[f'dphi_{i}'] for i in indexes]
-                dphi_spline = scipy.interpolate.CubicSpline(self.frequency_nodes,phis)(temp_frequency_grid)
-                dphi = np.interp(self.frequency_array,temp_frequency_grid,dphi_spline)
-            except:
-                dphi = 0
-                if self.correct_phase is True:
+            else:
+                dA = 0
+
+            if self.correct_phase is True:
+                try:
+                    phis = [parameters[f'dphi_{i}'] for i in indexes]
+                    dphi_spline = scipy.interpolate.CubicSpline(self.frequency_nodes,phis)(temp_frequency_grid)
+                    dphi = np.interp(self.frequency_array,temp_frequency_grid,dphi_spline)
+                except:
                     raise Exception('Phase Correction Failed!')
+            else:
+                dphi = 0
+                    
         else:
             dA = 0
             dphi = 0
