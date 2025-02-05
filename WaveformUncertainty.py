@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.9.0.14"
+__version__ = "0.9.0.15"
 
 import numpy as np
 import bilby
@@ -786,6 +786,7 @@ class WaveformGeneratorWFU(object):
             if self.geometrized is True:
                 M = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
                 frequency_nodes = np.array(self.frequency_nodes)*(203025.4467280836/M)
+                print(frequency_nodes)
             else:
                 frequency_nodes = self.frequency_nodes
 
