@@ -444,34 +444,6 @@ def maxL(result):
 
 
 
-def Q_factor(WFU_result,NHP_result,injection):
-    WFU_maxL = maxL(WFU_result)
-    NHP_maxL = maxL(NHP_result)
-
-    try:
-        if WFU_maxL['phase'] > np.pi:
-            WFU_maxL['phase'] -= np.pi
-        if NHP_maxL['phase'] > np.pi:
-            NHP_maxL['phase'] -= np.pi
-    except:
-        pass
-    
-    NHP_sum = 0
-    WFU_sum = 0
-    
-    for p in injection.keys():
-        NHP_sum += ((NHP_maxL[p]-injection[p])/injection[p])**2
-        WFU_sum += ((WFU_maxL[p]-injection[p])/injection[p])**2
-    
-    epsilon_NHP = np.sqrt(NHP_sum)
-    epsilon_WFU = np.sqrt(WFU_sum)
-    
-    Q_factor = ((epsilon_NHP-epsilon_WFU)/epsilon_NHP)*100
-    
-    return Q_factor
-
-
-
 class WaveformGeneratorWFU(object):
     '''
     Modified WaveformGenerator object from bilby.gw to include waveform uncertainty corrections in the strain calculation
