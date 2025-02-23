@@ -28,10 +28,12 @@ Parameters:
 -----------
 data: numpy.ndarray
     WaveformUncertainty.parameterization() output table
-linear: bool, optional, (False)
-    if True, default geometric frequency grid will be replaced with a linear one; useful for waveform uncertainty sampling
-resolution: float, (None)
-    distance between points in the linear frequency grid
+geometrized_frequency_grid: numpy.ndarray, optional
+    if given, data will be returned in geometrized units with points corresponding to this array
+    default: None
+resolution: float, optional
+    size of output frequency grid if no geometrized_frequency_grid is given
+    default: 5000
       
 Returns:
 --------
@@ -43,6 +45,5 @@ mean_phase_difference: numpy.ndarray
     array of the mean value of the phase difference corresponding to the frequency grid
 phase_uncertainty: numpy.ndarray
     standard deviations of the phase difference
-linear_frequency_grid: numpy.ndarray
-    only if ``linear=True``, new linear frequency grid
-    if ``linear=False``, will return ``None``
+new_frequency_grid: numpy.ndarray
+    output frequency grid
