@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.9.2"
+__version__ = "0.9.3"
 
 import numpy as np
 import bilby
@@ -420,6 +420,150 @@ def uncertainties_from_parameterization(data,**kwargs):
 
 
 
+def dphi_prior(phase_uncertainty,k, **kwargs):
+    '''
+    Generates a Gaussian prior for the phase correction parameters
+    
+    Parameters
+    ===================
+    phase_uncertainty: numpy.ndarray
+        array of standard deviation of a set of phase differences; by default, this should be as a function of dimensionless frequency, xi
+    k: int
+        number of phase correction parameters desired
+    mean_phase_difference: numpy.ndarray, optional
+        array of the means of a set of phase differences, by default, this should be as a function of dimensionless frequency, xi
+        default: None
+    prior: bilby.core.prior.PriorDict, optional
+        bilby prior object; if given, dphi priors will be added to this dictionary
+        default: None
+    geometrized: bool, optional
+        if True, will return geometrized frequency nodes; if False, normal frequency nodes (Hz)
+        default: True
+    xi_low: float, optional
+        if geometrized is True; lower bound on the geometrized frequency band
+        default: 0.018
+    xi_high: float, optional
+        if geometrized is True; upper bound on the geometrized frequency band
+        default: 1/pi (0.318...)
+    f_low: float, optional
+        if geometrized is False; lower bound on the normal frequency band
+        default: 20.0 Hz
+    f_high: float, optional
+        if geometrized is False; upper bound on the normal frequency band
+        default: 1024.0 Hz
+        
+    Returns
+    ==================
+    frequency_nodes: numpy.ndarray
+        array of frequency nodes
+    prior: bilby.core.prior.PriorDict
+        bilby prior object containing the phase correction priors
+    '''
+    f_low = kwargs.get('f_low',20)
+    f_high = kwargs.get('f_high',1024)
+    xi_low = kwargs.get('xi_low',0.018)
+    xi_high = kwargs.get('xi_high',1/np.pi)
+    prior = kwargs.get('prior',None)
+    geometrized = kwargs.get('geometrized',True)
+    mean_phase_difference = kwargs.get('mean_phase_difference',None)
+    
+    if prior is None:
+        prior = bilby.core.prior.PriorDict()
+    
+    if mean_phase_difference is None:
+        mean_phase_difference = np.array([0]*len(phase_uncertainty))
+    
+    if geometrized is True:
+        frequency_grid = np.linspace(0.001,1,len(phase_uncertainty))
+        desired_frequency_nodes = np.geomspace(xi_low,xi_high,k+1)
+    else:
+        frequency_grid = np.linspace(f_low,f_high,len(phase_uncertainty))
+        desired_frequency_nodes = np.geomspace(f_low,f_high,k+1)
+        
+    indexes = [list(frequency_grid).index(min(frequency_grid, key=lambda x:np.abs(x-node))) for node in desired_frequency_nodes]
+    frequency_nodes = np.array(frequency_grid[indexes])
+
+    prior['dphi_0'] = bilby.core.prior.DeltaFunction(name='dphi_0',latex_label=r'$\varphi_0$',peak=0)
+    for i in list(range(len(frequency_nodes)))[1:]:
+        prior[f'dphi_{i}'] = bilby.core.prior.Gaussian(name=f'dphi_{i}',latex_label=r'$\varphi_num$'.replace('num',str(i)),
+                                                     mu=mean_phase_difference[indexes[i]],sigma=phase_uncertainty[indexes[i]])
+    
+    return frequency_nodes, prior
+
+
+
+def dA_prior(amplitude_uncertainty,k, **kwargs):
+    '''
+    Generates a Gaussian prior for the amplitude correction parameters
+    
+    Parameters
+    ===================
+    amplitude_uncertainty: numpy.ndarray
+        array of standard deviation of a set of amplitude differences; by default, this should be as a function of dimensionless frequency, xi
+    k: int
+        number of amplitude correction parameters desired
+    mean_amplitude_difference: numpy.ndarray, optional
+        array of the means of a set of amplitude differences, by default, this should be as a function of dimensionless frequency, xi
+        default: None
+    prior: bilby.core.prior.PriorDict, optional
+        bilby prior object; if given, dA priors will be added to this dictionary
+        default: None
+    geometrized: bool, optional
+        if True, will return geometrized frequency nodes; if False, normal frequency nodes (Hz)
+        default: True
+    xi_low: float, optional
+        if geometrized is True; lower bound on the geometrized frequency band
+        default: 0.018
+    xi_high: float, optional
+        if geometrized is True; upper bound on the geometrized frequency band
+        default: 1/pi (0.318...)
+    f_low: float, optional
+        if geometrized is False; lower bound on the normal frequency band
+        default: 20.0 Hz
+    f_high: float, optional
+        if geometrized is False; upper bound on the normal frequency band
+        default: 1024.0 Hz
+        
+    Returns
+    ==================
+    frequency_nodes: numpy.ndarray
+        array of frequency nodes
+    prior: bilby.core.prior.PriorDict
+        bilby prior object containing the amplitude correction priors
+    '''
+    f_low = kwargs.get('f_low',20)
+    f_high = kwargs.get('f_high',1024)
+    xi_low = kwargs.get('xi_low',0.018)
+    xi_high = kwargs.get('xi_high',1/np.pi)
+    prior = kwargs.get('prior',None)
+    geometrized = kwargs.get('geometrized',True)
+    mean_amplitude_difference = kwargs.get('mean_amplitude_difference',None)
+    
+    if prior is None:
+        prior = bilby.core.prior.PriorDict()
+    
+    if mean_amplitude_difference is None:
+        mean_amplitude_difference = np.array([0]*len(amplitude_uncertainty))
+    
+    if geometrized is True:
+        frequency_grid = np.linspace(0.001,1,len(amplitude_uncertainty))
+        desired_frequency_nodes = np.geomspace(xi_low,xi_high,k+1)
+    else:
+        frequency_grid = np.linspace(f_low,f_high,len(amplitude_uncertainty))
+        desired_frequency_nodes = np.geomspace(f_low,f_high,k+1)
+        
+    indexes = [list(frequency_grid).index(min(frequency_grid, key=lambda x:np.abs(x-node))) for node in desired_frequency_nodes]
+    frequency_nodes = np.array(frequency_grid[indexes])
+
+    prior['dA_0'] = bilby.core.prior.DeltaFunction(name='dA_0',latex_label=r'$\alpha_0$',peak=0)
+    for i in list(range(len(frequency_nodes)))[1:]:
+        prior[f'dA_{i}'] = bilby.core.prior.Gaussian(name=f'dA_{i}',latex_label=r'$\alpha_num$'.replace('num',str(i)),
+                                                     mu=mean_amplitude_difference[indexes[i]],sigma=amplitude_uncertainty[indexes[i]])
+    
+    return frequency_nodes, prior
+
+
+
 def maxL(result):
     '''
     Calculates the set of parameters in a posterior that together yield the highest likelihood
@@ -472,7 +616,7 @@ class WaveformGeneratorWFU(object):
     time_array = PropertyAccessor('_times_and_frequencies', 'time_array')
     def __init__(self, duration=None, sampling_frequency=None, start_time=0, frequency_domain_source_model=None,
                  time_domain_source_model=None, parameters=None,
-                 frequency_nodes=None,indexes=None,correct_amplitude=False,correct_phase=True,
+                 frequency_nodes=None,correct_amplitude=False,correct_phase=True,
                  geometrized=True,parameter_conversion=None,
                  waveform_arguments=None):
         self._times_and_frequencies = CoupledTimeAndFrequencySeries(duration=duration,
@@ -481,7 +625,6 @@ class WaveformGeneratorWFU(object):
         self.frequency_domain_source_model = frequency_domain_source_model
         self.time_domain_source_model = time_domain_source_model
         self.source_parameter_keys = self.__parameters_from_source_model()
-        self.indexes=indexes
         self.geometrized=geometrized
         self.correct_amplitude=correct_amplitude
         self.correct_phase=correct_phase
@@ -529,13 +672,12 @@ class WaveformGeneratorWFU(object):
                                          'frequency_domain_source_model={}, time_domain_source_model={}, ' \
                                          'parameter_conversion={}, ' \
                                          'frequency_nodes={}, ' \
-                                         'indexes={}, ' \
                                          'geometrized={}, ' \
                                          'correct_amplitude={}, ' \
                                          'correct_phase={}, ' \
                                          'waveform_arguments={})'\
             .format(self.duration, self.sampling_frequency, self.start_time, fdsm_name, tdsm_name,
-                    param_conv_name, self.frequency_nodes, self.indexes, self.geometrized, self.correct_amplitude, self.correct_phase, self.waveform_arguments)
+                    param_conv_name, self.frequency_nodes, self.geometrized, self.correct_amplitude, self.correct_phase, self.waveform_arguments)
     
     def frequency_domain_strain(self, parameters=None):
         return self._calculate_strain(model=self.frequency_domain_source_model,
@@ -545,7 +687,6 @@ class WaveformGeneratorWFU(object):
                                       transformed_model=self.time_domain_source_model,
                                       transformed_model_data_points=self.time_array,
                                       frequency_nodes=self.frequency_nodes,
-                                      indexes=self.indexes,
                                       geometrized=self.geometrized,
                                       correct_amplitude=self.correct_amplitude,
                                       correct_phase=self.correct_phase,
@@ -559,7 +700,6 @@ class WaveformGeneratorWFU(object):
                                       transformed_model=self.time_domain_source_model,
                                       transformed_model_data_points=self.time_array,
                                       frequency_nodes=self.frequency_nodes,
-                                      indexes=self.indexes,
                                       geometrized=self.geometrized,
                                       correct_amplitude=self.correct_amplitude,
                                       correct_phase=self.correct_phase,
@@ -578,7 +718,7 @@ class WaveformGeneratorWFU(object):
         return model_strain
     
     def _calculate_strain(self, model, model_data_points, transformation_function, transformed_model,
-                          transformed_model_data_points, parameters, frequency_nodes,indexes,geometrized,correct_amplitude,correct_phase):
+                          transformed_model_data_points, parameters, frequency_nodes, geometrized, correct_amplitude, correct_phase):
         if parameters is not None:
             self.parameters = parameters
         if self.parameters == self._cache['parameters'] and self._cache['model'] == model and \
@@ -598,8 +738,7 @@ class WaveformGeneratorWFU(object):
         
         if self.frequency_nodes is not None:
             
-            if self.indexes is not None and len(self.frequency_nodes) != len(self.indexes):
-                raise Exception("Frequency Nodes Do Not Match Provided Indexes")
+            indexes = np.arange(0,len(self.frequency_nodes),1)
             
             if self.geometrized is True:
                 M = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
