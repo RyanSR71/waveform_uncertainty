@@ -8,7 +8,7 @@ WaveformUncertainty.uncertainties_from_parameterization
 Takes all of the sets in a parameterized waveform difference matrix and takes the mean and standard deviation of amplitude and phase difference.
 
 .. math::
-   \mathrm{Given}\ \xi\equiv\frac{GMf}{c^3}:
+   \mathrm{Given}\ \ \xi\equiv\frac{GMf}{c^3},
 
 .. math::
    \overline{\Delta\mathcal{A}_{\mu}}(\xi)=\frac{\sum_{i=1}^{N}(\Delta\mathcal{A}_{\mu}(\xi;\vartheta_{i}))}{N}
