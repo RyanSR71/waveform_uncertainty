@@ -39,8 +39,8 @@ def fd_model_difference(hf1,hf2,**kwargs):
         array containing the psd data and their corresponding frequencies
         default: None
     correction_parameter: float, optional
-        amplitude difference cutoff in geometerized units
-        default: 0.142
+        fraction of maximum amplitude to cut off the amplitude at
+        default: 0.0001
     ref_amplitude: numpy.ndarray, optional
         array of gravitational waveform amplitude
         default None
@@ -64,7 +64,7 @@ def fd_model_difference(hf1,hf2,**kwargs):
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
-    correction_parameter = kwargs.get('correction_parameter',0.142)
+    correction_parameter = kwargs.get('correction_parameter',0.0001)
     ref_amplitude = kwargs.get('ref_amplitude',None)
 
     f_low = hf1.waveform_arguments['f_low']
@@ -99,15 +99,10 @@ def fd_model_difference(hf1,hf2,**kwargs):
     while any(value > 6 for value in [np.abs(raw_phase_difference[i+1]-raw_phase_difference[i]) for i in range(len(raw_phase_difference)-2)]):
         raw_phase_difference = np.unwrap(raw_phase_difference)
 
-    # calculating the discontinuity correction frequency and its position in the frequency grid
-    total_mass = bilby.gw.conversion.generate_mass_parameters(hf1.parameters)['total_mass']*lal.MSUN_SI
-    G = lal.G_SI
-    c = 299792458
-    
-    f_disc = correction_parameter*(c**3)/(G*total_mass)
-    if f_disc > f_high:
-        f_disc = f_high
-    final_index = list(hf1.frequency_array[wf_freqs]).index(min(hf1.frequency_array[wf_freqs],key=lambda x:abs(x-f_disc)))    
+    # finding the position of the cuttoff/discontinuity correction frequency, f_disc
+    final_index_1 = list(amplitude_1).index(min(amplitude_1, key=lambda x:np.abs(x-correction_parameter*np.max(amplitude_1))))
+    final_index_2 = list(amplitude_2).index(min(amplitude_2, key=lambda x:np.abs(x-correction_parameter*np.max(amplitude_2))))
+    final_index = min([final_index_1,final_index_2])
     
     # fitting a line to raw_phase_difference weighted by PSDs and subtracting off that line
     if psd_data is not None:
@@ -210,8 +205,8 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
         array containing the psd data and their corresponding frequencies
         default: None
     correction_parameter: float, optional
-        amplitude difference cut off in geometerized united
-        default: 0.142
+        fraction of maximum amplitude to cut off the amplitude at
+        default: 0.0001
     ref_amplitude: numpy.ndarray, optional
         reference amplitude for residual phase calculation
         default: None
@@ -249,7 +244,7 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
     npoints = kwargs.get('npoints',1000)
     polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
-    correction_parameter = kwargs.get('correction_parameter',0.142)
+    correction_parameter = kwargs.get('correction_parameter',0.0001)
     ref_amplitude = kwargs.get('ref_amplitude',None)
     precession = kwargs.get('precession',False)
     tides = kwargs.get('tides',True)
