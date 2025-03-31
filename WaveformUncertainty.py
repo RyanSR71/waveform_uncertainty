@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.9.5"
+__version__ = "0.9.6"
 
 import numpy as np
 import bilby
@@ -580,6 +580,68 @@ def maxL(result):
         maxL_dict[parameter] = result.posterior[parameter][maxL_index]
         
     return maxL_dict
+
+
+
+def TotalMassConstraint(*,name,f_low,f_high,**kwargs):
+    '''
+    Generates a bilby prior to constrain the total mass
+    
+    Parameters
+    ===================
+    name: string
+        name of the prior
+    f_low: float
+        lower bound on the frequency band
+    f_high: float
+        upper bound of the frequency band
+    unit: string, optional
+        unit of the parameter
+        default: r'$\mathrm{M}_\odot$' (solar mass)
+    latex_label: string, optional
+        label for the parameter in LaTeX
+        default: r'$M$'
+    xi_low: float, optional
+        lower bound on the waveform uncertainty correction in dimensionless frequency
+        default: 0.018
+    xi_high: float, optional
+        upper bound on the waveform uncertainty correction in dimensionless frequency
+        default: 1/pi
+
+    Returns
+    ==================
+    total_mass_prior: bilby.core.prior.base.Constraint
+        bilby constraint prior object for the total mass
+    '''
+    unit = kwargs.get('unit',r'$\mathrm{M}_\odot$')
+    latex_label = kwargs.get('latex_label',r'$M$')
+    boundary = kwargs.get('boundary',None)
+    xi_low = kwargs.get('xi_low',0.018)
+    xi_high = kwargs.get('xi_high',1/np.pi)
+    
+    total_mass_prior = bilby.core.prior.Constraint(name=name,latex_label=latex_label,minimum=xi_high*203025.4467280836/f_high, maximum=xi_low*203025.4467280836/f_low, unit=unit)
+    
+    return total_mass_prior
+
+
+
+def total_mass_conversion(parameters):
+    '''
+    Conversion function to generate the total mass from a set of parameters; to be used alongside the total mass prior
+    
+    Parameters
+    ==================
+    parameters: dict
+        dictionary of binary black hole parameters
+    
+    Returns
+    ==================
+    parameters: dict
+        input parameters, but with the total mass added
+    '''
+    parameters['total_mass'] = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
+    
+    return parameters
 
 
 
