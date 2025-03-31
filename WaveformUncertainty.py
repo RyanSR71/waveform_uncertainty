@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.9.4"
+__version__ = "0.9.5"
 
 import numpy as np
 import bilby
@@ -705,15 +705,9 @@ class WaveformGeneratorWFU(object):
                                       correct_phase=self.correct_phase,
                                       )
 
-        td_waveform_plus_ifft = np.real(self.sampling_frequency*np.fft.ifft(fd_model_strain['plus']))
-        td_waveform_plus = np.interp(self.time_array,np.linspace(self.time_array[0],self.time_array[-1],len(td_waveform_plus_ifft)),td_waveform_plus_ifft)
-
-        td_waveform_cross_ifft = np.real(self.sampling_frequency*np.fft.ifft(fd_model_strain['cross']))
-        td_waveform_cross = np.interp(self.time_array,np.linspace(self.time_array[0],self.time_array[-1],len(td_waveform_cross_ifft)),td_waveform_cross_ifft)
-
         model_strain = dict()
-        model_strain['plus'] = td_waveform_plus
-        model_strain['cross'] = td_waveform_cross
+        model_strain['plus'] = td_waveform(fd_model_strain['plus'],self.sampling_frequency)
+        model_strain['cross'] = td_waveform(fd_model_strain['cross'],self.sampling_frequency)
 
         return model_strain
     
@@ -877,3 +871,9 @@ def match(signal,data,PSDs,duration):
     normalized_match = np.abs(bilby.gw.utils.matched_filter_snr(signal,data,PSDs,4)/(signal_match*data_match))
     
     return normalized_match
+
+def td_waveform(fd_waveform,sampling_frequency):
+    reversed_fd_waveform = fd_waveform[::-1]
+    total_fd_strain = np.concatenate((fd_waveform,np.conjugate(reversed_fd_waveform[1:-1])))
+    td_waveform = sampling_frequency*np.real(np.fft.ifft(total_fd_strain))
+    return td_waveform
