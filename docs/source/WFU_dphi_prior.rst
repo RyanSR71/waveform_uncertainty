@@ -1,67 +1,49 @@
-WaveformUncertainty.WFU_dphi_prior
+WaveformUncertainty.dphi_prior
 =============================
 
 .. code-block:: python
 
-   WaveformUncertainty.WFU_dphi_prior(phase_uncertainty,frequency_grid,injection,hf,PSDs,match_boundary,
-                                      duration,nnodes,prior=None,polarization='plus',match_resolution=100)
+   WaveformUncertainty.dphi_prior(phase_uncertainty,k,mean_phase_difference=None,prior=None,
+                                  geometrized=True,xi_low=0.018,xi_high=0.318,f_low=20.0,f_high=1024.0)
 
-Automatically generates a bilby prior object containing truncated Gaussian priors for each dphi parameter.
-
-.. math::
-
-   \mathfrak{M}(h_1,h_2)=\underset{t_c,\phi_c}{\max}\hspace{0.1cm}\left|\frac{\int df\hat{h}_1^*(f)\hat{h}_2(f)\mathrm{e}^{-2\pi ift_c+i\phi_c}}{\sqrt{\int df\hat{h}_1^*(f)\hat{h}_1(f)}\sqrt{\int df\hat{h}_2^*(f)\hat{h}_2(f)}}\right|\times 100\%
+Automatically generates a bilby prior object containing Gaussian priors for each dphi parameter.
 
 .. math::
 
-   \mathfrak{M}(\mu(f;\theta),\mu_{\mathcal{C}}(f;\theta,\varphi_k^{\gamma\%}))=\gamma\%
-
-.. math::
-
-   \mathcal{TN}(0,\delta\phi_\mu(f),\mp\varphi^{\gamma\%})=\frac{(2\pi)^{-\frac{1}{2}}}{\delta\phi_{\mu}(f_k)}\left[\frac{\mathrm{exp}\left[-\frac{1}{2}\left(\frac{\Delta\phi}{\delta\phi_{\mu}(f_k)}\right)^2\right]}{\mathrm{erf}\left(\frac{\varphi_k^{\gamma\%}}{\sqrt{2}\delta\phi_{\mu}(f_k)}\right)}\right]
-
-.. math::
-
-   f_\mathrm{IM}=\frac{0.018c^3}{GM}\quad\quad f_\mathrm{light}=\frac{c^3}{\pi GM}
-
-.. math::
-
-   \pi(\varphi_k)=\begin{cases}
-        \delta(\Delta\phi) & f_k\leq f_\mathrm{IM} \\
-        \mathcal{TN}(0,\delta\phi_{\mu}(f_k),\mp\varphi_k^{\gamma\%}) & f_\mathrm{IM}<f_k<f_\mathrm{light} \\
-        \delta(\Delta\phi) & f_k\geq f_\mathrm{light}
-    \end{cases}
+   \Pi(\varphi_k)=\mathcal{N}(0,\delta\phi_\mu(f_k))
 
 Parameters:
 -----------
 phase_uncertainty: numpy.ndarray
-   array of the phase uncertainty; defined as the standard deviation of phase differences
-frequency_grid: numpy.ndarray
-   frequency array corresponding to the waveform uncertainties
-injection: dictionary
-   dictionary of injection parameters
-hf: bilby.gw.WaveformGenerator
-   bilby waveform generator object
-PSDs: numpy.ndarray
-   power spectral density data
-match_boundary: float
-   required faithfullness for each dphi parameter
-duration: int [s]
-   duration of the signal
-nnodes: int
-   number of frequency nodes desired
-prior: bilby.core.prior.PriorDict, optional, (None)
-   if given, the output prior will simply be added to this
-polarization: string, optional, ('plus')
-   polarization of the signal
-match_resolution: int, optional, (100)
-   number of draws of the match function taken to find the faithfullness boundaries
+   array of standard deviation of a set of phase differences; by default, this should be as a function of dimensionless frequency, xi
+k: int
+   number of phase correction parameters desired
+mean_phase_difference: numpy.ndarray, optional
+   array of the means of a set of phase differences, by default, this should be as a function of dimensionless frequency, xi
+   if not given, the means of the dphi distributions are set to zero
+   default: None
+prior: bilby.core.prior.PriorDict, optional
+   bilby prior object; if given, dphi priors will be added to this dictionary
+   default: None
+geometrized: bool, optional
+   if True, will return dimensionless frequency nodes; if False, standard frequency nodes (Hz)
+   default: True
+xi_low: float, optional
+   if geometrized is True; lower bound on the dimensionless frequency band
+   default: 0.018
+xi_high: float, optional
+   if geometrized is True; upper bound on the dimensionless frequency band
+   default: 1/pi (0.318...)
+f_low: float, optional
+   if geometrized is False; lower bound on the standard frequency band
+   default: 20.0 Hz
+f_high: float, optional
+   if geometrized is False; upper bound on the standard frequency band
+   default: 1024.0 Hz
       
 Returns:
 --------
-prior: bilby.core.prior.PriorDict
-   prior containing the dphi parameters
 frequency_nodes: numpy.ndarray
-   frequency nodes used by __WaveformGeneratorWFU() to generate waveform difference splines
-indexes: numpy.ndarray
-   list of dphi parameters present in the prior; i.e. dphi_1-dphi_5 gives indexes=[1,2,3,4,5]
+   array of frequency nodes
+prior: bilby.core.prior.PriorDict
+   bilby prior object containing the phase correction priors
