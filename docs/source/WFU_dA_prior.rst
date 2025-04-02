@@ -1,13 +1,12 @@
-WaveformUncertainty.WFU_dA_prior
+WaveformUncertainty.dA_prior
 =============================
 
 .. code-block:: python
 
-   WaveformUncertainty.WFU_dA_prior(amplitude_uncertainty,k,mean_amplitude_difference=None,
-                                    prior=None,geometrized=True,xi_low=0.018,xi_high=0.318,
-                                    f_low=20.0,f_high=1024.0)
+   WaveformUncertainty.dA_prior(amplitude_uncertainty,k,mean_amplitude_difference=None,prior=None,
+                                geometrized=True,xi_low=0.018,xi_high=0.318,f_low=20.0,f_high=1024.0)
 
-Automatically generates a bilby prior object containing truncated Gaussian priors for each dA parameter.
+Automatically generates a bilby prior object containing Gaussian priors for each dA parameter.
 
 .. math::
 
@@ -21,7 +20,7 @@ k: int
    number of amplitude correction parameters desired
 mean_amplitude_difference: numpy.ndarray, optional
    array of the means of a set of amplitude differences, by default, this should be as a function of dimensionless frequency, xi
-   if not given, the means of the alpha distributions are set to zero
+   if not given, the means of the dA distributions are set to zero
    default: None
 prior: bilby.core.prior.PriorDict, optional
    bilby prior object; if given, dA priors will be added to this dictionary
