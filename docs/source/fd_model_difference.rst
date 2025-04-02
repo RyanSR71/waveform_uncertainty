@@ -12,7 +12,7 @@ Generates frequency domain waveform differences between two models hf1 and hf2.
 .. math::
 
    \Delta\mathcal{A}_{\mu}(f;\vartheta)= \begin{cases} 
-      \frac{\mathcal{A}_2(f;\vartheta)}{\mathcal{A}_1(f;\vartheta)} & f \leq f_{\mathrm{disc}} \\
+      \frac{\mathcal{A}_2(f;\vartheta)}{\mathcal{A}_1(f;\vartheta)}-1 & f \leq f_{\mathrm{disc}} \\
       \Delta\mathcal{A}_\mu(f_{\mathrm{disc}};\vartheta) & f > f_{\mathrm{disc}} 
    \end{cases}
 
