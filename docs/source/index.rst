@@ -24,7 +24,7 @@ Check out the :doc:`installation` section for instructions. General information 
    :maxdepth: 1
    :caption: Tutorials:
 
-   notebooks/Parameterization_Tutorial
+   notebooks/Parameterization_and_Waveform_Differences
 
 .. toctree::
    :maxdepth: 1
