@@ -1,12 +1,12 @@
-WaveformUncertainty.Q_factor
-============================
+WaveformUncertainty.TotalMassConstraint
+=======================================
 
 .. code-block:: python
 
   WaveformUncertainty.TotalMassConstraint(*,name,f_low,f_high,latex_label=r'$M$',boundary=None,
                                          unit=r'$\mathrm{M}_\odot$',xi_low=0.018,xi_high=0.318)
 
-Calculates the quality factor of a correction by comparing the posteriors of the waveform uncertainty corrected parameter estimation run and the null-hypothesis (uncorrection) parameter estimation run.
+Generates a bilby prior that constrains the total mass to ensure that the waveform correction is always within the frequency band.
 
 .. math::
 
