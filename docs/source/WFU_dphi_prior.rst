@@ -18,28 +18,21 @@ phase_uncertainty: numpy.ndarray
    array of standard deviation of a set of phase differences; by default, this should be as a function of dimensionless frequency, xi
 k: int
    number of phase correction parameters desired
-mean_phase_difference: numpy.ndarray, optional
+mean_phase_difference: numpy.ndarray, optional, (None)
    array of the means of a set of phase differences, by default, this should be as a function of dimensionless frequency, xi
    if not given, the means of the dphi distributions are set to zero
-   default: None
-prior: bilby.core.prior.PriorDict, optional
+prior: bilby.core.prior.PriorDict, optional, (None)
    bilby prior object; if given, dphi priors will be added to this dictionary
-   default: None
-geometrized: bool, optional
+geometrized: bool, optional, (True)
    if True, will return dimensionless frequency nodes; if False, standard frequency nodes (Hz)
-   default: True
-xi_low: float, optional
+xi_low: float, optional, (0.018)
    if geometrized is True; lower bound on the dimensionless frequency band
-   default: 0.018
-xi_high: float, optional
+xi_high: float, optional, (1/pi, 0.318...)
    if geometrized is True; upper bound on the dimensionless frequency band
-   default: 1/pi (0.318...)
-f_low: float, optional
+f_low: float, optional, (20.0 Hz)
    if geometrized is False; lower bound on the standard frequency band
-   default: 20.0 Hz
-f_high: float, optional
+f_high: float, optional, (1024.0 Hz)
    if geometrized is False; upper bound on the standard frequency band
-   default: 1024.0 Hz
       
 Returns:
 --------
