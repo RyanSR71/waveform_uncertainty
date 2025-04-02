@@ -10,7 +10,7 @@ Automatically generates a bilby prior object containing Gaussian priors for each
 
 .. math::
 
-   \Pi(\varphi_k)=\mathcal{N}(0,\delta\phi_\mu(f_k))
+   \Pi(\varphi_k)=\mathcal{N}(0,\delta\phi_\mu(\xi_k))
 
 Parameters:
 -----------
