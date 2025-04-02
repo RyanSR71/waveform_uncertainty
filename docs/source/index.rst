@@ -24,8 +24,6 @@ Check out the :doc:`installation` section for instructions. General information 
    :maxdepth: 1
    :caption: Tutorials:
 
-   notebooks/WFU_Sampling_Tutorial
-   notebooks/Posterior_Analysis_Tutorial
    notebooks/Parameterization_Tutorial
 
 .. toctree::
