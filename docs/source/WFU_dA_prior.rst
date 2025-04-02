@@ -10,7 +10,7 @@ Automatically generates a bilby prior object containing Gaussian priors for each
 
 .. math::
 
-   \Pi(\alpha_k)=\mathcal{N}(0,\delta\mathcal{A}_\mu(f_k))
+   \Pi(\alpha_k)=\mathcal{N}(0,\delta\mathcal{A}_\mu(\xi_k))
 
 Parameters:
 -----------
