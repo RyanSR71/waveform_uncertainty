@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.9.6"
+__version__ = "0.9.6.1"
 
 import numpy as np
 import bilby
@@ -601,12 +601,15 @@ def TotalMassConstraint(*,name,f_low,f_high,**kwargs):
     latex_label: string, optional
         label for the parameter in LaTeX
         default: r'$M$'
+    boundary: string, optional
+        boundary condition type for the prior
+        default: None
     xi_low: float, optional
         lower bound on the waveform uncertainty correction in dimensionless frequency
         default: 0.018
     xi_high: float, optional
         upper bound on the waveform uncertainty correction in dimensionless frequency
-        default: 1/pi
+        default: 1/pi, 0.318...
 
     Returns
     ==================
@@ -673,7 +676,7 @@ class WaveformGeneratorWFU(object):
     time_array = PropertyAccessor('_times_and_frequencies', 'time_array')
     def __init__(self, duration=None, sampling_frequency=None, start_time=0, frequency_domain_source_model=None,
                  time_domain_source_model=None, parameters=None,
-                 frequency_nodes=None,correct_amplitude=False,correct_phase=True,
+                 frequency_nodes=None,correct_amplitude=False,correct_phase=False,
                  geometrized=True,parameter_conversion=None,
                  waveform_arguments=None):
         self._times_and_frequencies = CoupledTimeAndFrequencySeries(duration=duration,
