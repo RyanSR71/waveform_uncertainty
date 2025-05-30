@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.9.6.1"
+__version__ = "0.10.0"
 
 import numpy as np
 import bilby
@@ -800,13 +800,10 @@ class WaveformGeneratorWFU(object):
             else:
                 frequency_nodes = self.frequency_nodes
 
-            temp_frequency_grid = np.linspace(frequency_nodes[0],frequency_nodes[-1],1000)
-
             if self.correct_amplitude is True:
                 try:
                     alphas = [parameters[f'dA_{i}'] for i in indexes]
-                    dA_spline = scipy.interpolate.CubicSpline(frequency_nodes,alphas)(temp_frequency_grid)
-                    dA = np.interp(self.frequency_array,temp_frequency_grid,dA_spline)
+                    dA = smooth_interpolation(self.frequency_array,frequency_nodes,alphas,parameters['gamma_dA'])
                 except:
                     raise Exception('Amplitude Correction Failed!')
             else:
@@ -815,8 +812,7 @@ class WaveformGeneratorWFU(object):
             if self.correct_phase is True:
                 try:
                     phis = [parameters[f'dphi_{i}'] for i in indexes]
-                    dphi_spline = scipy.interpolate.CubicSpline(frequency_nodes,phis)(temp_frequency_grid)
-                    dphi = np.interp(self.frequency_array,temp_frequency_grid,dphi_spline)
+                    dphi = smooth_interpolation(self.frequency_array,frequency_nodes,phis,parameters['gamma_dphi'])
                 except:
                     raise Exception('Phase Correction Failed!')
             else:
@@ -937,3 +933,17 @@ def td_waveform(fd_waveform,sampling_frequency):
     total_fd_strain = np.concatenate((fd_waveform,np.conjugate(reversed_fd_waveform[1:-1])))
     td_waveform = sampling_frequency*np.real(np.fft.ifft(total_fd_strain))
     return td_waveform
+
+def smooth_interpolation(full_grid,nodes,parameters,gamma):
+    spline = scipy.interpolate.interp1d(nodes,parameters)(nodes)
+    data = np.interp(full_grid,nodes,spline)
+    new_data = data.copy()
+    
+    if gamma != 0:
+        r = int(gamma*len(data))
+        lower_index = int(gamma*len(data))
+        upper_index = int((1-gamma)*len(data))
+        for i in range(lower_index,upper_index):
+            new_data[i] = (1/(2*r))*np.sum(data[i-r:i+r])
+    
+    return new_data
