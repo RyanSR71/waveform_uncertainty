@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.10.1.1"
+__version__ = "0.10.1.2"
 
 import numpy as np
 import bilby
@@ -941,9 +941,9 @@ def smooth_interpolation(full_grid,nodes,parameters,gamma):
         print("Interp1D Error!")
     data = np.interp(full_grid,nodes,spline)
     new_data = data.copy()
-    
-    if gamma != 0:
-        r = int(gamma*len(data))
+
+    r = int(gamma*len(data))
+    if r != 0:
         lower_index = int(gamma*len(data))
         upper_index = int((1-gamma)*len(data))
         for i in range(lower_index,upper_index):
