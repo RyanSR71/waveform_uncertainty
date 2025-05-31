@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.10.2"
+__version__ = "0.10.3"
 
 import numpy as np
 import bilby
@@ -936,7 +936,7 @@ def td_waveform(fd_waveform,sampling_frequency):
 
 def smooth_interpolation(full_grid,nodes,parameters,gamma):
     spline = scipy.interpolate.interp1d(nodes,parameters)(nodes)
-    temp_grid = np.geomspace(full_grid[0],full_grid[-1],200)
+    temp_grid = np.geomspace(full_grid[1],full_grid[-1],100)
     data = np.interp(temp_grid,nodes,spline)
     new_data = data.copy()
     
