@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.10.3"
+__version__ = "0.10.4"
 
 import numpy as np
 import bilby
@@ -800,10 +800,15 @@ class WaveformGeneratorWFU(object):
             else:
                 frequency_nodes = self.frequency_nodes
 
+            try:
+                gamma = parameters['gamma']
+            except:
+                gamma = 0.025
+            
             if self.correct_amplitude is True:
                 try:
                     alphas = [parameters[f'dA_{i}'] for i in indexes]
-                    dA = smooth_interpolation(self.frequency_array,frequency_nodes,alphas,parameters['gamma_dA'])
+                    dA = smooth_interpolation(self.frequency_array,frequency_nodes,alphas,gamma)
                 except:
                     raise Exception('Amplitude Correction Failed!')
             else:
@@ -812,7 +817,7 @@ class WaveformGeneratorWFU(object):
             if self.correct_phase is True:
                 try:
                     phis = [parameters[f'dphi_{i}'] for i in indexes]
-                    dphi = smooth_interpolation(self.frequency_array,frequency_nodes,phis,parameters['gamma_dphi'])
+                    dphi = smooth_interpolation(self.frequency_array,frequency_nodes,phis,gamma)
                 except:
                     raise Exception('Phase Correction Failed!')
             else:
