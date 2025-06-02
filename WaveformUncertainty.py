@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.11.1.1"
+__version__ = "0.11.1.2"
 
 import numpy as np
 import bilby
@@ -1027,10 +1027,10 @@ class WaveformGeneratorAdvanced(object):
             xi_low = 0.018
             
         if correction_arguments['correct_amplitude'] is True:
-            dA_frequency_nodes,dA_prior = wfu.dA_prior(np.sqrt(amplitude_uncertainty**2+0.25*mean_amplitude_difference**2),correction_arguments['nodes'],
+            dA_frequency_nodes,dA_prior = dA_prior(np.sqrt(amplitude_uncertainty**2+0.25*mean_amplitude_difference**2),correction_arguments['nodes'],
                                                       xi_high = parameters['xi_dA'], xi_low=xi_low)
         if correction_arguments['correct_phase'] is True:
-            dphi_frequency_nodes,dphi_prior = wfu.dphi_prior(np.sqrt(phase_uncertainty**2+0.25*mean_phase_difference**2),correction_arguments['nodes'],
+            dphi_frequency_nodes,dphi_prior = dphi_prior(np.sqrt(phase_uncertainty**2+0.25*mean_phase_difference**2),correction_arguments['nodes'],
                                                             xi_high = parameters['xi_dphi'], xi_low=xi_low)
                               
         indexes = np.arange(0,correction_arguments['nodes']+1,1)
