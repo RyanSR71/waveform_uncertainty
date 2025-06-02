@@ -935,10 +935,10 @@ class WaveformGeneratorAdvanced(object):
             self.waveform_arguments = waveform_arguments
         else:
             self.waveform_arguments = dict()
-       if self.correction_arguments is not None:
-           self.correction_arguments = correction_arguments
-       else:
-           self.correction_arguments = dict()
+        if self.correction_arguments is not None:
+            self.correction_arguments = correction_arguments
+        else:
+            self.correction_arguments = dict()
         if isinstance(parameters, dict):
             self.parameters = parameters
         self._cache = dict(parameters=None, waveform=None, model=None)
