@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.11.1.3"
+__version__ = "0.11.1.4"
 
 import numpy as np
 import bilby
@@ -1025,20 +1025,20 @@ class WaveformGeneratorAdvanced(object):
             xi_low = correction_arguments['xi_low']
         except:
             xi_low = 0.018
-            
+
+        M = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
+        
         if correction_arguments['correct_amplitude'] is True:
             dA_frequency_nodes,dA_priors = dA_prior(np.sqrt(amplitude_uncertainty**2+0.25*mean_amplitude_difference**2),correction_arguments['nodes'],
                                                       xi_high = parameters['xi_dA'], xi_low=xi_low)
+            dA_frequency_nodes *= float(203025.4467280836/M)
         if correction_arguments['correct_phase'] is True:
             dphi_frequency_nodes,dphi_priors = dphi_prior(np.sqrt(phase_uncertainty**2+0.25*mean_phase_difference**2),correction_arguments['nodes'],
                                                             xi_high = parameters['xi_dphi'], xi_low=xi_low)
+            dphi_frequency_nodes *= float(203025.4467280836/M)
                               
         indexes = np.arange(0,correction_arguments['nodes']+1,1)
-                              
-        M = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
-        dA_frequency_nodes *= float(203025.4467280836/M)
-        dphi_frequency_nodes *= float(203025.4467280836/M)
-
+            
         try:
             gamma = parameters['gamma']
         except:
