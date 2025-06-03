@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.11.1.7"
+__version__ = "0.11.1.8"
 
 import numpy as np
 import bilby
@@ -826,7 +826,7 @@ class WaveformGeneratorWFU(object):
         else:
             dA = 0
             dphi = 0
-            
+        print('hi')
         model_strain['plus'] = model_strain['plus']*(1+dA)*np.exp(dphi*1j)
         model_strain['cross'] = model_strain['cross']*(1+dA)*np.exp(dphi*1j)
         
@@ -1026,25 +1026,18 @@ class WaveformGeneratorAdvanced(object):
         except:
             xi_low = 0.018
 
-        M = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
-        
-        if correction_arguments['correct_amplitude'] is True:
-            dA_frequency_nodes,dA_priors = dA_prior(np.sqrt(amplitude_uncertainty**2+0.25*mean_amplitude_difference**2),correction_arguments['nodes'],
-                                                      xi_high = parameters['xi_dA'], xi_low=xi_low)
-            dA_frequency_nodes *= float(203025.4467280836/M)
-        if correction_arguments['correct_phase'] is True:
-            dphi_frequency_nodes,dphi_priors = dphi_prior(np.sqrt(phase_uncertainty**2+0.25*mean_phase_difference**2),correction_arguments['nodes'],
-                                                            xi_high = parameters['xi_dphi'], xi_low=xi_low)
-            dphi_frequency_nodes *= float(203025.4467280836/M)
-                              
-        indexes = np.arange(0,correction_arguments['nodes']+1,1)
-            
         try:
             gamma = parameters['gamma']
         except:
             gamma = 0.025
-        
+
+        M = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
+        indexes = np.arange(0,correction_arguments['nodes']+1,1)
+                              
         if correction_arguments['correct_amplitude'] is True:
+            dA_frequency_nodes,dA_priors = dA_prior(np.sqrt(amplitude_uncertainty**2+0.25*mean_amplitude_difference**2),correction_arguments['nodes'],
+                                                      xi_high = parameters['xi_dA'], xi_low=xi_low)
+            dA_frequency_nodes *= float(203025.4467280836/M)
             try:
                 prior_alphas = [parameters[f'dA_{i}'] for i in indexes]
                 alphas = [0] + [prior_alphas[i]*dA_priors[f'dA_{i}'].sigma for i in indexes[1:]]
@@ -1053,8 +1046,10 @@ class WaveformGeneratorAdvanced(object):
                 raise Exception('Amplitude Correction Failed!')
         else:
             dA = 0
-
         if correction_arguments['correct_phase'] is True:
+            dphi_frequency_nodes,dphi_priors = dphi_prior(np.sqrt(phase_uncertainty**2+0.25*mean_phase_difference**2),correction_arguments['nodes'],
+                                                            xi_high = parameters['xi_dphi'], xi_low=xi_low)
+            dphi_frequency_nodes *= float(203025.4467280836/M)
             try:
                 prior_phis = [parameters[f'dphi_{i}'] for i in indexes]
                 phis = [0] + [prior_phis[i]*dphi_priors[f'dphi_{i}'].sigma for i in indexes[1:]]
@@ -1063,8 +1058,7 @@ class WaveformGeneratorAdvanced(object):
                 raise Exception('Phase Correction Failed!')
         else:
             dphi = 0
-        print(phis)
-        print('yo')
+
         model_strain['plus'] = model_strain['plus']*(1+dA)*np.exp(dphi*1j)
         model_strain['cross'] = model_strain['cross']*(1+dA)*np.exp(dphi*1j)
         
