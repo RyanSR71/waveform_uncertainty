@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.11.1.4"
+__version__ = "0.11.1.5"
 
 import numpy as np
 import bilby
@@ -1047,7 +1047,7 @@ class WaveformGeneratorAdvanced(object):
         if correction_arguments['correct_amplitude'] is True:
             try:
                 prior_alphas = [parameters[f'dA_{i}'] for i in indexes]
-                alphas = [0] + [prior_alphas[i]*dA_priors[f'alpha_{i}'].sigma for i in indexes[1:]]
+                alphas = [0] + [prior_alphas[i]*dA_priors[f'dA_{i}'].sigma for i in indexes[1:]]
                 dA = smooth_interpolation(self.frequency_array,dA_frequency_nodes,alphas,gamma)
             except:
                 raise Exception('Amplitude Correction Failed!')
