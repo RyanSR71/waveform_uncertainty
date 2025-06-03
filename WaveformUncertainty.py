@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.11.1.5"
+__version__ = "0.11.1.6"
 
 import numpy as np
 import bilby
@@ -1058,6 +1058,7 @@ class WaveformGeneratorAdvanced(object):
             try:
                 prior_phis = [parameters[f'dphi_{i}'] for i in indexes]
                 phis = [0] + [prior_phis[i]*dphi_priors[f'dphi_{i}'].sigma for i in indexes[1:]]
+                print(phis)
                 dphi = smooth_interpolation(self.frequency_array,dphi_frequency_nodes,phis,gamma)
             except:
                 raise Exception('Phase Correction Failed!')
