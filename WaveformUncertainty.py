@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.11.1.8"
+__version__ = "0.11.1.9"
 
 import numpy as np
 import bilby
@@ -826,7 +826,7 @@ class WaveformGeneratorWFU(object):
         else:
             dA = 0
             dphi = 0
-        print('hi')
+            
         model_strain['plus'] = model_strain['plus']*(1+dA)*np.exp(dphi*1j)
         model_strain['cross'] = model_strain['cross']*(1+dA)*np.exp(dphi*1j)
         
@@ -937,7 +937,7 @@ class WaveformGeneratorAdvanced(object):
         if self.correction_arguments is not None:
             self.correction_arguments = correction_arguments
         else:
-            self.correction_arguments = dict()
+            self.correction_arguments = None
         if isinstance(parameters, dict):
             self.parameters = parameters
         self._cache = dict(parameters=None, waveform=None, model=None)
@@ -1018,6 +1018,7 @@ class WaveformGeneratorAdvanced(object):
         The following block performs the waveform uncertainty correction:
         '''
 
+        correction_arguments = self.correction_arguments
         parameterization = correction_arguments['parameterization']
         mean_amplitude_difference,amplitude_uncertainty,mean_phase_difference,phase_uncertainty,_ = uncertainties_from_parameterization(parameterization)
         
