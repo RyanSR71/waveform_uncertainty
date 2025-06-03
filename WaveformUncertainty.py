@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.11.1.9"
+__version__ = "0.11.2"
 
 import numpy as np
 import bilby
@@ -1102,8 +1102,6 @@ class WaveformGeneratorAdvanced(object):
             # preventing waveform uncertainty parameters from being removed
             indexes = np.arange(0,self.correction_arguments['nodes']+1,1)
             if key not in [f'dA_{i}' for i in indexes]+[f'dphi_{i}' for i in indexes]+['gamma','gamma_dphi','gamma_dA','xi_dphi','xi_dA']:  
-                new_parameters.pop(key)
-            else:
                 new_parameters.pop(key)
         self.__parameters = new_parameters
         self.__parameters.update(self.waveform_arguments)
