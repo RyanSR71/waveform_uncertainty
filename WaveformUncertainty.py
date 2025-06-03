@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.11.3.1"
+__version__ = "0.11.3.2"
 
 import numpy as np
 import bilby
@@ -1184,7 +1184,7 @@ def smooth_interpolation(full_grid,nodes,parameters,gamma):
     
     return output
 
-def variable_prior(uncertainty,k,xi_low,xi_hight):
+def variable_prior(uncertainty,k,xi_low,xi_high):
     frequency_grid = np.linspace(0.001,1,len(uncertainty))
     desired_frequency_nodes = np.geomspace(xi_low,xi_high,k+1)
     
