@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.11.2.1"
+__version__ = "0.11.3"
 
 import numpy as np
 import bilby
@@ -1017,10 +1017,6 @@ class WaveformGeneratorAdvanced(object):
         '''
         The following block performs the waveform uncertainty correction:
         '''
-
-        correction_arguments = self.correction_arguments
-        parameterization = correction_arguments['parameterization']
-        mean_amplitude_difference,amplitude_uncertainty,mean_phase_difference,phase_uncertainty,_ = uncertainties_from_parameterization(parameterization)
         
         try:
             xi_low = correction_arguments['xi_low']
@@ -1036,7 +1032,8 @@ class WaveformGeneratorAdvanced(object):
         indexes = np.arange(0,correction_arguments['nodes']+1,1)
                               
         if correction_arguments['correct_amplitude'] is True:
-            dA_frequency_nodes,dA_coeffs = variable_prior(np.sqrt(amplitude_uncertainty*amplitude_uncertainty+0.25*mean_amplitude_difference*mean_amplitude_difference),correction_arguments['nodes'],
+            sigma_dA = correction_arguments['sigma_dA']
+            dA_frequency_nodes,dA_coeffs = variable_prior(sigma_dA,correction_arguments['nodes'],
                                                       xi_high=parameters['xi_dA'], xi_low=xi_low)
             dA_frequency_nodes *= float(203025.4467280836/M)
             try:
@@ -1048,7 +1045,8 @@ class WaveformGeneratorAdvanced(object):
         else:
             dA = 0
         if correction_arguments['correct_phase'] is True:
-            dphi_frequency_nodes,dphi_coeffs = variable_prior(np.sqrt(phase_uncertainty*phase_uncertainty+0.25*mean_phase_difference*mean_phase_difference),correction_arguments['nodes'],
+            sigma_dphi = correction_arguments['sigma_dphi']
+            dphi_frequency_nodes,dphi_coeffs = variable_prior(sigma_dphi,correction_arguments['nodes'],
                                                             xi_high=parameters['xi_dphi'], xi_low=xi_low)
             dphi_frequency_nodes *= float(203025.4467280836/M)
             try:
@@ -1186,10 +1184,7 @@ def smooth_interpolation(full_grid,nodes,parameters,gamma):
     
     return output
 
-def variable_prior(uncertainty,k, **kwargs):
-    xi_low = kwargs.get('xi_low',0.018)
-    xi_high = kwargs.get('xi_high',1/np.pi)
-    
+def variable_prior(uncertainty,k,xi_low,xi_hight):
     frequency_grid = np.linspace(0.001,1,len(uncertainty))
     desired_frequency_nodes = np.geomspace(xi_low,xi_high,k+1)
     
