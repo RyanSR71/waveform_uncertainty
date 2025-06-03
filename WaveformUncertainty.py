@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.11.2"
+__version__ = "0.11.2.1"
 
 import numpy as np
 import bilby
@@ -1036,24 +1036,24 @@ class WaveformGeneratorAdvanced(object):
         indexes = np.arange(0,correction_arguments['nodes']+1,1)
                               
         if correction_arguments['correct_amplitude'] is True:
-            dA_frequency_nodes,dA_priors = dA_prior(np.sqrt(amplitude_uncertainty**2+0.25*mean_amplitude_difference**2),correction_arguments['nodes'],
-                                                      xi_high = parameters['xi_dA'], xi_low=xi_low)
+            dA_frequency_nodes,dA_coeffs = variable_prior(np.sqrt(amplitude_uncertainty*amplitude_uncertainty+0.25*mean_amplitude_difference*mean_amplitude_difference),correction_arguments['nodes'],
+                                                      xi_high=parameters['xi_dA'], xi_low=xi_low)
             dA_frequency_nodes *= float(203025.4467280836/M)
             try:
-                prior_alphas = [parameters[f'dA_{i}'] for i in indexes]
-                alphas = [0] + [prior_alphas[i]*dA_priors[f'dA_{i}'].sigma for i in indexes[1:]]
+                prior_alphas = np.array([parameters[f'dA_{i}'] for i in indexes])
+                alphas = prior_alphas*dA_coeffs
                 dA = smooth_interpolation(self.frequency_array,dA_frequency_nodes,alphas,gamma)
             except:
                 raise Exception('Amplitude Correction Failed!')
         else:
             dA = 0
         if correction_arguments['correct_phase'] is True:
-            dphi_frequency_nodes,dphi_priors = dphi_prior(np.sqrt(phase_uncertainty**2+0.25*mean_phase_difference**2),correction_arguments['nodes'],
-                                                            xi_high = parameters['xi_dphi'], xi_low=xi_low)
+            dphi_frequency_nodes,dphi_coeffs = variable_prior(np.sqrt(phase_uncertainty*phase_uncertainty+0.25*mean_phase_difference*mean_phase_difference),correction_arguments['nodes'],
+                                                            xi_high=parameters['xi_dphi'], xi_low=xi_low)
             dphi_frequency_nodes *= float(203025.4467280836/M)
             try:
-                prior_phis = [parameters[f'dphi_{i}'] for i in indexes]
-                phis = [0] + [prior_phis[i]*dphi_priors[f'dphi_{i}'].sigma for i in indexes[1:]]
+                prior_phis = np.array([parameters[f'dphi_{i}'] for i in indexes])
+                phis = prior_phis*dphi_coeffs
                 dphi = smooth_interpolation(self.frequency_array,dphi_frequency_nodes,phis,gamma)
             except:
                 raise Exception('Phase Correction Failed!')
@@ -1171,7 +1171,7 @@ def td_waveform(fd_waveform,sampling_frequency):
 
 def smooth_interpolation(full_grid,nodes,parameters,gamma):
     spline = scipy.interpolate.interp1d(nodes,parameters)(nodes)
-    temp_grid = np.geomspace(full_grid[1],full_grid[-1],100)
+    temp_grid = np.geomspace(full_grid[1],full_grid[-1],200)
     data = np.interp(temp_grid,nodes,spline)
     new_data = data.copy()
     
@@ -1185,3 +1185,17 @@ def smooth_interpolation(full_grid,nodes,parameters,gamma):
     output = np.interp(full_grid,temp_grid,new_data)
     
     return output
+
+def variable_prior(uncertainty,k, **kwargs):
+    xi_low = kwargs.get('xi_low',0.018)
+    xi_high = kwargs.get('xi_high',1/np.pi)
+    
+    frequency_grid = np.linspace(0.001,1,len(uncertainty))
+    desired_frequency_nodes = np.geomspace(xi_low,xi_high,k+1)
+    
+    indexes = [list(frequency_grid).index(min(frequency_grid, key=lambda x:np.abs(x-node))) for node in desired_frequency_nodes]
+    frequency_nodes = np.array(frequency_grid[indexes])
+    
+    coef = np.array([uncertainty[indexes[i]] for i in range(k+1)])
+
+    return frequency_nodes, coef
