@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.11.3.2"
+__version__ = "0.11.4"
 
 import numpy as np
 import bilby
@@ -1034,7 +1034,7 @@ class WaveformGeneratorAdvanced(object):
         if correction_arguments['correct_amplitude'] is True:
             sigma_dA = correction_arguments['sigma_dA']
             dA_frequency_nodes,dA_coeffs = variable_prior(sigma_dA,correction_arguments['nodes'],
-                                                      xi_low, parameters['xi_dA'])
+                                                      xi_low, parameters['xi'])
             dA_frequency_nodes *= float(203025.4467280836/M)
             try:
                 prior_alphas = np.array([parameters[f'dA_{i}'] for i in indexes])
@@ -1047,7 +1047,7 @@ class WaveformGeneratorAdvanced(object):
         if correction_arguments['correct_phase'] is True:
             sigma_dphi = correction_arguments['sigma_dphi']
             dphi_frequency_nodes,dphi_coeffs = variable_prior(sigma_dphi,correction_arguments['nodes'],
-                                                            xi_low, parameters['xi_dphi'])
+                                                            xi_low, parameters['xi'])
             dphi_frequency_nodes *= float(203025.4467280836/M)
             try:
                 prior_phis = np.array([parameters[f'dphi_{i}'] for i in indexes])
