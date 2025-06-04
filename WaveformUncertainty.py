@@ -1034,7 +1034,7 @@ class WaveformGeneratorAdvanced(object):
         if correction_arguments['correct_amplitude'] is True:
             sigma_dA = correction_arguments['sigma_dA']
             dA_frequency_nodes,dA_coeffs = variable_prior(sigma_dA,correction_arguments['nodes'],
-                                                      xi_low, parameters['xi_A'])
+                                                      xi_low, parameters['xi_dA'])
             dA_frequency_nodes *= float(203025.4467280836/M)
             try:
                 prior_alphas = np.array([parameters[f'dA_{i}'] for i in indexes])
@@ -1047,7 +1047,7 @@ class WaveformGeneratorAdvanced(object):
         if correction_arguments['correct_phase'] is True:
             sigma_dphi = correction_arguments['sigma_dphi']
             dphi_frequency_nodes,dphi_coeffs = variable_prior(sigma_dphi,correction_arguments['nodes'],
-                                                            xi_low, parameters['xi_phi'])
+                                                            xi_low, parameters['xi_dphi'])
             dphi_frequency_nodes *= float(203025.4467280836/M)
             try:
                 prior_phis = np.array([parameters[f'dphi_{i}'] for i in indexes])
