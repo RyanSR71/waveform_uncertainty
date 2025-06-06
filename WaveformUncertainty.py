@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.11.6"
+__version__ = "0.11.7"
 
 import numpy as np
 import bilby
@@ -1019,9 +1019,9 @@ class WaveformGeneratorAdvanced(object):
         '''
         
         try:
-            xi_low = correction_arguments['xi_low']
+            parameters['xi_low']
         except:
-            xi_low = 0.018
+            parameters['xi_low'] = 0.018
 
         try:
             gamma = parameters['gamma']
@@ -1034,7 +1034,7 @@ class WaveformGeneratorAdvanced(object):
         if correction_arguments['correct_amplitude'] is True:
             sigma_dA = correction_arguments['sigma_dA']
             dA_frequency_nodes,dA_coeffs = variable_prior(sigma_dA,correction_arguments['nodes'],
-                                                      xi_low, parameters['xi_dA'])
+                                                      parameters['xi_low'], parameters['xi_high'])
             dA_frequency_nodes *= float(203025.4467280836/M)
             try:
                 prior_alphas = np.array([parameters[f'dA_{i}'] for i in indexes])
@@ -1047,7 +1047,7 @@ class WaveformGeneratorAdvanced(object):
         if correction_arguments['correct_phase'] is True:
             sigma_dphi = correction_arguments['sigma_dphi']
             dphi_frequency_nodes,dphi_coeffs = variable_prior(sigma_dphi,correction_arguments['nodes'],
-                                                            xi_low, parameters['xi_dphi'])
+                                                            parameters['xi_low'], parameters['xi_high'])
             dphi_frequency_nodes *= float(203025.4467280836/M)
             try:
                 prior_phis = np.array([parameters[f'dphi_{i}'] for i in indexes])
@@ -1099,7 +1099,7 @@ class WaveformGeneratorAdvanced(object):
         for key in self.source_parameter_keys.symmetric_difference(new_parameters):
             # preventing waveform uncertainty parameters from being removed
             indexes = np.arange(0,self.correction_arguments['nodes']+1,1)
-            if key not in [f'dA_{i}' for i in indexes]+[f'dphi_{i}' for i in indexes]+['gamma','gamma_dphi','gamma_dA','xi','xi_dphi','xi_dA']:  
+            if key not in [f'dA_{i}' for i in indexes]+[f'dphi_{i}' for i in indexes]+['gamma','xi_low','xi_high']:  
                 new_parameters.pop(key)
         self.__parameters = new_parameters
         self.__parameters.update(self.waveform_arguments)
