@@ -336,7 +336,7 @@ class PriorDict(dict):
             out_sample = self.conversion_function(sample)
         prob = 1
         for key in self:
-            if isinstance(self[key], Constraint) and key in out_sample:
+            if isinstance(self[key], bilby.core.prior.base.Constraint) and key in out_sample:
                 prob *= self[key].prob(out_sample[key])
         return prob
 
@@ -696,9 +696,9 @@ class PriorDict(dict):
         self.convert_floats_to_delta_functions()
         samples = dict()
         for key in keys:
-            if isinstance(self[key], Constraint):
+            if isinstance(self[key], bilby.core.prior.base.Constraint):
                 continue
-            elif isinstance(self[key], Prior):
+            elif isinstance(self[key], bilby.core.prior.base.Prior):
                 samples[key] = self[key].sample(size=size)
             else:
                 logger.debug("{} not a known prior.".format(key))
@@ -707,7 +707,7 @@ class PriorDict(dict):
     @property
     def non_fixed_keys(self):
         keys = self.keys()
-        keys = [k for k in keys if isinstance(self[k], Prior)]
+        keys = [k for k in keys if isinstance(self[k], bilby.core.prior.base.Prior)]
         keys = [k for k in keys if self[k].is_fixed is False]
         keys = [k for k in keys if k not in self.constraint_keys]
         return keys
@@ -720,18 +720,18 @@ class PriorDict(dict):
 
     @property
     def constraint_keys(self):
-        return [k for k, p in self.items() if isinstance(p, Constraint)]
+        return [k for k, p in self.items() if isinstance(p, bilby.core.prior.base.Constraint)]
 
-    def sample_subset_constrained(self, keys=iter([]), size=None):
+    def sample_subset_constrained(self, keys=iter([]), size=None, conversion_arguments=None):
         if size is None or size == 1:
             while True:
                 sample = self.sample_subset(keys=keys, size=size)
-                if self.evaluate_constraints(sample):
+                if self.evaluate_constraints(sample,self.conversion_arguments):
                     return sample
         else:
             needed = np.prod(size)
             for key in keys.copy():
-                if isinstance(self[key], Constraint):
+                if isinstance(self[key], bilby.core.prior.base.Constraint):
                     del keys[keys.index(key)]
             all_samples = {key: np.array([]) for key in keys}
             _first_key = list(all_samples.keys())[0]
@@ -909,7 +909,7 @@ class PriorDict(dict):
         """
         redundant = False
         for key in self:
-            if isinstance(self[key], Constraint):
+            if isinstance(self[key], bilby.core.prior.base.Constraint):
                 continue
             temp = self.copy()
             del temp[key]
