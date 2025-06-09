@@ -68,3 +68,25 @@ def variable_prior(uncertainty,k,xi_low,xi_high):
     coef = np.array([uncertainty[indexes[i]] for i in range(k+1)])
 
     return frequency_nodes, coef
+
+def maxL(result):
+    '''
+    Calculates the set of parameters in a posterior that together yield the highest likelihood
+
+    Parameters
+    ==================
+    result: bilby.core.result.Result
+        bilby result object from a parameter estimation run
+
+    Returns
+    ==================
+    maxL_dict: dictionary
+        dictionary of the maximum likelihood values of each of the injected parameters
+    '''
+    maxL_index = np.argmax(result.log_likelihood_evaluations)
+    
+    maxL_dict = dict()
+    for parameter in result.priors.keys():
+        maxL_dict[parameter] = result.posterior[parameter][maxL_index]
+        
+    return maxL_dict
