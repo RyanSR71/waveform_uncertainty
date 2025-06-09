@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.11.7"
+__version__ = "0.11.8"
 
 import numpy as np
 import bilby
@@ -627,6 +627,46 @@ def TotalMassConstraint(*,name,f_low,f_high,**kwargs):
     return total_mass_prior
 
 
+def DeltaFConstraint(*,name,duration,f_low,f_high,n,**kwargs):
+    '''
+    Generates a bilby prior to constrain the total mass
+    
+    Parameters
+    ===================
+    name: string
+        name of the prior
+    duration: float
+        duration of the signal
+    f_low: float
+        lower bound on the frequency band
+    f_high: float
+        upper bound of the frequency band
+    n: int
+        number of frequency nodes
+    unit: string, optional
+        unit of the parameter
+        default: None
+    latex_label: string, optional
+        label for the parameter in LaTeX
+        default: r'$\Delta f$'
+    boundary: string, optional
+        boundary condition type for the prior
+        default: None
+
+    Returns
+    ==================
+    total_mass_prior: bilby.core.prior.base.Constraint
+        bilby constraint prior object for delta_f
+    '''
+    unit = kwargs.get('unit',None)
+    latex_label = kwargs.get('latex_label',r'$\Delta f$')
+    boundary = kwargs.get('boundary',None)
+    
+    delta_f_prior = bilby.core.prior.Constraint(name=name,latex_label=latex_label,minimum=4/duration, maximum=f_low**(1-1/n)*f_high**(1/n)-f_low, unit=unit)
+    
+    return delta_f_prior
+
+
 
 def total_mass_conversion(parameters):
     '''
@@ -643,6 +683,28 @@ def total_mass_conversion(parameters):
         input parameters, but with the total mass added
     '''
     parameters['total_mass'] = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
+    
+    return parameters
+
+
+def conversion(parameters):
+    '''
+    Conversion function to generate the total mass from a set of parameters; to be used alongside the total mass prior
+    
+    Parameters
+    ==================
+    parameters: dict
+        dictionary of binary black hole parameters
+    
+    Returns
+    ==================
+    parameters: dict
+        input parameters, but with the total mass added
+    '''
+    total_mass = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
+    n = correction_arguments['nodes']
+    parameters['total_mass'] = total_mass
+    parameters['delta_f'] = (203025.4467280836/total_mass)*(parameters['xi_low']**(1-1/n)*parameters['xi_high']**(1/n)-parameters['xi_low'])
     
     return parameters
 
