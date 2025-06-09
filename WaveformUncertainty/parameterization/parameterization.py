@@ -9,6 +9,7 @@ from bilby.core import utils
 from bilby.core.series import CoupledTimeAndFrequencySeries
 from bilby.core.utils import PropertyAccessor
 from bilby.gw.conversion import convert_to_lal_binary_neutron_star_parameters
+from .utils import progressBar
 
 def fd_model_difference(hf1,hf2,**kwargs):
     '''
