@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.11.8.6"
+__version__ = "0.11.8.7"
 
 import numpy as np
 import bilby
@@ -687,7 +687,7 @@ def total_mass_conversion(parameters):
     return parameters
 
 
-def conversion(parameters):
+def conversion(parameters,conversion_arguments):
     '''
     Conversion function to generate the total mass from a set of parameters; to be used alongside the total mass prior
     
@@ -695,15 +695,21 @@ def conversion(parameters):
     ==================
     parameters: dict
         dictionary of binary black hole parameters
+    conversion_arguments: dict
+        dictionary of additional arguments for the conversion function
     
     Returns
     ==================
     parameters: dict
         input parameters, but with the total mass added
     '''
-    total_mass = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
-    parameters['total_mass'] = total_mass
-    n = int(parameters['n'])
+    try:
+        total_mass = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
+        parameters['total_mass'] = total_mass
+    except:
+        total_mass = conversion_arguments['total_mass']
+        
+    n = conversion_arguments['n']
     parameters['delta_f'] = (203025.4467280836/total_mass)*(parameters['xi_low']**(1-1/n)*parameters['xi_high']**(1/n)-parameters['xi_low'])
     
     return parameters
@@ -1161,7 +1167,7 @@ class WaveformGeneratorAdvanced(object):
         for key in self.source_parameter_keys.symmetric_difference(new_parameters):
             # preventing waveform uncertainty parameters from being removed
             indexes = np.arange(0,self.correction_arguments['nodes']+1,1)
-            if key not in [f'dA_{i}' for i in indexes]+[f'dphi_{i}' for i in indexes]+['gamma','xi_low','xi_high','n']:  
+            if key not in [f'dA_{i}' for i in indexes]+[f'dphi_{i}' for i in indexes]+['gamma','xi_low','xi_high']:  
                 new_parameters.pop(key)
         self.__parameters = new_parameters
         self.__parameters.update(self.waveform_arguments)
