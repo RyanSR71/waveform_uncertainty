@@ -1,6 +1,3 @@
-"WaveformUncertainty package"
-__version__ = "0.11.8.7"
-
 import numpy as np
 import bilby
 import random
