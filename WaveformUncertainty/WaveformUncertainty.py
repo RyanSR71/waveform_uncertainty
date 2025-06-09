@@ -8,7 +8,6 @@ import time as tm
 import sys
 import scipy
 import lal
-import matplotlib.pyplot as plt
 from bilby.core import utils
 from bilby.core.series import CoupledTimeAndFrequencySeries
 from bilby.core.utils import PropertyAccessor
