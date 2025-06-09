@@ -1,5 +1,5 @@
 "WaveformUncertainty package"
-__version__ = "0.11.8.4"
+__version__ = "0.11.8.5"
 
 import numpy as np
 import bilby
@@ -701,13 +701,9 @@ def conversion(parameters):
     parameters: dict
         input parameters, but with the total mass added
     '''
-    try:
-        total_mass = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
-        parameters['total_mass'] = total_mass
-    except:
-        total_mass = bilby.gw.conversion.generate_mass_parameters(self.parameters)['total_mass']
-    
-    n = self.parameters['n']
+    total_mass = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
+    parameters['total_mass'] = total_mass
+    n = int(self.parameters['n'])
     parameters['delta_f'] = (203025.4467280836/total_mass)*(parameters['xi_low']**(1-1/n)*parameters['xi_high']**(1/n)-parameters['xi_low'])
     
     return parameters
