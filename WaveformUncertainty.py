@@ -704,7 +704,7 @@ def conversion(parameters):
     try:
         total_mass = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
         parameters['total_mass'] = total_mass
-    else:
+    except:
         total_mass = bilby.gw.conversion.generate_mass_parameters(self.parameters)['total_mass']
     
     n = self.parameters['n']
