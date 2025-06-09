@@ -1,4 +1,4 @@
 "WaveformUncertainty package"
-__version__ = "0.11.9.3"
+__version__ = "0.12.0"
 
-from . import WaveformUncertainty, parameterization, prior, waveform_generator, utils
+from . import parameterization, prior, waveform_generator, utils
