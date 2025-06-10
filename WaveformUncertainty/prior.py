@@ -298,7 +298,7 @@ def bilby_delta_f_conversion(parameters):
         input parameters, but with delta_f added
     '''
         
-    n = int(parameters['n'])
+    n = np.floor(parameters['n'])
     total_mass = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
     parameters['delta_f'] = (203025.4467280836/total_mass)*(parameters['xi_low']**(1-1/n)*parameters['xi_high']**(1/n)-parameters['xi_low'])
     return parameters
