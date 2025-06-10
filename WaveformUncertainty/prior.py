@@ -275,14 +275,11 @@ def conversion(parameters,conversion_arguments):
     parameters: dict
         input parameters, but with the total mass added
     '''
-    try:
-        total_mass = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
-        parameters['total_mass'] = total_mass
-    except:
-        total_mass = conversion_arguments['total_mass']
         
     n = conversion_arguments['n']
+    total_mass = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
     parameters['delta_f'] = (203025.4467280836/total_mass)*(parameters['xi_low']**(1-1/n)*parameters['xi_high']**(1/n)-parameters['xi_low'])
+    parameters['total_mass'] = total_mass
     
     return parameters
 
