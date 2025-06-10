@@ -199,7 +199,7 @@ def TotalMassConstraint(*,name,f_low,f_high,**kwargs):
     return total_mass_prior
 
 
-def DeltaFConstraint(*,name,duration,f_low,f_high,n,**kwargs):
+def DeltaFConstraint(*,name,duration,f_low,f_high,**kwargs):
     '''
     Generates a bilby prior to constrain the total mass
     
@@ -234,7 +234,7 @@ def DeltaFConstraint(*,name,duration,f_low,f_high,n,**kwargs):
     latex_label = kwargs.get('latex_label',r'$\Delta f$')
     boundary = kwargs.get('boundary',None)
     
-    delta_f_prior = bilby.core.prior.Constraint(name=name,latex_label=latex_label,minimum=4/duration, maximum=f_low**(1-1/n)*f_high**(1/n)-f_low, unit=unit)
+    delta_f_prior = bilby.core.prior.Constraint(name=name,latex_label=latex_label,minimum=4/duration, maximum=f_high-f_low, unit=unit)
     
     return delta_f_prior
 
