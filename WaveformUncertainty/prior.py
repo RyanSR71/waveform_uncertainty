@@ -259,7 +259,7 @@ def total_mass_conversion(parameters):
     return parameters
 
 
-def conversion(parameters,conversion_arguments):
+def delta_f_conversion(parameters,conversion_arguments):
     '''
     Conversion function to generate the total mass from a set of parameters; to be used alongside the total mass prior
     
@@ -273,14 +273,34 @@ def conversion(parameters,conversion_arguments):
     Returns
     ==================
     parameters: dict
-        input parameters, but with the total mass added
+        input parameters, but with delta_f added
     '''
         
     n = conversion_arguments['n']
     total_mass = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
     parameters['delta_f'] = (203025.4467280836/total_mass)*(parameters['xi_low']**(1-1/n)*parameters['xi_high']**(1/n)-parameters['xi_low'])
-    parameters['total_mass'] = total_mass
+    return parameters
+
+def bilby_delta_f_conversion(parameters):
+    '''
+    Conversion function to generate the total mass from a set of parameters; to be used alongside the total mass prior
     
+    Parameters
+    ==================
+    parameters: dict
+        dictionary of binary black hole parameters
+    conversion_arguments: dict
+        dictionary of additional arguments for the conversion function
+    
+    Returns
+    ==================
+    parameters: dict
+        input parameters, but with delta_f added
+    '''
+        
+    n = int(parameters['n'])
+    total_mass = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
+    parameters['delta_f'] = (203025.4467280836/total_mass)*(parameters['xi_low']**(1-1/n)*parameters['xi_high']**(1/n)-parameters['xi_low'])
     return parameters
 
 
