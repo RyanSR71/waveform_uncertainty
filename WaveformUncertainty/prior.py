@@ -10,6 +10,23 @@ from bilby.core.series import CoupledTimeAndFrequencySeries
 from bilby.core.utils import PropertyAccessor
 from bilby.gw.conversion import convert_to_lal_binary_neutron_star_parameters
 
+### Bilby Imports ###
+import json
+import os
+import re
+from importlib import import_module
+from io import open as ioopen
+
+from bilby.core.prior.analytical import DeltaFunction
+from bilby.core.prior.base import Prior, Constraint
+from bilby.core.prior.joint import JointPrior
+from bilby.core.utils import (
+    logger,
+    check_directory_exists_and_if_not_mkdir,
+    BilbyJsonEncoder,
+    decode_bilby_json,
+)
+
 
 
 def dphi_prior(phase_uncertainty,k, **kwargs):
@@ -306,7 +323,7 @@ def bilby_delta_f_conversion(parameters):
 
 
 class PriorDict(dict):
-    def __init__(self, dictionary=None, filename=None, conversion_function=None, conversion_arguments=None):
+    def __init__(self, dictionary=None, filename=None, conversion_function=None):
         """A dictionary of priors
 
         Parameters
@@ -340,20 +357,12 @@ class PriorDict(dict):
             self.conversion_function = conversion_function
         else:
             self.conversion_function = self.default_conversion_function
-            
-        if conversion_arguments is not None:
-            self.conversion_arguments = conversion_arguments
-        else:
-            self.conversion_arguments = None
 
-    def evaluate_constraints(self, sample, conversion_arguments):
-        if conversion_arguments is not None:
-            out_sample = self.conversion_function(sample, conversion_arguments)
-        else:
-            out_sample = self.conversion_function(sample)
+    def evaluate_constraints(self, sample):
+        out_sample = self.conversion_function(sample)
         prob = 1
         for key in self:
-            if isinstance(self[key], bilby.core.prior.base.Constraint) and key in out_sample:
+            if isinstance(self[key], Constraint) and key in out_sample:
                 prob *= self[key].prob(out_sample[key])
         return prob
 
@@ -505,7 +514,7 @@ class PriorDict(dict):
         mvgkwargs = {}
         for key in list(dictionary.keys()):
             val = dictionary[key]
-            if isinstance(val, bilby.core.prior.base.Prior):
+            if isinstance(val, Prior):
                 continue
             elif isinstance(val, (int, float)):
                 dictionary[key] = DeltaFunction(peak=val)
@@ -606,7 +615,7 @@ class PriorDict(dict):
     def convert_floats_to_delta_functions(self):
         """Convert all float parameters to delta functions"""
         for key in self:
-            if isinstance(self[key], bilby.core.prior.base.Prior):
+            if isinstance(self[key], Prior):
                 continue
             elif isinstance(self[key], float) or isinstance(self[key], int):
                 self[key] = DeltaFunction(self[key])
@@ -697,7 +706,7 @@ class PriorDict(dict):
         return np.array(samples_list)
 
     def sample_subset(self, keys=iter([]), size=None):
-        """Draw samples from the prior set for parameters which are not a DeltaFunction
+        """Draw samples from the prior set for parameters INCLUDING DeltaFunction
 
         Parameters
         ==========
@@ -713,10 +722,14 @@ class PriorDict(dict):
         self.convert_floats_to_delta_functions()
         samples = dict()
         for key in keys:
-            if isinstance(self[key], bilby.core.prior.base.Constraint):
+            if isinstance(self[key], Constraint):
                 continue
-            elif isinstance(self[key], bilby.core.prior.base.Prior):
+            elif isinstance(self[key], Prior):
                 samples[key] = self[key].sample(size=size)
+            ###############################################
+            elif isinstance(self[key], DeltaFunction):
+                samples[key] = self[key].sample(size=size)
+            ###############################################
             else:
                 logger.debug("{} not a known prior.".format(key))
         return samples
@@ -724,7 +737,7 @@ class PriorDict(dict):
     @property
     def non_fixed_keys(self):
         keys = self.keys()
-        keys = [k for k in keys if isinstance(self[k], bilby.core.prior.base.Prior)]
+        keys = [k for k in keys if isinstance(self[k], Prior)]
         keys = [k for k in keys if self[k].is_fixed is False]
         keys = [k for k in keys if k not in self.constraint_keys]
         return keys
@@ -737,18 +750,18 @@ class PriorDict(dict):
 
     @property
     def constraint_keys(self):
-        return [k for k, p in self.items() if isinstance(p, bilby.core.prior.base.Constraint)]
+        return [k for k, p in self.items() if isinstance(p, Constraint)]
 
-    def sample_subset_constrained(self, keys=iter([]), size=None, conversion_arguments=None):
+    def sample_subset_constrained(self, keys=iter([]), size=None):
         if size is None or size == 1:
             while True:
                 sample = self.sample_subset(keys=keys, size=size)
-                if self.evaluate_constraints(sample,self.conversion_arguments):
+                if self.evaluate_constraints(sample):
                     return sample
         else:
             needed = np.prod(size)
             for key in keys.copy():
-                if isinstance(self[key], bilby.core.prior.base.Constraint):
+                if isinstance(self[key], Constraint):
                     del keys[keys.index(key)]
             all_samples = {key: np.array([]) for key in keys}
             _first_key = list(all_samples.keys())[0]
@@ -926,7 +939,7 @@ class PriorDict(dict):
         """
         redundant = False
         for key in self:
-            if isinstance(self[key], bilby.core.prior.base.Constraint):
+            if isinstance(self[key], Constraint):
                 continue
             temp = self.copy()
             del temp[key]
