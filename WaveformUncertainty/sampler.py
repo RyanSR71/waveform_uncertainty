@@ -7,16 +7,81 @@ from bilby.core.prior import DeltaFunction, PriorDict
 from bilby.core.utils import (
     command_line_args,
     env_package_list,
+    get_entry_points,
     loaded_modules_dict,
     logger,
 )
-from bilby.core.sampler import (
-    proposal, 
-    IMPLEMENTED_SAMPLERS, 
-    _check_marginalized_parameters_not_sampled, 
-)
+from bilby.core.sampler import proposal
 from bilby.core.sampler.base_sampler import Sampler, SamplingMarginalisedParameterError
 
+
+class ImplementedSamplers:
+    """Dictionary-like object that contains implemented samplers.
+
+    This class is singleton and only one instance can exist.
+    """
+
+    _instance = None
+
+    _samplers = get_entry_points("bilby.samplers")
+
+    def keys(self):
+        """Iterator of available samplers by name.
+
+        Reduces the list to its simplest. This includes removing the 'bilby.'
+        prefix from native samplers if a corresponding plugin is not available.
+        """
+        keys = []
+        for key in self._samplers.keys():
+            name = key.replace("bilby.", "")
+            if name in self._samplers.keys():
+                keys.append(key)
+            else:
+                keys.append(name)
+        return iter(keys)
+
+    def values(self):
+        """Iterator of sampler classes.
+
+        Note: the classes need to loaded using :code:`.load()` before being
+        called.
+        """
+        return iter(self._samplers.values())
+
+    def items(self):
+        """Iterator of tuples containing keys (sampler names) and classes.
+
+        Note: the classes need to loaded using :code:`.load()` before being
+        called.
+        """
+        return iter(((k, v) for k, v in zip(self.keys(), self.values())))
+
+    def valid_keys(self):
+        """All valid keys including bilby.<sampler name>."""
+        keys = set(self._samplers.keys())
+        return iter(keys.union({k.replace("bilby.", "") for k in keys}))
+
+    def __getitem__(self, key):
+        if key in self._samplers:
+            return self._samplers[key]
+        elif f"bilby.{key}" in self._samplers:
+            return self._samplers[f"bilby.{key}"]
+        else:
+            raise ValueError(
+                f"Sampler {key} is not implemented! "
+                f"Available samplers are: {list(self.keys())}"
+            )
+
+    def __contains__(self, value):
+        return value in self.valid_keys()
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+
+IMPLEMENTED_SAMPLERS = ImplementedSamplers()
 
 
 def get_implemented_samplers():
@@ -31,7 +96,6 @@ def get_implemented_samplers():
         The list of implemented samplers.
     """
     return list(IMPLEMENTED_SAMPLERS.keys())
-
 
 
 def get_sampler_class(sampler):
@@ -58,7 +122,6 @@ def get_sampler_class(sampler):
     return IMPLEMENTED_SAMPLERS[sampler.lower()].load()
 
 
-
 if command_line_args.sampler_help:
     sampler = command_line_args.sampler_help
     if sampler in IMPLEMENTED_SAMPLERS:
@@ -76,7 +139,6 @@ if command_line_args.sampler_help:
         print(f"Available samplers = {get_implemented_samplers()}")
 
     sys.exit()
-
 
 
 def run_sampler(
@@ -166,6 +228,8 @@ def run_sampler(
     if command_line_args.clean:
         kwargs["resume"] = False
 
+    from . import IMPLEMENTED_SAMPLERS
+
     if priors is None:
         priors = dict()
 
@@ -175,8 +239,10 @@ def run_sampler(
         priors = PriorDict(priors)
     elif isinstance(priors, PriorDict):
         pass
-    elif isinstance(priors, wfu.prior.PriorDict):
+    ##############################################
+    elif isinstance(priors, wfu.prior.PriorsDict):
         pass
+    ##############################################
     else:
         raise ValueError("Input priors not understood should be dict or PriorDict")
 
@@ -291,3 +357,12 @@ def run_sampler(
         result.plot_corner()
     logger.info(f"Summary of results:\n{result}")
     return result
+
+
+def _check_marginalized_parameters_not_sampled(likelihood, priors):
+    for key in likelihood.marginalized_parameters:
+        if key in priors:
+            if not isinstance(priors[key], (float, DeltaFunction)):
+                raise SamplingMarginalisedParameterError(
+                    f"Likelihood is {key} marginalized but you are trying to sample in {key}. "
+                )
