@@ -7,7 +7,6 @@ from bilby.core.prior import DeltaFunction, PriorDict
 from bilby.core.utils import (
     command_line_args,
     env_package_list,
-    get_entry_points,
     loaded_modules_dict,
     logger,
 )
