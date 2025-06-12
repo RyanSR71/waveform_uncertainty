@@ -259,7 +259,7 @@ def run_sampler(
     elif isinstance(priors, PriorDict):
         pass
     ##############################################
-    elif isinstance(priors, wfu.prior.PriorsDict):
+    elif isinstance(priors, wfu.prior.PriorDict):
         pass
     ##############################################
     else:
