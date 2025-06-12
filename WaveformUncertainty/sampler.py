@@ -12,6 +12,7 @@ from bilby.core.utils import (
 )
 from bilby.core.sampler import proposal
 from bilby.core.sampler import IMPLEMENTED_SAMPLERS
+from bilby.core.sampler import _check_marginalized_parameters_not_sampled
 from bilby.core.sampler.base_sampler import Sampler, SamplingMarginalisedParameterError
 
 
