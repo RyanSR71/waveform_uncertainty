@@ -14,10 +14,68 @@ from bilby.core.sampler import (
     proposal, 
     IMPLEMENTED_SAMPLERS, 
     _check_marginalized_parameters_not_sampled, 
-    get_sampler_class,
-    get_implemented_samplers
 )
 from bilby.core.sampler.base_sampler import Sampler, SamplingMarginalisedParameterError
+
+
+
+def get_implemented_samplers():
+    """Get a list of the names of the implemented samplers.
+
+    This includes natively supported samplers (e.g. dynesty) and any additional
+    samplers that are supported through the sampler plugins.
+
+    Returns
+    -------
+    list
+        The list of implemented samplers.
+    """
+    return list(IMPLEMENTED_SAMPLERS.keys())
+
+
+
+def get_sampler_class(sampler):
+    """Get the class for a sampler from its name.
+
+    This includes natively supported samplers (e.g. dynesty) and any additional
+    samplers that are supported through the sampler plugins.
+
+    Parameters
+    ----------
+    sampler : str
+        The name of the sampler.
+
+    Returns
+    -------
+    Sampler
+        The sampler class.
+
+    Raises
+    ------
+    ValueError
+        Raised if the sampler is not implemented.
+    """
+    return IMPLEMENTED_SAMPLERS[sampler.lower()].load()
+
+
+
+if command_line_args.sampler_help:
+    sampler = command_line_args.sampler_help
+    if sampler in IMPLEMENTED_SAMPLERS:
+        sampler_class = IMPLEMENTED_SAMPLERS[sampler].load()
+        print(f'Help for sampler "{sampler}":')
+        print(sampler_class.__doc__)
+    else:
+        if sampler == "None":
+            print(
+                "For help with a specific sampler, call sampler-help with "
+                "the name of the sampler"
+            )
+        else:
+            print(f"Requested sampler {sampler} not implemented")
+        print(f"Available samplers = {get_implemented_samplers()}")
+
+    sys.exit()
 
 
 
