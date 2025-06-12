@@ -247,7 +247,7 @@ def run_sampler(
     if command_line_args.clean:
         kwargs["resume"] = False
 
-    from . import IMPLEMENTED_SAMPLERS
+    from bilby.core.sampler import IMPLEMENTED_SAMPLERS
 
     if priors is None:
         priors = dict()
