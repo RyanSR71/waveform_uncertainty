@@ -11,6 +11,7 @@ from bilby.core.utils import (
     logger,
 )
 from bilby.core.sampler import proposal
+from bilby.core.sampler import IMPLEMENTED_SAMPLERS
 from bilby.core.sampler.base_sampler import Sampler, SamplingMarginalisedParameterError
 
 
@@ -101,8 +102,6 @@ def run_sampler(
         command_line_args.clean = clean
     if command_line_args.clean:
         kwargs["resume"] = False
-
-    from . import IMPLEMENTED_SAMPLERS
 
     if priors is None:
         priors = dict()
