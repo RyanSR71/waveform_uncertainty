@@ -318,6 +318,15 @@ def bilby_delta_f_conversion(parameters):
 
 
 
+def Xi(n):    
+    def f(x):
+        A = np.pi*0.018/(1-np.pi*0.018)
+        return x**(1-n) + (A/(0.018**n))*x - A/(np.pi*0.018**n)
+    root = scipy.optimize.brentq(f, 0.3, 0.4)
+    return root
+
+
+
 class PriorDict(dict):
     def __init__(self, dictionary=None, filename=None, conversion_function=None):
         """A dictionary of priors
