@@ -393,8 +393,9 @@ class WaveformGeneratorAdvanced(object):
                               
         if correction_arguments['correct_amplitude'] is True:
             sigma_dA = correction_arguments['sigma_dA']
+            xi_high = parameters['xi_0']*(1+((1-np.pi*parameters['xi_0'])/(np.pi*parameters['xi_0']))*parameters['delta_xi_tilde'])
             dA_frequency_nodes,dA_coeffs = variable_prior(sigma_dA,correction_arguments['nodes'],
-                                                      parameters['xi_low'], parameters['xi_high'])
+                                                      parameters['xi_0'], xi_high)
             dA_frequency_nodes *= float(203025.4467280836/M)
             try:
                 prior_alphas = np.array([parameters[f'dA_{i}'] for i in indexes])
@@ -406,8 +407,9 @@ class WaveformGeneratorAdvanced(object):
             dA = 0
         if correction_arguments['correct_phase'] is True:
             sigma_dphi = correction_arguments['sigma_dphi']
+            xi_high = parameters['xi_0']*(1+((1-np.pi*parameters['xi_0'])/(np.pi*parameters['xi_0']))*parameters['delta_xi_tilde'])
             dphi_frequency_nodes,dphi_coeffs = variable_prior(sigma_dphi,correction_arguments['nodes'],
-                                                            parameters['xi_low'], parameters['xi_high'])
+                                                            parameters['xi_0'], xi_high)
             dphi_frequency_nodes *= float(203025.4467280836/M)
             try:
                 prior_phis = np.array([parameters[f'dphi_{i}'] for i in indexes])
@@ -459,7 +461,7 @@ class WaveformGeneratorAdvanced(object):
         for key in self.source_parameter_keys.symmetric_difference(new_parameters):
             # preventing waveform uncertainty parameters from being removed
             indexes = np.arange(0,self.correction_arguments['nodes']+1,1)
-            if key not in [f'dA_{i}' for i in indexes]+[f'dphi_{i}' for i in indexes]+['gamma','xi_low','xi_high']:  
+            if key not in [f'dA_{i}' for i in indexes]+[f'dphi_{i}' for i in indexes]+['gamma','xi_0','delta_xi_tilde']:  
                 new_parameters.pop(key)
         self.__parameters = new_parameters
         self.__parameters.update(self.waveform_arguments)
