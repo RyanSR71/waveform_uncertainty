@@ -401,7 +401,6 @@ class WaveformGeneratorAdvanced(object):
                 prior_alphas = np.array([parameters[f'dA_{i}'] for i in indexes])
                 alphas = prior_alphas*dA_coeffs
                 dA = smooth_interpolation(self.frequency_array,dA_frequency_nodes,alphas,gamma)
-                dA -= dA[0]
             except:
                 raise Exception('Amplitude Correction Failed!')
         else:
@@ -416,7 +415,6 @@ class WaveformGeneratorAdvanced(object):
                 prior_phis = np.array([parameters[f'dphi_{i}'] for i in indexes])
                 phis = prior_phis*dphi_coeffs
                 dphi = smooth_interpolation(self.frequency_array,dphi_frequency_nodes,phis,gamma)
-                dphi -= dphi[0]
             except:
                 raise Exception('Phase Correction Failed!')
         else:
