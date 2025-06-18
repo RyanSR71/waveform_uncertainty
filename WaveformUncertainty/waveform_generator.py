@@ -388,14 +388,19 @@ class WaveformGeneratorAdvanced(object):
         except:
             gamma = 0.025
 
+        try:
+            xi_high = correction_arguments['xi_high']
+        except:
+            xi_high = 1/np.pi
+
         M = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
         indexes = np.arange(0,correction_arguments['nodes']+1,1)
                               
         if correction_arguments['correct_amplitude'] is True:
             sigma_dA = correction_arguments['sigma_dA']
-            xi_high = parameters['xi_0']*(1+((1-np.pi*parameters['xi_0'])/(np.pi*parameters['xi_0']))*parameters['delta_xi_tilde'])
+            xi_up = parameters['xi_0']*(1+((xi_high-parameters['xi_0'])/(parameters['xi_0']))*parameters['delta_xi_tilde'])
             dA_frequency_nodes,dA_coeffs = variable_prior(sigma_dA,correction_arguments['nodes'],
-                                                      parameters['xi_0'], xi_high)
+                                                      parameters['xi_0'], xi_up)
             dA_frequency_nodes *= float(203025.4467280836/M)
             try:
                 prior_alphas = np.array([parameters[f'dA_{i}'] for i in indexes])
@@ -407,9 +412,9 @@ class WaveformGeneratorAdvanced(object):
             dA = 0
         if correction_arguments['correct_phase'] is True:
             sigma_dphi = correction_arguments['sigma_dphi']
-            xi_high = parameters['xi_0']*(1+((1-np.pi*parameters['xi_0'])/(np.pi*parameters['xi_0']))*parameters['delta_xi_tilde'])
+            xi_up = parameters['xi_0']*(1+((xi_high-parameters['xi_0'])/(parameters['xi_0']))*parameters['delta_xi_tilde'])
             dphi_frequency_nodes,dphi_coeffs = variable_prior(sigma_dphi,correction_arguments['nodes'],
-                                                            parameters['xi_0'], xi_high)
+                                                            parameters['xi_0'], xi_up)
             dphi_frequency_nodes *= float(203025.4467280836/M)
             try:
                 prior_phis = np.array([parameters[f'dphi_{i}'] for i in indexes])
