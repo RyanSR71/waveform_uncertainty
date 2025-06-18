@@ -55,7 +55,9 @@ def smooth_interpolation(full_grid,nodes,parameters,gamma):
             new_data[i] = (1/(2*r))*np.sum(data[i-r:i+r])
     
     output = np.interp(full_grid,temp_grid,new_data)
-    
+    if np.abs(output[0]) > 0:
+        output -= output[0]
+
     return output
 
 def variable_prior(uncertainty,k,xi_low,xi_high):
