@@ -10,23 +10,6 @@ from bilby.core.series import CoupledTimeAndFrequencySeries
 from bilby.core.utils import PropertyAccessor
 from bilby.gw.conversion import convert_to_lal_binary_neutron_star_parameters
 
-### Bilby Imports ###
-import json
-import os
-import re
-from importlib import import_module
-from io import open as ioopen
-
-from bilby.core.prior.analytical import DeltaFunction
-from bilby.core.prior.base import Prior, Constraint
-from bilby.core.prior.joint import JointPrior
-from bilby.core.utils import (
-    logger,
-    check_directory_exists_and_if_not_mkdir,
-    BilbyJsonEncoder,
-    decode_bilby_json,
-)
-
 
 
 def dphi_prior(phase_uncertainty,k, **kwargs):
@@ -242,7 +225,7 @@ def xi_0_upper_bound(n, **kwargs):
     xi_high = kwargs.get('xi_high',1/np.pi)
     def f(x):
         return x**(1-n) + (xi_low**(1-n)/(xi_high-xi_low))*x - ((xi_high*xi_low**(1-n))/(xi_high-xi_low))
-    root = scipy.optimize.brentq(f, 0.3, 0.4)
+    root = scipy.optimize.brentq(f, xi_low, xi_high)
     return root
 
 
@@ -301,6 +284,55 @@ class TFDG(bilby.core.prior.Prior):
                 draw = (N*self.mu_1+val-A_1)/N
             elif in_region_3:
                 draw = self.mu_2-np.sqrt(2)*self.sigma_2*scipy.special.erfinv((np.sqrt(2*np.pi)*A_1+np.sqrt(2*np.pi)*A_2-np.sqrt(2*np.pi)*val)/(np.pi*N*self.sigma_2))
+            else:
+                raise Exception('Draw Failed!')
+            return draw
+
+
+
+class EHG(bilby.core.prior.Prior):
+    def __init__(self,mu_1,mu_2,sigma_1,sigma_2,minimum,maximum,name=None, latex_label=None):
+        super(TFDG, self).__init__(
+            name=name,latex_label=latex_label,minimum=minimum,maximum=maximum
+        )
+        self.mu = float(mu)
+        self.sigma = float(sigma)        
+        
+    def prob(self, val):
+        in_region_1 = (val >= self.minimum) & (val <= self.mu)
+        in_region_2 = (val >= self.mu) & (val <= self.maximum)
+        N = (self.mu-self.minimum-np.sqrt(np.pi/2)*scipy.special.erf((self.mu-self.maximum)/(np.sqrt(2)*self.sigma)))**(-1)
+        draw = N*in_region_1+N*np.exp(-0.5*((val-self.mu)/self.sigma)**2)*in_region_2
+        return draw
+    
+    
+    def rescale(self, val):
+        N = (self.mu-self.minimum-np.sqrt(np.pi/2)*scipy.special.erf((self.mu-self.maximum)/(np.sqrt(2)*self.sigma)))**(-1)
+        A = N*(self.mu-self.minimum)
+        
+        if hasattr(val, "__len__"):
+            draw = []
+            for v in val:
+        
+                in_region_1 = (v >= 0) & (v <= A)
+                in_region_2 = (v > A) & (v <= 1)
+
+                if in_region_1:
+                    draw.append((val+N*self.minimum)/N)
+                elif in_region_2:
+                    draw.append(self.mu+np.sqrt(2)*self.sigma*scipy.special.erfinv(np.sqrt(2/np.pi)*(val-A)/(N*self.sigma)))
+                else:
+                    raise Exception('Draw Failed!')
+            return np.array(draw)
+        
+        else:
+            in_region_1 = (val >= 0) & (val <= A)
+            in_region_2 = (val > A) & (val <= 1)
+
+            if in_region_1:
+                draw = (val+N*self.minimum)/N
+            elif in_region_2:
+                draw = self.mu+np.sqrt(2)*self.sigma*scipy.special.erfinv(np.sqrt(2/np.pi)*(val-A)/(N*self.sigma))
             else:
                 raise Exception('Draw Failed!')
             return draw
