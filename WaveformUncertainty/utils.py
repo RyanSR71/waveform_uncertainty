@@ -10,15 +10,6 @@ from bilby.core.series import CoupledTimeAndFrequencySeries
 from bilby.core.utils import PropertyAccessor
 from bilby.gw.conversion import convert_to_lal_binary_neutron_star_parameters
 
-def injection(data,**kwargs):
-    index = kwargs.get('index',random.randint(0,len(data)))
-    
-    injection = dict()
-    for key in data.keys():
-        injection[f'{key}']=data[f'{key}'][index]
-        
-    return injection
-
 def progressBar(count_value, total, suffix=''):
         bar_length = 100
         filled_up_Length = int(round(bar_length* count_value / float(total)))
