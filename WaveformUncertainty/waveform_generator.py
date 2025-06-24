@@ -21,18 +21,18 @@ class WaveformGeneratorBC(object):
     
     New Parameters
     ==================
-    waveform_uncertainty_nodes: numpy.ndarray, optional
+   frequency_nodes: numpy.ndarray, optional
         array of frequency nodes to be used in generating the dA and dphi splines
         default: None
-    dA_sampling: bool, optional
-        if True, the waveform generator will attempt to pull alpha parameters from the parameter dictionary (either an injection or the prior)
+    correct_amplitude: bool, optional
+        if True, the waveform generator will attempt to pull dA parameters from the parameter dictionary (either an injection or the prior)
         default: None
-    dphi_sampling: bool, optional
-        if True, the waveform generator will attempt to pull phi parameters from the parameter dictionary (either an injection or the prior)
+    correct_phase: bool, optional
+        if True, the waveform generator will attempt to pull dphi parameters from the parameter dictionary (either an injection or the prior)
         default: None
-    indexes: numpy.array, optional
-        the numbers of waveform correction parameters; e.g. phi_1 = 1, alpha_-8 = -8, etc.
-        default: None
+    dimensionless: bool, optional
+        whether or not to perfom the waveform correction in dimensionless frequency or not
+        default: True
     '''
     duration = PropertyAccessor('_times_and_frequencies', 'duration')
     sampling_frequency = PropertyAccessor('_times_and_frequencies', 'sampling_frequency')
@@ -42,7 +42,7 @@ class WaveformGeneratorBC(object):
     def __init__(self, duration=None, sampling_frequency=None, start_time=0, frequency_domain_source_model=None,
                  time_domain_source_model=None, parameters=None,
                  frequency_nodes=None,correct_amplitude=False,correct_phase=False,
-                 geometrized=True,parameter_conversion=None,
+                 dimensionless=True,parameter_conversion=None,
                  waveform_arguments=None):
         self._times_and_frequencies = CoupledTimeAndFrequencySeries(duration=duration,
                                                                     sampling_frequency=sampling_frequency,
@@ -50,7 +50,7 @@ class WaveformGeneratorBC(object):
         self.frequency_domain_source_model = frequency_domain_source_model
         self.time_domain_source_model = time_domain_source_model
         self.source_parameter_keys = self.__parameters_from_source_model()
-        self.geometrized=geometrized
+        self.dimensionless=dimensionless
         self.correct_amplitude=correct_amplitude
         self.correct_phase=correct_phase
         
@@ -97,12 +97,12 @@ class WaveformGeneratorBC(object):
                                          'frequency_domain_source_model={}, time_domain_source_model={}, ' \
                                          'parameter_conversion={}, ' \
                                          'frequency_nodes={}, ' \
-                                         'geometrized={}, ' \
+                                         'dimensionless={}, ' \
                                          'correct_amplitude={}, ' \
                                          'correct_phase={}, ' \
                                          'waveform_arguments={})'\
             .format(self.duration, self.sampling_frequency, self.start_time, fdsm_name, tdsm_name,
-                    param_conv_name, self.frequency_nodes, self.geometrized, self.correct_amplitude, self.correct_phase, self.waveform_arguments)
+                    param_conv_name, self.frequency_nodes, self.dimensionless, self.correct_amplitude, self.correct_phase, self.waveform_arguments)
     
     def frequency_domain_strain(self, parameters=None):
         return self._calculate_strain(model=self.frequency_domain_source_model,
@@ -112,7 +112,7 @@ class WaveformGeneratorBC(object):
                                       transformed_model=self.time_domain_source_model,
                                       transformed_model_data_points=self.time_array,
                                       frequency_nodes=self.frequency_nodes,
-                                      geometrized=self.geometrized,
+                                      dimensionless=self.dimensionless,
                                       correct_amplitude=self.correct_amplitude,
                                       correct_phase=self.correct_phase,
                                       )
@@ -125,7 +125,7 @@ class WaveformGeneratorBC(object):
                                       transformed_model=self.time_domain_source_model,
                                       transformed_model_data_points=self.time_array,
                                       frequency_nodes=self.frequency_nodes,
-                                      geometrized=self.geometrized,
+                                      dimensionless=self.dimensionless,
                                       correct_amplitude=self.correct_amplitude,
                                       correct_phase=self.correct_phase,
                                       )
@@ -137,7 +137,7 @@ class WaveformGeneratorBC(object):
         return model_strain
     
     def _calculate_strain(self, model, model_data_points, transformation_function, transformed_model,
-                          transformed_model_data_points, parameters, frequency_nodes, geometrized, correct_amplitude, correct_phase):
+                          transformed_model_data_points, parameters, frequency_nodes, dimensionless, correct_amplitude, correct_phase):
         if parameters is not None:
             self.parameters = parameters
         if self.parameters == self._cache['parameters'] and self._cache['model'] == model and \
@@ -159,7 +159,7 @@ class WaveformGeneratorBC(object):
             
             indexes = np.arange(0,len(self.frequency_nodes),1)
             
-            if self.geometrized is True:
+            if self.dimensionless is True:
                 M = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
                 frequency_nodes = np.array(self.frequency_nodes)*float(203025.4467280836/M)
             else:
@@ -256,23 +256,29 @@ class WaveformGeneratorBC(object):
 class WaveformGeneratorGC(object):
     '''
     Modified WaveformGenerator object from bilby.gw to include waveform uncertainty corrections in the strain calculation
-    To sample waveform uncertainty, include all relevant "alpha" and "phi" parameters in the prior.
-    Note: make sure the number of alphas, phis, and waveform_uncertainty_nodes are the same
     
     New Parameters
     ==================
-    waveform_uncertainty_nodes: numpy.ndarray, optional
-        array of frequency nodes to be used in generating the dA and dphi splines
+    correction_arguments: dict, optional
+        dictionary containing arguments for the waveform correction
         default: None
-    dA_sampling: bool, optional
-        if True, the waveform generator will attempt to pull alpha parameters from the parameter dictionary (either an injection or the prior)
-        default: None
-    dphi_sampling: bool, optional
-        if True, the waveform generator will attempt to pull phi parameters from the parameter dictionary (either an injection or the prior)
-        default: None
-    indexes: numpy.array, optional
-        the numbers of waveform correction parameters; e.g. phi_1 = 1, alpha_-8 = -8, etc.
-        default: None
+
+        contents:
+            correct_amplitude: bool
+                whether or not to attempt an amplitude correction
+                include all dA parameters in the prior if True
+            sigma_dA: numpy.ndarry
+                if correct_amplitude is True, this is the array of standard deviations for the dA priors
+            correct_phase: bool
+                whether or not to attempt a phase correction
+                include all dphi parameters in the prior if True
+            sigma_dphi: numpy.ndarry
+                if correct_phase is True, this is the array of standard deviations for the dphi priors
+            nodes: int
+                number of frequency nodes desired
+            xi_high: float, optional
+                absolute lower bound on dimensionless frequency, xi
+                default: 1/pi
     '''
     duration = PropertyAccessor('_times_and_frequencies', 'duration')
     sampling_frequency = PropertyAccessor('_times_and_frequencies', 'sampling_frequency')
