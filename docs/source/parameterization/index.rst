@@ -1,5 +1,5 @@
-wfu.parameterization
-====================
+Parameterization
+================
 
 .. toctree::
   :maxdepth: 2
