@@ -23,10 +23,9 @@ Make sure to include "xi_0", "delta_xi_tilde", and all necessary "dA" and "dphi"
 
    __init__(duration=None,sampling_frequency=None,start_time=0,
                                                   frequency_domain_source_model=None,
-                                                  time_domain_source_model=None,parameters=None,
-                                                  parameter_conversion=None,waveform_arguments=None,
-                                                  frequency_nodes=None,correct_amplitude=False,
-                                                  correct_phase=False,dimensionless=True)
+                                                  time_domain_source_model=None,
+                                                  parameters=None,parameter_conversion=None,
+                                                  correction_arguments=None,waveform_arguments=None)
 
 New Parameters:
 ---------------
