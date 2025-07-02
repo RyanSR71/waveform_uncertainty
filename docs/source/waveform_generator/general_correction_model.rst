@@ -1,5 +1,5 @@
 general_correction_model
-======================++
+========================
 
 .. code-block:: python
 
