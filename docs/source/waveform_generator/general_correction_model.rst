@@ -17,7 +17,7 @@ Modified WaveformGenerator object from `bilby.gw.WaveformGenerator <https://lscs
 
    \mu_\mathrm{GC}(f;\vartheta,\mathrm{A},\Phi)=\mu(f;\vartheta)(1+\Delta\mathcal{A}_\mathrm{SI}(f;\{\mathrm{f}_k,\tilde\alpha_k\sigma_{\alpha,k}\}))\exp(i\Delta\phi_\mathrm{SI}(f;\{\mathrm{f}_k,\tilde\varphi_k\sigma_{\varphi,k}\}))
 
-To sample waveform uncertainty, include all necessary "dA" and "dphi" parameters in the prior.
+Make sure to include "xi_0", "delta_xi_tilde", and all necessary "dA" and "dphi" parameters in the prior. To change smoothing parameter, gamma, include it in the prior.
 
 .. code-block:: python
 
