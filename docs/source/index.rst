@@ -29,3 +29,5 @@ Check out the :doc:`installation` section for instructions. General information 
    :caption: API:
 
    parameterization/index
+   prior/index
+   waveform_generator/index
