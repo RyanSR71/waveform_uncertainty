@@ -1,5 +1,5 @@
 basic_correction_model
-========================================
+======================
 
 .. code-block:: python
 
@@ -8,7 +8,7 @@ basic_correction_model
                                                                        time_domain_source_model=None,parameters=None,
                                                                        parameter_conversion=None,waveform_arguments=None,
                                                                        frequency_nodes=None,correct_amplitude=False,
-                                                                       correct_phase=False,geometrized=True)
+                                                                       correct_phase=False,dimensionless=True)
 
 Bases: ``object``
 
@@ -16,7 +16,7 @@ Modified WaveformGenerator object from `bilby.gw.WaveformGenerator <https://lscs
 
 .. math::
 
-   \mu_\mathrm{BC}(f;\vartheta,\alpha,\varphi)=\mu(f;\vartheta)(1+\Delta\mathcal{A}_\mathrm{SI}(f;\{f_k,\alpha_k\}))\exp[i\Delta\phi_\mathrm{SI}(f;\{f_k,\varphi_k\})]
+   \mu_\mathrm{BC}(f;\vartheta,\alpha,\varphi)=\mu(f;\vartheta)(1+\Delta\mathcal{A}_\mathrm{SI}(f;\{f_k,\alpha_k\}))\exp(i\Delta\phi_\mathrm{SI}(f;\{f_k,\varphi_k\}))
 
 To sample waveform uncertainty, include all necessary "dA" and "dphi" parameters in the prior.
 
@@ -27,7 +27,7 @@ To sample waveform uncertainty, include all necessary "dA" and "dphi" parameters
                                                   time_domain_source_model=None,parameters=None,
                                                   parameter_conversion=None,waveform_arguments=None,
                                                   frequency_nodes=None,correct_amplitude=False,
-                                                  correct_phase=False,geometrized=True)
+                                                  correct_phase=False,dimensionless=True)
 
 New Parameters:
 ---------------
@@ -37,5 +37,5 @@ correct_amplitude: bool, optional, (False)
    toggle for the amplitude correction
 correct_phase: bool, optional, (False)
    toggle for the phase correction
-geometrized: bool, optional, (True)
+dimensionless: bool, optional, (True)
    whether or not the frequency nodes are in dimensionless frequency or not
