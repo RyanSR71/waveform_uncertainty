@@ -1,20 +1,35 @@
-WaveformUncertainty.recovery_from_parameterization
-==================================================
+recovery_from_parameterization
+==============================
 
 .. code-block:: python
 
-   WaveformUncertainty.recovery_from_parameterization(identity,data)
+   WaveformUncertainty.parameterization.recovery_from_parameterization(parameterization_draw,dimensionless=False,
+                                                                       xi_low=0.01,xi_high=1,resolution=1000)
 
-Converts a parameterized set of waveform difference back into waveform difference arrays (See `WaveformUncertainty.parameterization <https://waveformuncertainty.readthedocs.io/en/latest/parameterization.html>`_)
+Converts a draw of parameterized waveform differences back into waveform difference arrays.
 
 Parameters:
 -----------
-identity: string
-    specifies which waveform difference should be returned; {'amplitude_difference', 'phase_difference'}
-data: numpy.ndarray
-    one index of the output matrix from WaveformUncertainty.parameterization(); input WaveformUncertainty.parameterization()[index]
+parameterization_draw: numpy.ndarray
+   one row of a parameterization matrix
+dimensionless: bool, optional
+   whether or not the output is returned in dimensionless frequency units
+   Default: False
+xi_low: float, optional
+   if dimensionless is True, this is the lower bound on the dimensionless frequency grid
+   default: 0.001
+xi_high: float, optional
+   if dimensionless is True, this is the upper bound on the dimensionless frequency grid
+   default: 1
+resolution: int, optional
+   if dimensionless is True, this is the number of points in the dimensionless frequency grid
+   default: 1000
   
 Returns:
 --------
-difference_array: numpy.ndarray
-    array of the waveform difference converted from the parameterization; has the same shape as the frequency grid within the original matrix
+frequency_grid: numpy.ndarray
+   array of frequency points
+amplitude_difference: numpy.ndarray
+   array of amplitude differences
+phase_difference: numpy.ndarray
+   array of phase differences
