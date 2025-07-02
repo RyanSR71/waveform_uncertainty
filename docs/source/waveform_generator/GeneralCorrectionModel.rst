@@ -1,13 +1,13 @@
-general_correction_model
-========================
+GeneralCorrectionModel
+======================
 
 .. code-block:: python
 
-   class WaveformUncertainty.waveform_generator.general_correction_model(duration=None,sampling_frequency=None,start_time=0,
-                                                                         frequency_domain_source_model=None,
-                                                                         time_domain_source_model=None,
-                                                                         parameters=None,parameter_conversion=None,
-                                                                         correction_arguments=None,waveform_arguments=None)
+   class WaveformUncertainty.waveform_generator.GeneralCorrectionModel(duration=None,sampling_frequency=None,start_time=0,
+                                                                       frequency_domain_source_model=None,
+                                                                       time_domain_source_model=None,
+                                                                       parameters=None,parameter_conversion=None,
+                                                                       correction_arguments=None,waveform_arguments=None)
 
 Bases: ``object``
 
