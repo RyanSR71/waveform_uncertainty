@@ -1,11 +1,11 @@
-WaveformUncertainty.fd_model_difference
-=======================================
+fd_model_difference
+===================
 
 .. code-block:: python
 
-   WaveformUncertainty.fd_model_difference(hf1,hf2,injection=None,npoints=1000,
-                                           polarization='plus',psd_data=None,
-                                           correction_parameter=0.0001,ref_amplitude=None)
+   WaveformUncertainty.parameterization.fd_model_difference(hf1,hf2,injection=None,
+                                        npoints=1000,polarization='plus',psd_data=None,
+                                        correction_parameter=0.0001,ref_amplitude=None)
 
 Generates frequency domain waveform differences between two models hf1 and hf2.
 
@@ -38,23 +38,17 @@ npoints: int, optional, (1000)
 polarization: string, optional, ('plus')
    polarization of the strain data {'plus','cross'}
 psd_data: numpy.ndarray, optional, (None)
-   array containing the psd data and their corresponding frequencies
+   array containing the power spectral density data and their corresponding frequencies
 correction_parameter: float, optional, (0.0001)
    fraction of the peak frequency domain amplitudes at which to cut off the amplitudes; part of the f_disc calculation
 ref_amplitude: numpy.ndarray, optional, (None)
-   reference amplitude for residual phase calculation; will be generated automatically if not given
+   reference amplitude for aligned phase calculation; will be generated automatically if not given
 
 Returns:
 --------
 frequency_grid: numpy.ndarray
-   array of frequencies that corresponds to the waveform difference arrays
+   frequency grid that corresponds to the uncertainty arrays
 amplitude_difference: numpy.ndarray
    array of amplitude difference values
 phase_difference: numpy.ndarray
-   array of phase difference values; if psd data is None, raw_phase_difference will be returned, residual_phase_difference otherwise
-amplitude_difference_final_point: float
-   value of the amplitude difference where the discontinuity correction starts
-phase_difference_final_point: float
-   value of the phase difference where the discontinuity correction starts
-final_index: int
-   position within the frequency grid where the discontinuity correction starts
+   array of phase difference values; if psd data is None, unaligned_phase_difference will be returned, aligned_phase_difference otherwise
