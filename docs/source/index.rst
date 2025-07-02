@@ -28,13 +28,26 @@ Check out the :doc:`installation` section for instructions. General information 
    :maxdepth: 1
    :caption: API:
 
-   fd_model_difference
-   parameterization
-   recovery_from_parameterization
-   uncertainties_from_parameterization
-   dA_prior
-   dphi_prior
-   maxL
-   TotalMassConstraint
-   total_mass_conversion
-   WaveformGeneratorWFU
+   .. toctree::
+      :maxdepth: 1
+      :caption: wfu.parameterization
+
+      fd_model_difference
+      parameterization
+      recovery_from_parameterization
+      uncertainties_from_parameterization
+
+   .. toctree::
+      :maxdepth: 1
+      :caption: wfu.prior
+
+      dA_prior
+      dphi_prior
+      TotalMassConstraint
+      total_mass_conversion
+
+   .. toctree::
+      :maxdepth: 1
+      :caption: wfu.waveform_generator
+
+      WaveformGeneratorWFU
