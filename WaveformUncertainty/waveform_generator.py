@@ -13,7 +13,7 @@ from .utils import smooth_interpolation, td_waveform, variable_prior
 
 
 
-class WaveformGeneratorBC(object):
+class BasicCorrectionModel(object):
     '''
     Modified WaveformGenerator object from bilby.gw to include waveform uncertainty corrections in the strain calculation
     To sample waveform uncertainty, include all relevant "alpha" and "phi" parameters in the prior.
@@ -253,7 +253,7 @@ class WaveformGeneratorBC(object):
 
 
 
-class WaveformGeneratorGC(object):
+class GeneralCorrectionModel(object):
     '''
     Modified WaveformGenerator object from bilby.gw to include waveform uncertainty corrections in the strain calculation
     
