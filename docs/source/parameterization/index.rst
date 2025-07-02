@@ -1,5 +1,5 @@
 .. toctree::
-  :maxdepth: 1
+  :maxdepth: 2
   :caption: wfu.parameterization
 
   fd_model_difference
