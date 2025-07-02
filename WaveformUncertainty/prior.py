@@ -5,6 +5,7 @@ import time as tm
 import sys
 import scipy
 import lal
+from .utils import A_ASD_solutions, TFDG, EHG, xi_0_upper_bound, delta_xi_tilde_lower_bound
 from bilby.core import utils
 from bilby.core.series import CoupledTimeAndFrequencySeries
 from bilby.core.utils import PropertyAccessor
@@ -14,7 +15,7 @@ from bilby.gw.conversion import convert_to_lal_binary_neutron_star_parameters
 
 def dphi_prior(phase_uncertainty,k, **kwargs):
     '''
-    Generates a Gaussian prior for the phase correction parameters
+    Generates a Gaussian prior for the phase correction parameters for the BasicCorrectionModel
     
     Parameters
     ===================
@@ -86,7 +87,7 @@ def dphi_prior(phase_uncertainty,k, **kwargs):
 
 def dA_prior(amplitude_uncertainty,k, **kwargs):
     '''
-    Generates a Gaussian prior for the amplitude correction parameters
+    Generates a Gaussian prior for the amplitude correction parameters for the BasicCorrectionModel
     
     Parameters
     ===================
@@ -155,6 +156,66 @@ def dA_prior(amplitude_uncertainty,k, **kwargs):
     return frequency_nodes, prior
 
 
+
+def xi_priors(waveform_generator,prior,psd_data,n,f_low,**kwargs):
+    '''
+    Generates xi_0 and delta_xi_tilde priors from a BBH/BNS/NSBH prior and adds them to the original prior.
+
+    Parameters
+    ==================
+    waveform_generator: bilby.gw.WaveformGenerator
+        bilby waveform generator object
+    prior: bilby.core.prior.PriorDict
+        bilby prior dictionary
+    psd_data: numpy.ndarray
+        array of power spectral density data; first column needs to be the frequency points and the second column needs to be the data
+    n: int
+        number of frequency nodes
+    f_low: float
+        lower bound on the frequency band (Hz)
+    xi_0_latex_label: string, optional
+        latex label for xi_0
+        default: r'$\xi_0$'
+    delta_xi_tilde_latex_label: string, optional
+        latex_label for delta_xi_tilde
+        default: r'$\delta\tilde\xi$'
+    xi_low: float, optional
+        lower bound on the dimensionless frequency band
+        default: 0.018
+    xi_high: float, optional
+        upper bound on the dimensionless frequency band
+        default: 1/pi
+    samples: int, optional
+        number of draws of amplitude to take to generate the priors
+        default: 1000
+    '''
+    xi_0_latex_label = kwargs.get('xi_0_latex_label',r'$\xi_0$')
+    delta_xi_tilde_latex_label = kwargs.get('delta_xi_tilde_latex_label',r'$\delta\tilde\xi$')
+    xi_low = kwargs.get('xi_low',0.018)
+    xi_high = kwargs.get('xi_high',1/np.pi)
+    samples = kwargs.get('samples',1000)
+    
+    lower_xis, upper_xis = A_ASD_solutions(waveform_generator,psd_data,prior,samples,xi_low,xi_high)
+    
+    mu_1,sigma_1 = scipy.stats.norm.fit(lower_xis)
+    mu_2,sigma_2 = scipy.stats.norm.fit(upper_xis)
+    
+    delta_xi_tildes = (np.array(upper_xis)-np.array(lower_xis))/(xi_high-np.array(lower_xis))
+    
+    mu_3,sigma_3 = scipy.stats.norm.fit(delta_xi_tildes)
+    
+    prior['xi_0'] = TFDG(name='xi_0',latex_label=xi_0_latex_label,
+                        mu_1=mu_1,mu_2=mu_2,sigma_1=sigma_1,sigma_2=sigma_2,
+                        minimum=xi_low,maximum=xi_0_upper_bound(n,xi_low=xi_low,xi_high=xi_high))
+    
+    prior['delta_xi_tilde'] = EHG(name='delta_xi_tilde',latex_label=delta_xi_tilde_latex_label,
+                                  mu=mu_3,sigma=sigma_3,maximum=1,
+                                  minimum=delta_xi_tilde_lower_bound(n,f_low,waveform_generator.duration,xi_low=xi_low,xi_high=xi_high))
+    
+    return prior
+
+
+
 def TotalMassConstraint(*,name,f_low,f_high,**kwargs):
     '''
     Generates a bilby prior to constrain the total mass
@@ -217,122 +278,3 @@ def total_mass_conversion(parameters):
     parameters['total_mass'] = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
     
     return parameters
-
-
-
-def xi_0_upper_bound(n, **kwargs):
-    xi_low = kwargs.get('xi_low',0.018)
-    xi_high = kwargs.get('xi_high',1/np.pi)
-    def f(x):
-        return x**(1-n) + (xi_low**(1-n)/(xi_high-xi_low))*x - ((xi_high*xi_low**(1-n))/(xi_high-xi_low))
-    root = scipy.optimize.brentq(f, xi_low, xi_high)
-    return root
-
-
-
-class TFDG(bilby.core.prior.Prior):
-    def __init__(self,mu_1,mu_2,sigma_1,sigma_2,minimum,maximum,name=None, latex_label=None):
-        super(TFDG, self).__init__(
-            name=name,latex_label=latex_label,minimum=minimum,maximum=maximum
-        )
-        self.mu_1 = float(mu_1)
-        self.mu_2 = float(mu_2)
-        self.sigma_1 = float(sigma_1)
-        self.sigma_2 = float(sigma_2)
-        
-        
-    def prob(self, val):
-        in_region_1 = (val >= self.minimum) & (val <= self.mu_1)
-        in_region_2 = (val > self.mu_1) & (val < self.mu_2)
-        in_region_3 = (val >= self.mu_2) & (val <= self.maximum)
-        N = (-np.sqrt(np.pi/2)*self.sigma_1*scipy.special.erf((self.minimum-self.mu_1)/(np.sqrt(2)*self.sigma_1))+np.sqrt(np.pi/2)*self.sigma_2*scipy.special.erf((self.maximum-self.mu_2)/(np.sqrt(2)*self.sigma_2))+self.mu_2-self.mu_1)**-1
-        draw = N*np.exp(-0.5*((val-self.mu_1)/self.sigma_1)**2)*in_region_1+N*in_region_2+N*np.exp(-0.5*((val-self.mu_2)/self.sigma_2)**2)*in_region_3
-        return draw
-    
-    
-    def rescale(self, val):
-        N = (-np.sqrt(np.pi/2)*self.sigma_1*scipy.special.erf((self.minimum-self.mu_1)/(np.sqrt(2)*self.sigma_1))+np.sqrt(np.pi/2)*self.sigma_2*scipy.special.erf((self.maximum-self.mu_2)/(np.sqrt(2)*self.sigma_2))+self.mu_2-self.mu_1)**-1
-        A_1 = np.sqrt(np.pi/2)*N*self.sigma_1*scipy.special.erf((self.mu_1-self.minimum)/(np.sqrt(2)*self.sigma_1))
-        A_2 = N*(self.mu_2-self.mu_1)
-        
-        if hasattr(val, "__len__"):
-            draw = []
-            for v in val:
-        
-                in_region_1 = (v >= 0) & (v <= A_1)
-                in_region_2 = (v > A_1) & (v <= A_1+A_2)
-                in_region_3 = (v >= A_1+A_2) & (v <= 1)
-
-                if in_region_1:
-                    draw.append(np.sqrt(2)*self.sigma_1*scipy.special.erfinv((np.sqrt(2*np.pi)*v-np.pi*np.sqrt(2/np.pi)*A_1)/(np.pi*N*self.sigma_1))+self.mu_1)
-                elif in_region_2:
-                    draw.append((N*self.mu_1+v-A_1)/N)
-                elif in_region_3:
-                    draw.append(self.mu_2-np.sqrt(2)*self.sigma_2*scipy.special.erfinv((np.sqrt(2*np.pi)*A_1+np.sqrt(2*np.pi)*A_2-np.sqrt(2*np.pi)*v)/(np.pi*N*self.sigma_2)))
-                else:
-                    raise Exception('Draw Failed!')
-            return np.array(draw)
-        
-        else:
-            in_region_1 = (val >= 0) & (val <= A_1)
-            in_region_2 = (val > A_1) & (val <= A_1+A_2)
-            in_region_3 = (val >= A_1+A_2) & (val <= 1)
-
-            if in_region_1:
-                draw = np.sqrt(2)*self.sigma_1*scipy.special.erfinv((np.sqrt(2*np.pi)*val-np.pi*np.sqrt(2/np.pi)*A_1)/(np.pi*N*self.sigma_1))+self.mu_1
-            elif in_region_2:
-                draw = (N*self.mu_1+val-A_1)/N
-            elif in_region_3:
-                draw = self.mu_2-np.sqrt(2)*self.sigma_2*scipy.special.erfinv((np.sqrt(2*np.pi)*A_1+np.sqrt(2*np.pi)*A_2-np.sqrt(2*np.pi)*val)/(np.pi*N*self.sigma_2))
-            else:
-                raise Exception('Draw Failed!')
-            return draw
-
-
-
-class EHG(bilby.core.prior.Prior):
-    def __init__(self,mu_1,mu_2,sigma_1,sigma_2,minimum,maximum,name=None, latex_label=None):
-        super(TFDG, self).__init__(
-            name=name,latex_label=latex_label,minimum=minimum,maximum=maximum
-        )
-        self.mu = float(mu)
-        self.sigma = float(sigma)        
-        
-    def prob(self, val):
-        in_region_1 = (val >= self.minimum) & (val <= self.mu)
-        in_region_2 = (val >= self.mu) & (val <= self.maximum)
-        N = (self.mu-self.minimum-np.sqrt(np.pi/2)*scipy.special.erf((self.mu-self.maximum)/(np.sqrt(2)*self.sigma)))**(-1)
-        draw = N*in_region_1+N*np.exp(-0.5*((val-self.mu)/self.sigma)**2)*in_region_2
-        return draw
-    
-    
-    def rescale(self, val):
-        N = (self.mu-self.minimum-np.sqrt(np.pi/2)*scipy.special.erf((self.mu-self.maximum)/(np.sqrt(2)*self.sigma)))**(-1)
-        A = N*(self.mu-self.minimum)
-        
-        if hasattr(val, "__len__"):
-            draw = []
-            for v in val:
-        
-                in_region_1 = (v >= 0) & (v <= A)
-                in_region_2 = (v > A) & (v <= 1)
-
-                if in_region_1:
-                    draw.append((val+N*self.minimum)/N)
-                elif in_region_2:
-                    draw.append(self.mu+np.sqrt(2)*self.sigma*scipy.special.erfinv(np.sqrt(2/np.pi)*(val-A)/(N*self.sigma)))
-                else:
-                    raise Exception('Draw Failed!')
-            return np.array(draw)
-        
-        else:
-            in_region_1 = (val >= 0) & (val <= A)
-            in_region_2 = (val > A) & (val <= 1)
-
-            if in_region_1:
-                draw = (val+N*self.minimum)/N
-            elif in_region_2:
-                draw = self.mu+np.sqrt(2)*self.sigma*scipy.special.erfinv(np.sqrt(2/np.pi)*(val-A)/(N*self.sigma))
-            else:
-                raise Exception('Draw Failed!')
-            return draw
