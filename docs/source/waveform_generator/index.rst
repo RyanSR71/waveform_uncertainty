@@ -6,3 +6,4 @@ Waveform Generator
   :caption: wfu.waveform_generator
 
   basic_correction_model
+  general_correction_model
