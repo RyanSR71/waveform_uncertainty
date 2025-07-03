@@ -86,9 +86,9 @@ def dphi_prior(phase_uncertainty,k, **kwargs):
 
 
 def dA_prior(amplitude_uncertainty,k, **kwargs):
-    '''
+    '''    
     Generates a Gaussian prior for the amplitude correction parameters for the BasicCorrectionModel
-    
+     
     Parameters
     ===================
     amplitude_uncertainty: numpy.ndarray
@@ -123,7 +123,7 @@ def dA_prior(amplitude_uncertainty,k, **kwargs):
         array of frequency nodes
     prior: bilby.core.prior.PriorDict
         bilby prior object containing the amplitude correction priors
-    '''
+    '''    
     f_low = kwargs.get('f_low',20)
     f_high = kwargs.get('f_high',1024)
     xi_low = kwargs.get('xi_low',0.018)
@@ -175,10 +175,10 @@ def xi_priors(waveform_generator,prior,psd_data,n,f_low,**kwargs):
         lower bound on the frequency band (Hz)
     xi_0_latex_label: string, optional
         latex label for xi_0
-        default: r'$\xi_0$'
+        default: r'$xi_0$'
     delta_xi_tilde_latex_label: string, optional
         latex_label for delta_xi_tilde
-        default: r'$\delta\tilde\xi$'
+        default: r'$delta tilde xi$'
     xi_low: float, optional
         lower bound on the dimensionless frequency band
         default: 0.018
@@ -230,7 +230,7 @@ def TotalMassConstraint(*,name,f_low,f_high,**kwargs):
         upper bound of the frequency band
     unit: string, optional
         unit of the parameter
-        default: r'$\mathrm{M}_\odot$' (solar mass)
+        default: r'$mathrm{M}_odot$' (solar mass)
     latex_label: string, optional
         label for the parameter in LaTeX
         default: r'$M$'
