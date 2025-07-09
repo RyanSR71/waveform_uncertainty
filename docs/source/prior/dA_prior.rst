@@ -10,7 +10,7 @@ For the BasicCorrectionModel: Automatically generates a bilby prior object conta
 
 .. math::
 
-   \Pi(\alpha_k)=\mathcal{N}\left(0,\sqrt\left((\overline{\Delta\mathcal{A}_\mu}(\xi_k))^2+(\delta\mathcal{A}_\mu(\xi_k))^2\right)\right)
+   \Pi(\alpha_k)=\mathcal{N}\left(0,\sqrt{(\overline{\Delta\mathcal{A}_\mu}(\xi_k))^2+\left(\delta\mathcal{A}_\mu(\xi_k)\right)^2}\right)
 
 Parameters:
 -----------
