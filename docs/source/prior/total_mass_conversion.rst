@@ -1,9 +1,9 @@
-WaveformUncertainty.total_mass_conversion
-=========================================
+total_mass_conversion
+=====================
 
 .. code-block:: python
 
-  WaveformUncertainty.total_mass_conversion(parameters)
+  WaveformUncertainty.prior.total_mass_conversion(parameters)
 
 Conversion function between any mass parameters and the total system mass. Used with the bilby.core.prior.PriorDict() function
 
