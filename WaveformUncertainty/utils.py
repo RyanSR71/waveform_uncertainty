@@ -74,7 +74,7 @@ def variable_prior(uncertainty,k,xi_low,xi_high):
 
 
 
-def GC_waveform_correction(frequency_array,xi_0,delta_xi_tilde,n,dAs,dphis,sigma_dA,sigma_dphi,total_mass,xi_low,xi_high,gamma):
+def GC_waveform_correction(frequency_array,xi_0,delta_xi_tilde,n,dAs,dphis,sigma_dA,sigma_dphi,total_mass,xi_high,gamma):
     xi_n = xi_0*(1+((xi_high-xi_0)/(xi_0))*delta_xi_tilde)
     dA_nodes,dA_coeffs = variable_prior(sigma_dA,n,xi_0,xi_n)
     dphi_nodes,dphi_coeffs = variable_prior(sigma_dphi,n,xi_0,xi_n)
