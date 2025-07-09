@@ -10,7 +10,7 @@ Generates a bilby prior that constrains the total mass to ensure that the wavefo
 
 .. math::
 
-  \frac{\pi^{-1}c^3}{Gf_\mathrm{high}}<M<\frac{0.018c^3}{Gf_\mathrm{low}}
+  \frac{c^3\xi_\mathrm{high}}{Gf_\mathrm{high}}<M<\frac{c^3\xi_\mathrm{low}}{Gf_\mathrm{low}}
 
 Parameters:
 -----------
