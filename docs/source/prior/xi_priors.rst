@@ -40,21 +40,16 @@ n: int
     number of frequency nodes
 f_low: float
     lower bound on the frequency band (Hz)
-xi_0_latex_label: string, optional
+xi_0_latex_label: string, optional, (r'$xi_0$')
     latex label for xi_0
-    default: r'$xi_0$'
-delta_xi_tilde_latex_label: string, optional
+delta_xi_tilde_latex_label: string, optional, (r'$delta tilde xi$')
     latex_label for delta_xi_tilde
-    default: r'$delta tilde xi$'
-xi_low: float, optional
+xi_low: float, optional, (0.018)
     lower bound on the dimensionless frequency band
-    default: 0.018
-xi_high: float, optional
+xi_high: float, optional, (1/pi)
     upper bound on the dimensionless frequency band
-    default: 1/pi
-samples: int, optional
+samples: int, optional, (1000)
     number of draws of amplitude to take to generate the priors
-    default: 1000
 
 Returns:
 --------
