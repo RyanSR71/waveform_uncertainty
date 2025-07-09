@@ -1,7 +1,7 @@
 import numpy as np
 import bilby
 import random
-import time as tm
+import time
 import sys
 import scipy
 import lal
