@@ -12,19 +12,15 @@ Parameters:
 -----------
 parameterization_draw: numpy.ndarray
    one row of a parameterization matrix
-dimensionless: bool, optional
+dimensionless: bool, optional, (False)
    whether or not the output is returned in dimensionless frequency units
-   Default: False
-xi_low: float, optional
+xi_low: float, optional, (0.001)
    if dimensionless is True, this is the lower bound on the dimensionless frequency grid
-   default: 0.001
-xi_high: float, optional
+xi_high: float, optional, (1)
    if dimensionless is True, this is the upper bound on the dimensionless frequency grid
-   default: 1
-resolution: int, optional
+resolution: int, optional, (1000)
    if dimensionless is True, this is the number of points in the dimensionless frequency grid
-   default: 1000
-  
+
 Returns:
 --------
 frequency_grid: numpy.ndarray
