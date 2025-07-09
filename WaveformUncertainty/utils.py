@@ -74,6 +74,19 @@ def variable_prior(uncertainty,k,xi_low,xi_high):
 
 
 
+def GC_waveform_correction(frequency_array,xi_0,delta_xi_tilde,n,dAs,dphis,sigma_dA,sigma_dphi,total_mass,xi_low,xi_high,gamma):
+    xi_n = xi_0*(1+((xi_high-xi_0)/(xi_0))*delta_xi_tilde)
+    dA_nodes,dA_coeffs = variable_prior(sigma_dA,n,xi_0,xi_n)
+    dphi_nodes,dphi_coeffs = variable_prior(sigma_dphi,n,xi_0,xi_n)
+    dA_nodes *= 203025.4467280836/total_mass
+    dphi_nodes *= 203025.4467280836/total_mass
+    amplitude_correction = smooth_interpolation(frequency_array,dA_nodes,dAs*dA_coeffs,gamma)
+    phase_correction = smooth_interpolation(frequency_array,dphi_nodes,dphis*dphi_coeffs,gamma)
+    waveform_correction = (1+amplitude_correction)*np.exp(phase_correction*1j)
+    return waveform_correction
+
+
+
 def maxL(result):
     '''
     Calculates the set of parameters in a posterior that together yield the highest likelihood
