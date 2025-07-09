@@ -26,8 +26,7 @@ Generates xi_0 and delta_xi_tilde priors from a BBH/BNS/NSBH prior and adds them
 
 .. math::
 
-  y=\mathcal{U}\left(\frac{\xi_\mathrm{low}}{\xi_\mathrm{high}-\xi_\mathrm{low}}\left(\frac{4}{t_df_\mathrm{low}}\right)^n                                                                                                
-                                                                                                
+  y=\frac{\xi_\mathrm{low}}{\xi_\mathrm{high}-\xi_\mathrm{low}}\left(\frac{4}{t_df_\mathrm{low}}\right)^n                                                                                                
 
 Parameters:
 -----------
