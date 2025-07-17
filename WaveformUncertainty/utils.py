@@ -81,10 +81,8 @@ def GC_waveform_correction(frequency_array,xi_0,delta_xi_tilde,dAs,dphis,sigma_d
     frequency_nodes = dimensionless_frequency_nodes*203025.4467280836/total_mass
     if sigma_dA_spline is not None:
         sigma_dA = sigma_dA_spline(dimensionless_frequency_nodes)
-        print('yo')
     else: 
         sigma_dA = np.ones(n+1)
-        print('uh oh')
     if sigma_dphi_spline is not None:
         sigma_dphi = sigma_dphi_spline(dimensionless_frequency_nodes)
     else:
