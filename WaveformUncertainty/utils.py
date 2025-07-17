@@ -131,7 +131,7 @@ def A_ASD_solutions(waveform_generator,psd_data,prior,samples,xi_low,xi_high):
         geometrized_frequency_grid = np.geomspace(xi_low,xi_high,1000)
         amplitude = np.abs(waveform_generator.frequency_domain_strain(parameters=injection)['plus'])
         M = bilby.gw.conversion.generate_mass_parameters(injection)['total_mass']
-        freqs = hf1.frequency_array/float(203025.4467280836/M)
+        freqs = waveform_generator.frequency_array/float(203025.4467280836/M)
 
         effective_amplitude = np.interp(geometrized_frequency_grid,freqs,2*amplitude*np.sqrt(freqs)*np.sqrt(float(203025.4467280836/M)))
         ASD = np.interp(geometrized_frequency_grid,psd_data[:,0]/float(203025.4467280836/M),np.sqrt(psd_data[:,1]))
