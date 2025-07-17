@@ -74,14 +74,25 @@ def variable_prior(uncertainty,k,xi_low,xi_high):
 
 
 
-def GC_waveform_correction(frequency_array,xi_0,delta_xi_tilde,n,dAs,dphis,sigma_dA,sigma_dphi,total_mass,xi_high,gamma):
-    xi_n = xi_0*(1+((xi_high-xi_0)/(xi_0))*delta_xi_tilde)
-    dA_nodes,dA_coeffs = variable_prior(sigma_dA,n,xi_0,xi_n)
-    dphi_nodes,dphi_coeffs = variable_prior(sigma_dphi,n,xi_0,xi_n)
-    dA_nodes *= 203025.4467280836/total_mass
-    dphi_nodes *= 203025.4467280836/total_mass
-    amplitude_correction = smooth_interpolation(frequency_array,dA_nodes,dAs*dA_coeffs,gamma)
-    phase_correction = smooth_interpolation(frequency_array,dphi_nodes,dphis*dphi_coeffs,gamma)
+def GC_waveform_correction(frequency_array,xi_0,delta_xi_tilde,dAs,dphis,sigma_dA_spline,sigma_dphi_spline,mass_1,mass_2,xi_high,gamma):
+    n = len(dAs)-1
+    total_mass = mass_1+mass_2
+    dimensionless_frequency_nodes = np.array([xi_0*(1+((xi_high-xi_0)/(xi_0))*delta_xi_tilde)**(k/n) for k in range(n+1)])
+    frequency_nodes = dimensionless_frequency_nodes*203025.4467280836/total_mass
+    if sigma_dA_spline is not None:
+        sigma_dA = sigma_dA_spline(dimensionless_frequency_nodes)
+        print('yo')
+    else: 
+        sigma_dA = np.ones(n+1)
+        print('uh oh')
+    if sigma_dphi_spline is not None:
+        sigma_dphi = sigma_dphi_spline(dimensionless_frequency_nodes)
+    else:
+        sigma_dphi = np.ones(n+1)
+    
+    amplitude_correction = smooth_interpolation(frequency_array,frequency_nodes,dAs*sigma_dA,gamma)
+    phase_correction = smooth_interpolation(frequency_array,frequency_nodes,dphis*sigma_dphi,gamma)
+    
     waveform_correction = (1+amplitude_correction)*np.exp(phase_correction*1j)
     return waveform_correction
 
