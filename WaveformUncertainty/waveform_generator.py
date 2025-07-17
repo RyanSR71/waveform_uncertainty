@@ -230,9 +230,9 @@ def binary_black_hole_correction_conversion(parameters):
     
     if len(dA_keys) != 0:
         dAs = [parameters[key] for key in dA_keys]
-        dphis = np.zeros(len(dA_keys))
+        dphis = list(np.zeros(len(dA_keys)))
     if len(dphi_keys) != 0:
-        dAs = np.zeros(len(dphi_keys))
+        dAs = list(np.zeros(len(dphi_keys)))
         dphis = [parameters[key] for key in dphi_keys]
     
     converted_parameters['dAs'] = dAs
