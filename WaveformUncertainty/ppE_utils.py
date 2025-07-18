@@ -2,13 +2,11 @@ import numpy as np
 from numpy.linalg import inv
 import bilby
 import random
-import time as tm
 import sys
 import scipy
 import lal
 import math
-
-
+from math import factorial
 
 def inversion_function(a,b,x):
     if x < a:
@@ -116,8 +114,6 @@ def savitzky_golay(y, window_size, order, deriv=0, rate=1):
        W.H. Press, S.A. Teukolsky, W.T. Vetterling, B.P. Flannery
        Cambridge University Press ISBN-13: 9780521880688
     """
-    import numpy as np
-    from math import factorial
     
     try:
         window_size = np.abs(int(window_size))
@@ -244,8 +240,6 @@ def apply_ppe_correction(strain,frequency_array, total_mass, ppe_beta, ppe_b, pp
 
     return new_fd_waveform
 
-
-
 def integral_Ib(p_0, exponent_b):
     b = exponent_b
     if b != 4:
@@ -288,7 +282,6 @@ def match_floor_approximant_C0(p_0, p_1, exponent_b, beta, u_IM):
 def match_floor_approximant_C1(p_0, p_1, exponent_b, beta, u_IM):
     return 1.0 - 0.5 * beta ** 2 * pow(u_IM, 2.0 * b) * Phi_b_C1(p_0, p_1, exponent_b)
 
-
 def matrix_P(p_0, p_1):
     two_over_denom = 2.0 / (1 - (p_0/p_1)**4)
     P11 = integral_Ib(p_0, 6) + integral_Ib_plus(p_0, p_1, 6)
@@ -309,7 +302,6 @@ def term_under_sqrt(p_0, p_1, exponent_b):
     vec_p_b = vector_p_b(p_0, p_1, exponent_b)
     vec_theta_0 = -np.dot(inv(matrix_P(p_0, p_1)), vec_p_b)
     return Phi_b_C1(p_0, p_1, exponent_b) + 0.5 * np.dot(vec_theta_0, vec_p_b)
-
 
 def beta_from_beta_tilde_paper(beta_tilde, p_0, p_1, exponent_b, u_IM):
     """Produces ppE beta from the given parameters. This formulation is in
