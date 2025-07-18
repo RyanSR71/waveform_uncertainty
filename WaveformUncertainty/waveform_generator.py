@@ -224,7 +224,8 @@ def binary_black_hole_correction_conversion(parameters):
     dphi_keys = [key for key in parameters if 'dphi_' in key]
     
     if len(dA_keys) != 0 and len(dphi_keys) != 0:
-        raise Exception('Amplitude and Phase corrections do not have the same number of parameters!')
+            if len(dA_keys) != len(dphi_keys):
+                raise Exception(f'Amplitude and Phase corrections do not have the same number of parameters! dA: {len(dA_keys)} dphi: {len(dphi_keys)}')
     elif len(dA_keys) == 0 and len(dphi_keys) == 0:
         raise Exception('No waveform correction detected!')
     
