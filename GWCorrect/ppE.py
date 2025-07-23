@@ -9,6 +9,18 @@ import lal
 import math
 from .ppE_utils import inversion_function, beta_from_beta_tilde_wrapped, apply_ppe_correction
 
+
+
+def match(signal,data,PSDs,duration):
+    
+    signal_match = np.sqrt(bilby.gw.utils.matched_filter_snr(signal,signal,PSDs,4))
+    data_match = np.sqrt(bilby.gw.utils.matched_filter_snr(data,data,PSDs,4))
+    normalized_match = np.abs(bilby.gw.utils.matched_filter_snr(signal,data,PSDs,4)/(signal_match*data_match))
+    
+    return normalized_match
+
+
+
 def ppECorrectionModel(
         frequency_array, mass_1, mass_2, luminosity_distance, a_1, tilt_1,
         phi_12, a_2, tilt_2, phi_jl, theta_jn, phase,
