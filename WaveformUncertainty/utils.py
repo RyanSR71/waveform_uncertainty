@@ -1,10 +1,12 @@
 import numpy as np
 import bilby
 import random
-import time as tm
+import time
 import sys
 import scipy
 import lal
+import tqdm
+import logging
 from bilby.core import utils
 from bilby.core.series import CoupledTimeAndFrequencySeries
 from bilby.core.utils import PropertyAccessor
@@ -19,6 +21,20 @@ def progressBar(count_value, total, suffix=''):
         bar = '=' * filled_up_Length + '-' * (bar_length - filled_up_Length)
         sys.stdout.write('[%s] %s%s %s\r' %(bar, percentage, '%', suffix))
         sys.stdout.flush()
+
+
+
+class ProgressBar(logging.Handler):
+    def __init__(self, level=logging.NOTSET):
+        super().__init__(level)
+
+    def emit(self, record):
+        try:
+            msg = self.format(record)
+            tqdm.tqdm.write(msg)
+            self.flush()
+        except Exception:
+            self.handleError(record)
 
 
 
