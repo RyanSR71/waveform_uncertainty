@@ -3,7 +3,6 @@ Waveform Generator
 
 .. toctree::
   :maxdepth: 2
-  :caption: wfu.waveform_generator
+  :caption: gwc.waveform_generator
 
-  BasicCorrectionModel
-  GeneralCorrectionModel
+  GeneralCorrectionModelBBH
