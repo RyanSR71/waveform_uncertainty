@@ -3,6 +3,6 @@ Waveform Generator
 
 .. toctree::
   :maxdepth: 3
-  :caption: gwc.ppE.waveform_generator
+  :caption: GWCorrect.ppE.waveform_generator
 
   ppECorrectionModel
