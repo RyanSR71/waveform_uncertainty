@@ -1,4 +1,4 @@
 "GWCorrect package"
-__version__ = "0.18.0.2"
+__version__ = "0.18.0.3"
 
-from . import parameterization, prior, waveform_generator, ppE, utils
+from . import wfu, ppE
