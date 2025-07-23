@@ -1,7 +1,7 @@
 match
 =====
 
-.. code-block::
+.. code-block:: python
 
   GWCorrect.ppE.match(signal,data,PSDs,duration)
 
