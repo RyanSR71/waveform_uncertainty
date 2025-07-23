@@ -18,7 +18,7 @@ Because this package is in its early development, code may change drastically wi
 .. code-block:: python
 
    from importlib.metadata import version
-   version('WaveformUncertainty')
+   version('GWCorrect')
 
 Compare this version with the version listed on the `Home Page <https://waveformuncertainty.readthedocs.io/en/latest/#>`_. If you need to upgrade the package, simply run the following:
 
