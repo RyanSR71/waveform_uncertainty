@@ -31,3 +31,4 @@ Check out the :doc:`installation` section for instructions. General information 
    parameterization/index
    prior/index
    waveform_generator/index
+   ppE/index
