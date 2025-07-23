@@ -3,6 +3,6 @@ Prior
 
 .. toctree::
   :maxdepth: 3
-  :caption: gwc.ppE.prior
+  :caption: GWCorrect.ppE.prior
 
   match
