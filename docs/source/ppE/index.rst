@@ -3,7 +3,7 @@ ppE
 
 .. toctree::
   :maxdepth: 2
-  :caption: gwc.prior
+  :caption: gwc.ppE
 
   match
   ppECorrectionModel
