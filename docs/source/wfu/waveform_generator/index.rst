@@ -2,7 +2,7 @@ Waveform Generator
 ==================
 
 .. toctree::
-  :maxdepth: 2
+  :maxdepth: 3
   :caption: gwc.waveform_generator
 
   GeneralCorrectionModelBBH
