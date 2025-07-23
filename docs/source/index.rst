@@ -28,7 +28,5 @@ Check out the :doc:`installation` section for instructions. General information 
    :maxdepth: 1
    :caption: API:
 
-   parameterization/index
-   prior/index
-   waveform_generator/index
+   wfu/index
    ppE/index
