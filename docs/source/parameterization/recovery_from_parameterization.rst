@@ -3,7 +3,7 @@ recovery_from_parameterization
 
 .. code-block:: python
 
-   WaveformUncertainty.parameterization.recovery_from_parameterization(parameterization_draw,dimensionless=False,
+   GWCorrect.parameterization.recovery_from_parameterization(parameterization_draw,dimensionless=False,
                                                                        xi_low=0.01,xi_high=1,resolution=1000)
 
 Converts a draw of parameterized waveform differences back into waveform difference arrays.
