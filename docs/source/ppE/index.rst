@@ -5,4 +5,5 @@ ppE
   :maxdepth: 2
   :caption: gwc.prior
 
+  match
   ppECorrectionModel
