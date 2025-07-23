@@ -6,11 +6,12 @@ import sys
 import scipy
 import lal
 import logging
+import tqdm
 from bilby.core import utils
 from bilby.core.series import CoupledTimeAndFrequencySeries
 from bilby.core.utils import PropertyAccessor
 from bilby.gw.conversion import convert_to_lal_binary_neutron_star_parameters
-from .utils import progressBar
+from .utils import ProgressBar
 
 def fd_model_difference(hf1,hf2,**kwargs):
     '''
@@ -177,20 +178,8 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
     correction_parameter = kwargs.get('correction_parameter',0.0001)
     ref_amplitude = kwargs.get('ref_amplitude',None)
     spline_resolution = kwargs.get('spline_resolution',500)
-    
-    progress = 1
-    class Filter(object):
-        def __init__(self, level):
-            self.__level = level
-
-        def filter(self, logRecord):
-            return logRecord.levelno <= self.__level
-
-    logger = logging.getLogger('bilby')
-    logger.addFilter(Filter(logging.INFO))
 
     parameterization_data = np.zeros([nsamples,5],dtype=object)
-    start = time.time()
     
     print("Generating Waveform Differences and Parameterizing...")
 
@@ -198,10 +187,12 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
     if ref_amplitude is None:
         injection = prior.sample()
         ref_amplitude = np.abs(hf1.frequency_domain_strain(parameters=injection)[f'{polarization}'])
+
+    log = logging.getLogger(__name__)
+    log.setLevel(logging.INFO)
+    log.addHandler(ProgressBar())
     
-    for index in range(nsamples):
-    
-        progressBar(progress,(nsamples))
+    for index in tqdm.tqdm(range(nsamples)):
         
         injection = prior.sample()
         
@@ -220,12 +211,8 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
         parameterization_data[index][3] = np.array(phase_parameters)
         parameterization_data[index][4] = injection
 
-        progress += 1
-
     print("")
     print("Done!")
-    print("")
-    print(f"Time Elapsed: {round(time.time()-start,3)} seconds")
     print("")
     
     return parameterization_data
