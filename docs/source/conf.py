@@ -2,12 +2,12 @@
 
 # -- Project information
 
-project = 'WaveformUncertainty'
+project = 'GWCorrect'
 copyright = '2025, Ryan Johnson - No Rights Reserved'
 author = 'Ryan Johnson'
 
 release = 'beta'
-version = '0.15.0.2'
+version = '0.17.1'
 
 # -- General configuration
 
