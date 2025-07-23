@@ -1,3 +1,6 @@
+Waveform Uncertainty
+====================
+
 .. toctree::
    :maxdepth: 2
    :caption: wfu:
