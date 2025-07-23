@@ -7,7 +7,7 @@ import sys
 import scipy
 import lal
 import math
-from .ppE_utils import inversion_function, beta_from_beta_tilde_wrapped, apply_ppe_correction
+from .utils import inversion_function, beta_from_beta_tilde_wrapped, apply_ppe_correction
 
 
 
