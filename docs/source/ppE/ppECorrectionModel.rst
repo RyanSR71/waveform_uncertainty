@@ -9,7 +9,7 @@ Modified lal binary black hole frequency domain source model to include ppE corr
 
 .. math::
 
-   \mu_\mathrm{ppE}(f;\vartheta,\mathrm{A},\Phi)=\mu(f;\vartheta)\exp(i\Delta\phi_\mathrm{ppE}(f;\tilde\beta,\delta\tilde\epsilon,b)
+   \mu_\mathrm{ppE}(f;\vartheta,\Phi)=\mu(f;\vartheta)\exp(i\Delta\phi_\mathrm{ppE}(f;\tilde\beta,\delta\tilde\epsilon,b)
 
 Make sure to include "beta_tilde", "delta_epsilon_tilde", and "b" in the prior.
 
