@@ -195,7 +195,7 @@ def xi_priors(waveform_generator,prior,psd_data,n,f_low,**kwargs):
     xi_high = kwargs.get('xi_high',1/np.pi)
     samples = kwargs.get('samples',1000)
     
-    lower_xis, upper_xis = A_ASD_solutions(waveform_generator,psd_data,prior,samples,xi_low,xi_high)
+    lower_xis, upper_xis = A_ASD_solutions(waveform_generator,psd_data,prior,samples,xi_low,xi_high,'Generating Priors')
     
     mu_1,sigma_1 = scipy.stats.norm.fit(lower_xis)
     mu_2,sigma_2 = scipy.stats.norm.fit(upper_xis)
