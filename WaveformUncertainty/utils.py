@@ -136,12 +136,14 @@ def maxL(result):
 
 
 
-def A_ASD_solutions(waveform_generator,psd_data,prior,samples,xi_low,xi_high):
+def A_ASD_solutions(waveform_generator,psd_data,prior,samples,xi_low,xi_high,desc):
     lower_xis = []
     upper_xis = []
-    progress = 1
-    for trial in range(samples):
-        progressBar(progress,samples)
+    log = logging.getLogger(__name__)
+    log.setLevel(logging.INFO)
+    log.addHandler(ProgressBar())
+
+    for trial in tqdm.tqdm(range(samples), desc = desc):
         roots = []
         injection = prior.sample()
         geometrized_frequency_grid = np.geomspace(xi_low,xi_high,1000)
