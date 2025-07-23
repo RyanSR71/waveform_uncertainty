@@ -1,19 +1,19 @@
 Installation
-=====
+============
 
-To use WaveformUncertainty, install it with the following command:
+To use GWCorrect, install it with the following command:
 
 .. code-block:: console
 
-   pip install git+https://github.com/RyanSR71/waveform_uncertainty
+   pip install git+https://github.com/RyanSR71/GWCorrect
 
 Then, you can import the package:
 
 .. code-block:: python
 
-   import WaveformUncertainty
+   import GWCorrect
 
-Because this package is in its early development, code may change drastically with updates being put out quickly. To check WaveformUncertainty's version, run
+Because this package is in its early development, code may change drastically with updates being put out quickly. To check GWCorrect's version, run
 
 .. code-block:: python
 
@@ -24,5 +24,5 @@ Compare this version with the version listed on the `Home Page <https://waveform
 
 .. code-block:: console
 
-   pip install git+https://github.com/RyanSR71/waveform_uncertainty --upgrade
+   pip install git+https://github.com/RyanSR71/GWCorrect --upgrade
 
