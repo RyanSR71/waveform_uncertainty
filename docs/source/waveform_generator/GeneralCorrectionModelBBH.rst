@@ -5,8 +5,6 @@ GeneralCorrectionModelBBH
 
    def GWCorrect.waveform_generator.GeneralCorrectionModelBBH(parameters,**kwargs)
 
-Bases: ``object``
-
 Modified lal binary black hole frequency domain source model to include waveform error corrections in the strain calculation.
 
 .. math::
