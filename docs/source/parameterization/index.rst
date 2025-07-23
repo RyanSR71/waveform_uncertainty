@@ -3,7 +3,7 @@ Parameterization
 
 .. toctree::
   :maxdepth: 2
-  :caption: wfu.parameterization
+  :caption: gwc.parameterization
 
   fd_model_difference
   parameterization
