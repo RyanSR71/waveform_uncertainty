@@ -163,7 +163,6 @@ def A_ASD_solutions(waveform_generator,psd_data,prior,samples,xi_low,xi_high,des
                 upper_xis.append(roots[-1])
         except:
             pass
-        progress += 1
     return lower_xis, upper_xis
 
 
