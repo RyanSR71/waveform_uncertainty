@@ -3,7 +3,7 @@ parameterization
 
 .. code-block:: python
 
-   WaveformUncertainty.parameterization.parameterization(hf1,hf2,prior,nsamples,fit_parameters=15,
+   GWCorrect.parameterization.parameterization(hf1,hf2,prior,nsamples,fit_parameters=15,
                                         npoints=1000,max_amplitude_error=1,max_phase_error=5,
                                         psd_data=None,correction_parameter=0.0001,
                                         ref_amplitude=None,polarization='plus',
