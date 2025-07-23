@@ -3,7 +3,7 @@ Prior
 
 .. toctree::
   :maxdepth: 3
-  :caption: gwc.prior
+  :caption: gwc.wfu.prior
 
   TotalMassConstraint
   total_mass_conversion
