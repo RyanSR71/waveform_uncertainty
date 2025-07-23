@@ -180,19 +180,17 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
     spline_resolution = kwargs.get('spline_resolution',500)
 
     parameterization_data = np.zeros([nsamples,5],dtype=object)
-    
-    print("Generating Waveform Differences and Parameterizing...")
 
     # setting the reference amplitude
     if ref_amplitude is None:
         injection = prior.sample()
-        ref_amplitude = np.abs(hf1.frequency_domain_strain(parameters=injection)[f'{polarization}'])
+        ref_amplitude = np.abs(hf1.frequency_domain_strain(parameters=injection)[polarization])
 
     log = logging.getLogger(__name__)
     log.setLevel(logging.INFO)
     log.addHandler(ProgressBar())
     
-    for index in tqdm.tqdm(range(nsamples)):
+    for index in tqdm.tqdm(range(nsamples), desc = 'Generating Waveform Differences'):
         
         injection = prior.sample()
         
@@ -210,10 +208,6 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
         parameterization_data[index][2] = np.array(amplitude_parameters)
         parameterization_data[index][3] = np.array(phase_parameters)
         parameterization_data[index][4] = injection
-
-    print("")
-    print("Done!")
-    print("")
     
     return parameterization_data
 
