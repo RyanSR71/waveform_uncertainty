@@ -3,7 +3,7 @@ TotalMassConstraint
 
 .. code-block:: python
 
-  WaveformUncertainty.prior.TotalMassConstraint(*,name,f_low,f_high,latex_label=r'$M$',boundary=None,
+  GWCorrect.prior.TotalMassConstraint(*,name,f_low,f_high,latex_label=r'$M$',boundary=None,
                                                 unit=r'$\mathrm{M}_\odot$',xi_low=0.018,xi_high=0.318)
 
 Generates a bilby prior that constrains the total mass to ensure that the waveform correction is always within the frequency band.
