@@ -14,16 +14,6 @@ from bilby.gw.conversion import convert_to_lal_binary_neutron_star_parameters
 
 
 
-def progressBar(count_value, total, suffix=''):
-        bar_length = 100
-        filled_up_Length = int(round(bar_length* count_value / float(total)))
-        percentage = round(100.00 * count_value/float(total),1)
-        bar = '=' * filled_up_Length + '-' * (bar_length - filled_up_Length)
-        sys.stdout.write('[%s] %s%s %s\r' %(bar, percentage, '%', suffix))
-        sys.stdout.flush()
-
-
-
 class ProgressBar(logging.Handler):
     def __init__(self, level=logging.NOTSET):
         super().__init__(level)
