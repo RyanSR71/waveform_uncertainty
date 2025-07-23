@@ -2,7 +2,7 @@ Parameterization
 ================
 
 .. toctree::
-  :maxdepth: 2
+  :maxdepth: 3
   :caption: gwc.parameterization
 
   fd_model_difference
