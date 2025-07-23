@@ -3,7 +3,7 @@ Waveform Uncertainty
 
 .. toctree::
    :maxdepth: 2
-   :caption: wfu:
+   :caption: GWCorrect.wfu:
 
    parameterization/index
    prior/index
