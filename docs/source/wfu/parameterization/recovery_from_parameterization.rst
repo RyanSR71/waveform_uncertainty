@@ -3,8 +3,8 @@ recovery_from_parameterization
 
 .. code-block:: python
 
-   GWCorrect.wfu.parameterization.recovery_from_parameterization(parameterization_draw,dimensionless=False,
-                                                                       xi_low=0.01,xi_high=1,resolution=1000)
+   GWCorrect.wfu.parameterization.recovery_from_parameterization(parameterization_draw,
+   dimensionless=False,xi_low=0.01,xi_high=1,resolution=1000)
 
 Converts a draw of parameterized waveform differences back into waveform difference arrays.
 
