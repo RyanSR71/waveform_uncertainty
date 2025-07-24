@@ -3,7 +3,7 @@ binary_black_hole_correction_conversion
 
 .. code-block:: python
 
-   def GWCorrect.waveform_generator.binary_black_hole_correction_conversion(parameters)
+   GWCorrect.wfu.waveform_generator.binary_black_hole_correction_conversion(parameters)
 
 Converts set of parameters into the parameters needed by the source model. 
 
