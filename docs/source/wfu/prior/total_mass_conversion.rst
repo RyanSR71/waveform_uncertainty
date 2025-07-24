@@ -3,7 +3,7 @@ total_mass_conversion
 
 .. code-block:: python
 
-  GWCorrect.prior.total_mass_conversion(parameters)
+  GWCorrect.wfu.prior.total_mass_conversion(parameters)
 
 Conversion function between any mass parameters and the total system mass. Used with the bilby.core.prior.PriorDict() function
 
