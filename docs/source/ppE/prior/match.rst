@@ -20,4 +20,9 @@ data: numpy.ndarray
 PSDs: numpy.ndarray
     array of power spectral densities to weight the waveforms
 duration: float
-    time duration of the gravitational waves                                                                                                                                         
+    time duration of the gravitational waves 
+
+Returns:
+--------
+match: float
+    the match between the two waveforms; ranges from 0 to 1
