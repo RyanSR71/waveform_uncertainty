@@ -3,7 +3,7 @@ match
 
 .. code-block:: python
 
-  GWCorrect.ppE.match(signal,data,PSDs,duration)
+  GWCorrect.ppE.prior.match(signal,data,PSDs,duration)
 
 Computes the normalized match between two waveforms.
 
