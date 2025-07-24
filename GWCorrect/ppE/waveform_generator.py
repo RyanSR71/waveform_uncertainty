@@ -88,6 +88,9 @@ def ppECorrectionModel(
     pn_tidal_order = kwargs.get('pn_tidal_order',-1)
     pn_phase_order = kwargs.get('pn_phase_order',-1)
     pn_amplitude_order = kwargs.get('pn_amplitude_order',0)
+    Mf_IM = kwargs.get('Mf_IM',0.018)
+    ratio_f_MR_to_f_RD = kwargs.get('ratio_f_MR_to_f_RD',0.75)
+    aligned = kwargs.get('aligned',True)
     
     waveform_arguments = dict(
         waveform_approximant=waveform_approximant, reference_frequency=reference_frequency,
@@ -106,7 +109,9 @@ def ppECorrectionModel(
     delta_epsilon = inversion_function(0,3,b)*beta_from_beta_tilde_wrapped(delta_epsilon_tilde,minimum_frequency,1/np.pi,b,0.018,mass_1+mass_2)
     
     model_strain = dict()
-    model_strain['plus'] = apply_ppe_correction(unmodified_strain['plus'],frequency_array,mass_1+mass_2,beta,b,delta_epsilon,0.018,0.75,aligned=True)
-    model_strain['cross'] = apply_ppe_correction(unmodified_strain['cross'],frequency_array,mass_1+mass_2,beta,b,delta_epsilon,0.018,0.75,aligned=True)
+    model_strain['plus'] = apply_ppe_correction(unmodified_strain['plus'],frequency_array,mass_1+mass_2,beta,b,delta_epsilon,
+                                                Mfreq_IM=Mfreq_IM,ratio_f_MR_to_f_RD=ratio_f_MR_to_f_RD,aligned=aligned,window_size=41)
+    model_strain['cross'] = apply_ppe_correction(unmodified_strain['cross'],frequency_array,mass_1+mass_2,beta,b,delta_epsilon,
+                                                 Mfreq_IM=Mfreq_IM,ratio_f_MR_to_f_RD=ratio_f_MR_to_f_RD,aligned=aligned,window_size=41)
     
     return model_strain
