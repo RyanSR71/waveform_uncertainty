@@ -3,9 +3,8 @@ fd_model_difference
 
 .. code-block:: python
 
-   GWCorrect.wfu.parameterization.fd_model_difference(hf1,hf2,injection=None,
-                                        npoints=1000,polarization='plus',psd_data=None,
-                                        correction_parameter=0.0001,ref_amplitude=None)
+   GWCorrect.wfu.parameterization.fd_model_difference(hf1,hf2,injection=None,npoints=1000,
+   polarization='plus',psd_data=None,correction_parameter=0.0001,ref_amplitude=None)
 
 Generates frequency domain waveform differences between two models hf1 and hf2.
 
