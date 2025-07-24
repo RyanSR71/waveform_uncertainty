@@ -3,7 +3,7 @@ ppECorrectionModel
 
 .. code-block:: python
 
-   GWCorrect.ppE.ppECorrectionModel(parameters,**kwargs)
+   GWCorrect.ppE.waveform_generator.ppECorrectionModel(parameters,**kwargs)
 
 Modified lal binary black hole frequency domain source model to include ppE correction in the strain calculation.
 
