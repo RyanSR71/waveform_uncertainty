@@ -88,7 +88,7 @@ def ppECorrectionModel(
     pn_tidal_order = kwargs.get('pn_tidal_order',-1)
     pn_phase_order = kwargs.get('pn_phase_order',-1)
     pn_amplitude_order = kwargs.get('pn_amplitude_order',0)
-    Mf_IM = kwargs.get('Mf_IM',0.018)
+    Mfreq_IM = kwargs.get('Mfreq_IM',0.018)
     ratio_f_MR_to_f_RD = kwargs.get('ratio_f_MR_to_f_RD',0.75)
     aligned = kwargs.get('aligned',True)
     
