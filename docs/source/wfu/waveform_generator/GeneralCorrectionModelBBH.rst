@@ -3,7 +3,7 @@ GeneralCorrectionModelBBH
 
 .. code-block:: python
 
-   def GWCorrect.waveform_generator.GeneralCorrectionModelBBH(parameters,**kwargs)
+   GWCorrect.wfu.waveform_generator.GeneralCorrectionModelBBH(parameters,**kwargs)
 
 Modified lal binary black hole frequency domain source model to include waveform error corrections in the strain calculation.
 
