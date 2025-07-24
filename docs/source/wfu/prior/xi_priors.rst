@@ -3,7 +3,7 @@ xi_priors
 
 .. code-block:: python
 
-   GWCorrect.prior.xi_priors(waveform_generator,prior,psd_data,n,f_low,xi_low=0.018,xi_high=1/np.pi,
+   GWCorrect.wfu.prior.xi_priors(waveform_generator,prior,psd_data,n,f_low,xi_low=0.018,xi_high=1/np.pi,
                              xi_0_latex_label=r'$\xi_0$',delta_xi_tilde_latex_label=r'$\delta\tilde\xi$')
 
 Generates xi_0 and delta_xi_tilde priors from a BBH/BNS/NSBH prior and adds them to the original prior.
