@@ -53,9 +53,9 @@ def match_plot(ppE_waveform_generator,GR_waveform_generator,injection,beta_tilde
 
                 ppE_waveform = ppE_waveform_generator.frequency_domain_strain(parameters=injection)['plus']
 
-                match = match(ppE_waveform,GR_waveform,ppE_waveform_generator.duration,PSDs=PSDs)
+                match_value = match(ppE_waveform,GR_waveform,ppE_waveform_generator.duration,PSDs=PSDs)
 
-                match_grid[j,i] = match
+                match_grid[j,i] = match_value
 
                 pbar.update(1)
                 
