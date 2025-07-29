@@ -3,7 +3,7 @@ match
 
 .. code-block:: python
 
-  GWCorrect.ppE.prior.match(signal,data,PSDs,duration)
+  GWCorrect.ppE.prior.match(signal,data,duration,PSDs=None)
 
 Computes the normalized match between two waveforms.
 
@@ -17,10 +17,10 @@ signal: numpy.ndarray
     strain array of the first gravitational wave
 data: numpy.ndarray
     strain array of the second gravitational wave
-PSDs: numpy.ndarray
-    array of power spectral densities to weight the waveforms
 duration: float
     time duration of the gravitational waves 
+PSDs: numpy.ndarray, optional, (None)
+    array of power spectral densities to weight the waveforms
 
 Returns:
 --------
