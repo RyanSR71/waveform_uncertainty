@@ -23,7 +23,7 @@ Check out the :doc:`installation` section for instructions. Tutorials are in the
    :caption: Tutorials:
 
    notebooks/Parameterization_and_Waveform_Differences.ipynb
-   notebooks/ppE_Tutorial.ipybn
+   notebooks/ppE_Tutorial.ipynb
 
 .. toctree::
    :maxdepth: 1
