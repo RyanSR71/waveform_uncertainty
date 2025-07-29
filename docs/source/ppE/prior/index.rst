@@ -6,3 +6,4 @@ Prior
   :caption: GWCorrect.ppE.prior
 
   match
+  match_plot
