@@ -80,3 +80,62 @@ def match_plot(ppE_waveform_generator,GR_waveform_generator,injection,beta_tilde
             plt.savefig(f"{path}/match_plot_b={injection['b']}_M={M}.png")
     
     plt.show()
+
+
+
+def total_mass_conversion(parameters):
+    '''
+    Conversion function to generate the total mass from a set of parameters; to be used alongside the total mass prior
+    
+    Parameters
+    ==================
+    parameters: dict
+        dictionary of binary black hole parameters
+    
+    Returns
+    ==================
+    parameters: dict
+        input parameters, but with the total mass added
+    '''
+    parameters['total_mass'] = bilby.gw.conversion.generate_mass_parameters(parameters)['total_mass']
+    
+    return parameters
+
+
+
+def TotalMassConstraintPPE(*,name,f_low,**kwargs):
+    '''
+    Generates a bilby prior to constrain the total mass
+    
+    Parameters
+    ===================
+    name: string
+        name of the prior
+    f_low: float
+        lower bound on the frequency band
+    unit: string, optional
+        unit of the parameter
+        default: r'$mathrm{M}_odot$' (solar mass)
+    latex_label: string, optional
+        label for the parameter in LaTeX
+        default: r'$M$'
+    boundary: string, optional
+        boundary condition type for the prior
+        default: None
+    Mf_IM: float, optional
+        end of the early inspiral regime in geometrized units
+        default: 0.018
+
+    Returns
+    ==================
+    total_mass_prior: bilby.core.prior.base.Constraint
+        bilby constraint prior object for the total mass
+    '''
+    unit = kwargs.get('unit',r'$\mathrm{M}_\odot$')
+    latex_label = kwargs.get('latex_label',r'$M$')
+    boundary = kwargs.get('boundary',None)
+    MF_IM = kwargs.get('xi_low',0.018)
+    
+    total_mass_prior = bilby.core.prior.Constraint(name=name,latex_label=latex_label,minimum=0, maximum=Mf_IM*203025.4467280836/f_low, unit=unit)
+    
+    return total_mass_prior
