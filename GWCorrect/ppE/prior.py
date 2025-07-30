@@ -134,7 +134,7 @@ def TotalMassConstraintPPE(*,name,f_low,**kwargs):
     unit = kwargs.get('unit',r'$\mathrm{M}_\odot$')
     latex_label = kwargs.get('latex_label',r'$M$')
     boundary = kwargs.get('boundary',None)
-    MF_IM = kwargs.get('xi_low',0.018)
+    Mf_IM = kwargs.get('xi_low',0.018)
     
     total_mass_prior = bilby.core.prior.Constraint(name=name,latex_label=latex_label,minimum=0, maximum=Mf_IM*203025.4467280836/f_low, unit=unit)
     
