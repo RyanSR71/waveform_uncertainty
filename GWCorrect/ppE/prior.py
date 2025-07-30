@@ -29,6 +29,7 @@ def match(signal,data,duration,**kwargs):
 
 def match_plot(ppE_waveform_generator,GR_waveform_generator,injection,beta_tildes,delta_epsilon_tildes,**kwargs):
     PSDs = kwargs.get('PSDs',None)
+    cmap = kwargs.get('cmap','viridis')
     save = kwargs.get('save',False)
     path = kwargs.get('path',None)
     levels = kwargs.get('levels',np.linspace(0,1,21))
@@ -61,7 +62,7 @@ def match_plot(ppE_waveform_generator,GR_waveform_generator,injection,beta_tilde
                 
     X,Y = np.meshgrid(beta_tildes,delta_epsilon_tildes)
 
-    plt.contourf(X,Y,match_grid,levels=levels)
+    plt.contourf(X,Y,match_grid,levels=levels,cmap=cmap)
     plt.colorbar(label=r'$\mathrm{match}(\tilde{h}_\mathrm{ppE},\tilde{h}_\mathrm{GR})$')
     
     plt.grid(False)
