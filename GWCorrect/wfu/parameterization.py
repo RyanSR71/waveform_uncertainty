@@ -196,7 +196,7 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
         amplitude_parameters = amplitude_difference[spline_indexes]
         phase_parameters = phase_difference[spline_indexes]
 
-        peak_amplitude_difference = max(np.max(amplitude_1)/np.max(amplitude_2),np.max(amplitude_2)/np.max(amplitude_1))-1
+        peak_amplitude_difference = np.abs(amplitude_difference[0])
         if peak_amplitude_difference < 1:
             parameterization_data[index][0] = np.array(frequency_grid)
             parameterization_data[index][1] = np.array(frequency_nodes)
