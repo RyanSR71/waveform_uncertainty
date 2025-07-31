@@ -195,13 +195,27 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
         frequency_nodes = frequency_grid[spline_indexes]
         amplitude_parameters = amplitude_difference[spline_indexes]
         phase_parameters = phase_difference[spline_indexes]
-        
-        #constructing output matrix
-        parameterization_data[index][0] = np.array(frequency_grid)
-        parameterization_data[index][1] = np.array(frequency_nodes)
-        parameterization_data[index][2] = np.array(amplitude_parameters)
-        parameterization_data[index][3] = np.array(phase_parameters)
-        parameterization_data[index][4] = injection
+
+        peak_amplitude_difference = max(np.max(amplitude_1)/np.max(amplitude_2),np.max(amplitude_2)/np.max(amplitude_1))-1
+        if peak_amplitude_difference < 1:
+            parameterization_data[index][0] = np.array(frequency_grid)
+            parameterization_data[index][1] = np.array(frequency_nodes)
+            parameterization_data[index][2] = np.array(amplitude_parameters)
+            parameterization_data[index][3] = np.array(phase_parameters)
+            parameterization_data[index][4] = injection
+        else:
+            parameterization_data[index][0] = None
+
+    rows_to_delete = []
+    for index in range(nsamples):
+        if parameterization_data[index][0] is None:
+            rows_to_delete.append(index)
+
+    deletions = 0
+    while len(rows_to_delete) != 0:
+        parameterization_data = np.delete(parameterization_data,rows_to_delete[0]-deletions,axis=0)
+        rows_to_delete.pop(0)
+        deletions += 1
     
     return parameterization_data
 
