@@ -29,9 +29,6 @@ def fd_model_difference(hf1,hf2,**kwargs):
     npoints: int, optional
         length of the desired frequency grid
         default: 1000
-    polarization: string, optional
-        polarization of the strain data (plus or cross)
-        default: 'plus'
     psd_data: numpy.ndarray, optional
         array containing the psd data and their corresponding frequencies
         default: None
@@ -49,11 +46,10 @@ def fd_model_difference(hf1,hf2,**kwargs):
     amplitude_difference: numpy.ndarray
         array of amplitude difference values
     phase_difference: numpy.ndarray
-        array of phase difference values; if psd data is None, unaligned_phase_difference will be returned, aligned_phase_difference otherwise
+        array of phase difference values
     '''
     injection = kwargs.get('injection',None)
     npoints = kwargs.get('npoints',1000)
-    polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
     correction_parameter = kwargs.get('correction_parameter',0.0001)
     ref_amplitude = kwargs.get('ref_amplitude',None)
@@ -75,13 +71,17 @@ def fd_model_difference(hf1,hf2,**kwargs):
     frequency_grid = np.geomspace(f_low,f_high,npoints)
     wf_freqs = np.geomspace(start_index,len(hf1.frequency_array)-1,npoints).astype(int)
 
+    # full waveforms from polarizations
+    waveform_1 = hf1.frequency_domain_strain()['plus'][wf_freqs]-hf1.frequency_domain_strain()['cross'][wf_freqs]*1j
+    waveform_2 = hf2.frequency_domain_strain()['plus'][wf_freqs]-hf2.frequency_domain_strain()['cross'][wf_freqs]*1j
+    
     # waveform amplitudes
-    amplitude_1 = np.abs(hf1.frequency_domain_strain()[polarization][wf_freqs])
-    amplitude_2 = np.abs(hf2.frequency_domain_strain()[polarization][wf_freqs])
+    amplitude_1 = np.abs(waveform_1)
+    amplitude_2 = np.abs(waveform_2)
 
     # waveform phases
-    phase_1 = np.angle(hf1.frequency_domain_strain()[polarization][wf_freqs])
-    phase_2 = np.angle(hf2.frequency_domain_strain()[polarization][wf_freqs])
+    phase_1 = np.angle(waveform_1)
+    phase_2 = np.angle(waveform_2)
                      
     amplitude_difference = (amplitude_2/amplitude_1) - 1
     unaligned_phase_difference = phase_2-phase_1
@@ -95,28 +95,25 @@ def fd_model_difference(hf1,hf2,**kwargs):
     final_index_2 = list(amplitude_2).index(min(amplitude_2, key=lambda x:np.abs(x-correction_parameter*np.max(amplitude_2))))
     final_index = min([final_index_1,final_index_2])
     
-    # fitting a line to raw_phase_difference weighted by PSDs and subtracting off that line
-    if psd_data is not None:
-        if ref_amplitude is None:
-            ref_amplitude = np.abs(hf1.frequency_domain_strain()[polarization][wf_freqs][0:final_index])
-        ref_amplitude = np.interp(hf1.frequency_array[wf_freqs][0:final_index],f_high*np.linspace(0,1,len(ref_amplitude)),ref_amplitude)
+    if ref_amplitude is None:
+        ref_amplitude = np.copy(amplitude_2)
+    ref_amplitude = np.interp(hf1.frequency_array[wf_freqs][0:final_index],f_high*np.linspace(0,1,len(ref_amplitude)),ref_amplitude)
+    
+    if psd_data is None:
+        ref_sigma = np.max(ref_amplitude**2)
+    else:
         ref_sigma = np.interp(hf1.frequency_array[wf_freqs][0:final_index], psd_data[:,0],psd_data[:,1])
-        align_weights = (ref_amplitude**2)/(ref_sigma)
-        fit = np.polyfit(hf1.frequency_array[wf_freqs][0:final_index],unaligned_phase_difference[0:final_index],1,w=align_weights)
-        unaligned_phase_difference_no_shifts = unaligned_phase_difference[0:final_index]-np.poly1d(fit)(hf1.frequency_array[wf_freqs][0:final_index])
-        aligned_phase_difference = np.copy(unaligned_phase_difference)
-        aligned_phase_difference[0:final_index] = unaligned_phase_difference_no_shifts
+        
+    align_weights = (hf1.frequency_array[wf_freqs][0:final_index]*ref_amplitude**2)/(ref_sigma)
+    fit = np.polyfit(hf1.frequency_array[wf_freqs][0:final_index],unaligned_phase_difference[0:final_index],1,w=align_weights)
+    unaligned_phase_difference_no_shifts = unaligned_phase_difference[0:final_index]-np.poly1d(fit)(hf1.frequency_array[wf_freqs][0:final_index])
+    aligned_phase_difference = np.copy(unaligned_phase_difference)
+    aligned_phase_difference[0:final_index] = unaligned_phase_difference_no_shifts
         
     # making the discontinuity correction to amplitude_difference
     amplitude_difference[final_index:] = amplitude_difference[final_index-1]
-
-    # making the discontinuity correction to phase difference (raw or residual)
-    if psd_data is not None:
-        phase_difference = np.copy(aligned_phase_difference)
-        phase_difference[final_index:] = aligned_phase_difference[final_index-1]
-    else:
-        phase_difference = np.copy(unaligned_phase_difference)
-        phase_difference[final_index:] = unaligned_phase_difference[final_index-1]
+    phase_difference = np.copy(aligned_phase_difference)
+    phase_difference[final_index:] = aligned_phase_difference[final_index-1]
     
     return frequency_grid,amplitude_difference,phase_difference
 
@@ -151,9 +148,6 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
     ref_amplitude: numpy.ndarray, optional
         reference amplitude for residual phase calculation
         default: None
-    polarization: string, optional
-        polarization of the strain data (plus or cross)
-        default: 'plus'
 
     Returns
     ==================
@@ -173,7 +167,6 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
             source parameters injected into the waveform generators
     '''
     npoints = kwargs.get('npoints',1000)
-    polarization = kwargs.get('polarization','plus')
     psd_data = kwargs.get('psd_data',None)
     correction_parameter = kwargs.get('correction_parameter',0.0001)
     ref_amplitude = kwargs.get('ref_amplitude',None)
@@ -184,7 +177,8 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
     # setting the reference amplitude
     if ref_amplitude is None:
         injection = prior.sample()
-        ref_amplitude = np.abs(hf1.frequency_domain_strain(parameters=injection)[polarization])
+        ref_waveform = hf2.frequency_domain_strain(parameters=injection)['plus']-hf2.frequency_domain_strain(parameters=injection)['cross']*1j
+        ref_amplitude = np.abs(ref_waveform)
 
     log = logging.getLogger(__name__)
     log.setLevel(logging.INFO)
@@ -195,7 +189,7 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
         injection = prior.sample()
         
         # calculating waveform model differences
-        frequency_grid,amplitude_difference,phase_difference = fd_model_difference(hf1,hf2,injection=injection,npoints=npoints,polarization=polarization,psd_data=psd_data,correction_parameter=correction_parameter,ref_amplitude=ref_amplitude)
+        frequency_grid,amplitude_difference,phase_difference = fd_model_difference(hf1,hf2,injection=injection,npoints=npoints,psd_data=psd_data,correction_parameter=correction_parameter,ref_amplitude=ref_amplitude)
 
         spline_indexes = np.linspace(0,len(frequency_grid)-1,spline_resolution).astype(int)
         frequency_nodes = frequency_grid[spline_indexes]
