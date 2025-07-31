@@ -145,6 +145,9 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
     correction_parameter: float, optional
         fraction of maximum amplitude to cut off the amplitude at
         default: 0.0001
+    deletion_parameter: float, optional
+        upper limit for the first value of dA; if dA_0 rises above this value, the corresponding parameterization row will be deleted
+        default: 0.5
     ref_amplitude: numpy.ndarray, optional
         reference amplitude for residual phase calculation
         default: None
@@ -169,6 +172,7 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
     npoints = kwargs.get('npoints',1000)
     psd_data = kwargs.get('psd_data',None)
     correction_parameter = kwargs.get('correction_parameter',0.0001)
+    deletion_parameter = kwargs.get('deletion_parameter',0.5)
     ref_amplitude = kwargs.get('ref_amplitude',None)
     spline_resolution = kwargs.get('spline_resolution',500)
 
@@ -196,8 +200,8 @@ def parameterization(hf1,hf2,prior,nsamples,**kwargs):
         amplitude_parameters = amplitude_difference[spline_indexes]
         phase_parameters = phase_difference[spline_indexes]
 
-        peak_amplitude_difference = np.abs(amplitude_difference[0])
-        if peak_amplitude_difference < 1:
+        dA_0 = np.abs(amplitude_difference[0])
+        if dA_0 < deletion_parameter:
             parameterization_data[index][0] = np.array(frequency_grid)
             parameterization_data[index][1] = np.array(frequency_nodes)
             parameterization_data[index][2] = np.array(amplitude_parameters)
